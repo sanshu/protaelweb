@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+    <script>
+      var urlParams;
+      (window.onpopstate = function() {
+        var match, pl = /\+/g, // Regex for replacing addition symbol with a space
+                search = /([^&=]+)=?([^&]*)/g, decode = function(s) {
+                  return decodeURIComponent(s.replace(pl, " "));
+                }, query = window.location.search.substring(1);
+        urlParams = {};
+        while (match = search.exec(query)) {
+          urlParams[decode(match[1])] = decode(match[2]);
+        }
+      })();
+      var dir = urlParams["dir"] || 'db/CSGID/cs/_IDP00005_',
+              limit = urlParams["limit"] || 20,
+              showAli = urlParams["ali"] || true,
+              jsonurl = 'http://proteins.burnham.org:8080/Json4PV/getjson?dir=' + dir + '&limit=' + limit + '&ali=' + showAli,
+              protein3;// will read via getjson
+
+      $(document)
+              .ready(
+                      function() {
+                        $.getJSON(jsonurl, {
+                          format: "json"
+                        }).done(
+                                function(protein) {
+                                  protein3 = protein;
+                                  Protael(protein, "svgholder3", "100%",
+                                          "100%", true).draw();
+                                });
+                      });
+    </script>
+  </head>
+  <body>
+    <div>
+      <h1 id="xtal">Protein overview</h1>
+      <p class="lead">Domains, aligned structure and predictions of local features</p>
+      <div id="svgholder3"></div>
+
+      <pre class="prettyprint">
+    var jsonurl = '...'; 
+    
+    $(document).ready(
+        function() {
+            $.getJSON(jsonurl, {
+                format: "json"
+            }).done(
+                function(protein3) {
+                    Protael(protein3, "svgholder3", "100%", "100%", true).draw();
+                });
+        });
+      </pre>
+      <button type="submit" class="btn btn-default" onclick="tryIt(protein3)">Try it yourself</button>
+    </div>
+    <script>
+      (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+      ga('create', 'UA-50502533-2', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>

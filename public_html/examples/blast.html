@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+    <script>
+      var protein4 = {
+        "alidisplay": true, "alignments": [{"CS": "", "chain": null, "color": "#FFCC00", "description": "1bo4_A", "fragmentStart": 0, "gaps": [], "id": "1bo4", "label": "1bo4_A", "pdbid": "1bo4",
+            "sequence": "RTCRLGPDQVKSMRAALDLFGREFGDVATYSQHQPDSDYLGNLLRSKTFIALAAFDQEAVVGALAAYVLPKFEQPRSEIYIYDLAVSGEHRRQGIATALINLLKHEANALGAYVIYVQADYGDDPAVALYTKLGIREEVMH", "start": 7},
+          {"CS": "", "chain": null, "color": "#FF0000", "description": "3tfy_A", "fragmentStart": 0, "gaps": [], "id": "3tfy", "label": "3tfy_A", "pdbid": "3tfy",
+            "sequence": "NDKFYKDVL-EVGELAKLAYFNDIAVGAVCCRV--DHSQNQKRLYIMTLGCLAPYRRLGIGTKMLNHVLNICEKDGTFDNIYLHVQISNESAIDFYRKFG", "start": 42},
+          {"CS": "", "chain": null, "color": "#FF0000", "description": "4lx9_A", "fragmentStart": 0, "gaps": [], "id": "4lx9", "label": "4lx9_A", "pdbid": "4lx9",
+            "sequence": "GLAFFVAIVDNSVVG----YIMPRIEWGFSNIKQLPSLVRKGHVVSIAVLEEYRRKGIATTLLEASMKSMKNDYNAEEIYLEVRVSNYPAIALYEKLNFKK", "start": 54}, {"CS": "", "chain": null, "color": "#FF0000",
+            "description": "2psw_A", "fragmentStart": 0, "gaps": [], "id": "2psw", "label": "2psw_A", "pdbid": "2psw", "sequence": "NDKFYKDVL-EVGELAKLAYFNDIAVGAVCCRV--DHSQNQKRLYIMTLGCLAPYRRLGIGTKMLNHVLNICEKDGTFDNIYLHVQISNESAIDFYRKFG", "start": 42}, {"CS": "", "chain": null, "color": "#FF0000", "description": "2ob0_A", "fragmentStart": 0, "gaps": [], "id": "2ob0", "label": "2ob0_A", "pdbid": "2ob0", "sequence": "NDKFYKDVL-EVGELAKLAYFNDIAVGAVCCRV--DHSQNQKRLYIMTLGCLAPYRRLGIGTKMLNHVLNICEKDGTFDNIYLHVQISNESAIDFYRKFG", "start": 42}, {"CS": "", "chain": null, "color": "#FF0000", "description": "2x7b_A", "fragmentStart": 0, "gaps": [], "id": "2x7b", "label": "2x7b_A", "pdbid": "2x7b", "sequence": "GLAFFVAIVDNSVVG----YIMPRIEWGFSNIKQLPSLVRKGHVVSIAVLEEYRRKGIATTLLEASMKSMKNDYNAEEIYLEVRVSNYPAIALYEKLNFKK", "start": 54},
+          {"CS": '', 'chain': null, 'color': '#FF0000', 'description': '3i3g_A', 'fragmentStart': 0, 'gaps': [], 'id': '3i3g', 'label': '3i3g_A', 'pdbid': '3i3g',
+            'sequence': 'IVGSASLMIQPKFTRGGRAVGHIEDVVVDPSYRGAGLGKALIMDLCEISRSKGCYKVILDS---SEKSLPFYEKLGFRAHERQMRLDL', 'start': 66},
+          {'CS': '', 'chain': null, 'color': '#FF0000', 'description': '3fb3_A', 'fragmentStart': 0, 'gaps': [], 'id': '3fb3', 'label': '3fb3_A', 'pdbid': '3fb3',
+            'sequence': 'IVGSASLMIQPKFTRGGRAVGHIEDVVVDPSYRGAGLGKALIMDLCEISRSKGCYKVILDS---SEKSLPFYEKLGFRAHERQMRLDL', 'start': 66},
+          {'CS': '', 'chain': null, 'color': '#FF9900', 'description': '2pdo_A', 'fragmentStart': 0, 'gaps': [], 'id': '2pdo', 'label': '2pdo_A', 'pdbid': '2pdo',
+            'sequence': 'EVNGEVVGTVMGGYDGHRGSAYY--LGVHPEFRGRGIANALLNRLEKKLIARGCPKIQINVPEDNDMVLGMYERLG', 'start': 65}], 'ftracks': [], 'label': '', 'markers': [],
+        'properties': {}, 'qtracks': [], 'sequence': 'MISTQTKITRLNSQDVGVMRAMLGMFGEAFEDAENYCRAQPSDSYLQDLLCGSGFIAIAALQGQEVIGGLAAYVLPKFEQQRKEIYIYDLGVQGAYRRRGIATALINELQRIAHDIGAYVIFVQADYGDDPAVALYTKLGIREDVMHFDIEPQPAA'};
+
+      $(document).ready(
+              function() {
+                Protael(protein4, "svgholderPDB", "100%", "100%", true).draw();
+              });
+    </script>
+  </head>
+  <body>
+    <div>
+      <h1 id="blast">Alignment with structures from PDB</h1>
+
+      <div id="svgholderPDB"></div>
+      <pre class="prettyprint" style="height:300px; overflow:scroll">
+    var protein4 = {
+        'alidisplay': true, 
+        'alignments': [
+            {
+                'CS': '',  
+                'color': '#FFCC00', // color is based on blast evalue
+                'description': '1bo4_A', 
+                'fragmentStart': 0, 
+                'gaps': [], 
+                'id': '1bo4', 
+                'label': '1bo4_A', 
+                'pdbid': '1bo4', // used for tooltip image
+                'sequence': 'RTCRLGPD...', 
+                'start': 7
+            }, {
+                'CS': '', 
+                'chain': null, 
+                'color': '#FF0000', 
+                'description': '3tfy_A', 
+                'fragmentStart': 0, 
+                'gaps': [], 
+                'id': '3tfy', 
+                'label': '3tfy_A', 
+                'pdbid': '3tfy', 
+                'sequence': 'NDKFYKDVL-EVGE....', 'start': 42},
+           //// and some more ///
+        ], 
+        'ftracks': [], 
+        'label': '', 
+        'markers': [],
+         
+        'sequence': 'MISTQTKITRL...'
+    };
+ 
+   Protael(protein4, "svgholderPDB", "100%", "100%", true).draw();
+      </pre>
+      <button type="submit" class="btn btn-default" onclick="tryIt(protein4)">Try it yourself</button>
+
+    </div>
+
+    <script>
+      (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+      ga('create', 'UA-50502533-2', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>JSON generator : Protael</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.1.1/flatly/bootstrap.min.css"/>
+    <link rel="stylesheet" href ="css/bootstrap-colorpicker.min.css" />
+
+    <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <!--JQuery and jQueryUI are required:-->
+    <link rel="stylesheet"
+          href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript"
+    src="http://code.jquery.com/jquery-1.11.1.min.js"></script> 
+
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+    src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+
+    <script src="js/vendor/bootstrap-colorpicker.min.js"></script>
+    <!-- Snap 0.3.0 -->
+    <script type="text/javascript" src="http://proteins.burnham.org:8080/Protael/js/snap.svg-min.js"></script>
+    <script src="http://code.angularjs.org/snapshot/angular.js"></script>
+
+
+    <link rel="stylesheet" href="css/main.css">
+
+    <style>
+
+      .seqColorpicker{
+        background-color: #fff;
+        color: #000;
+      }
+      .seqColorpicker:hover{
+        background-color: #fff;
+        color: #000;
+      }
+    </style>
+
+    <script>
+      // Ok, I know that all this processing is not the best, will think about it later
+
+      function includeProtael() {
+
+        // script will load dev version fo protael on localhost 
+        // and minified on server
+        var script = document.createElement('script');
+        script.type = "text/javascript";
+        if (location.hostname != "localhost")
+        {
+          script.src = "js/protael.0.1.0.min.js";
+        } else {
+          script.src = "js/Protael.js";
+        }
+        document.getElementsByTagName('head')[0].appendChild(script);
+      }
+
+      $(document)
+              .ready(function() {
+                includeProtael();
+                $("#errorMsg").hide();
+                $('#inpSeqCol').bind('keypress', function(e) {
+                  var code = e.keyCode || e.which;
+                  if (code != 13) { //Enter keycode
+                    return;
+                  }
+                  processSeqColors();
+                });
+              });
+      var proteinJson = {},
+              seqColors = {},
+              markers = [], bridges = [];
+      seqColors.colors = {};
+      seqColors.data = '';
+      function editJson() {
+        // processSeqColors();
+        proteinJson.sequence = $("#inpSeq").val();
+        proteinJson.seqcolors = seqColors;
+        saveMarkers();
+        saveBridges();
+        proteinJson.markers = markers;
+        proteinJson.bridges = bridges;
+        $("#codeTextArea").val(JSON.stringify(proteinJson, undefined, 2));
+        applyJSON();
+      }
+
+      function applyJSON() {
+        $(".protael_resizable").remove();
+        $("#errorMsg").hide();
+        try {
+          var t = proteinJson; //JSON.parse($("#codeTextArea").val());
+
+          try {
+            Protael(t, "protaelHolder", "100%", "100%", true).draw();
+          } catch (err) {
+            console.log(err);
+            $("#errorMsg").html("Unable to display protein: " + err.name + ": " + err.message);
+            $("#errorMsg").show();
+          }
+        } catch (err) {
+          console.log(err);
+          $("#errorMsg").html("Invalid JSON: " + err.name + ": " + err.message);
+          $("#errorMsg").show();
+        }
+      }
+
+      function processSeqColors(e) {
+        scolors = $('#inpSeqCol').val().toUpperCase();
+        seqColors.data = scolors;
+        var chars = scolors.split(''), i, l = chars.length, button;
+        // find unique chars
+        for (i = 0; i < l; i++) {
+          if (typeof seqColors.colors[chars[i]] === 'undefined') {
+            seqColors.colors[chars[i]] = '';
+          }
+        }
+
+        $('#seqColorInputs').remove('.seqColorpicker');
+        // generate color pickers
+        for (i in seqColors.colors) {
+          $('#seqColorInputs').append("<button type='button' class='btn btn-default btn-sm seqColorpicker'>" + i + "</button>");
+        }
+
+        $('.seqColorpicker').colorpicker({"color": "#FFF"}).on('changeColor', function(ev) {
+          var newColor = ev.color.toHex().toString(),
+                  text = $(this).text();
+          $(this).css("background-color", newColor);
+          seqColors.colors[text] = newColor;
+        });
+      }
+
+      function addRow(parent) {
+        var rowClone = parent.find(".form-group").first().clone();
+        rowClone.find("input").val(null); //reset all data
+        rowClone.appendTo(parent);
+      }
+      function removeRow(row) {
+        if (row.siblings(".form-group").length > 0) {
+          row.remove();
+        } else {
+
+          row.find("input").val(null); //reset all data
+        }
+      }
+      function saveMarkers() {
+        markers = [];
+
+        $("#markersGrid .form-group").each(
+                function() {
+                  var mark = {"color": "#000"};
+                  mark.x = $(this).find("input[name='x']").val();
+                  if (mark.x) {
+                    mark.label = $(this).find("input[name='label']").val();
+                    mark.type = $(this).find("select[name='type']").val();
+                    mark.position = $(this).find("select[name='position']").val();
+                    markers.push(mark);
+                  }
+                });
+      }
+      function saveBridges() {
+        bridges = [];
+
+        $("#bridgesGrid .form-group").each(
+                function() {
+                  var b = {"color": "#000"};
+
+                  b.start = $(this).find("input[name='s']").val();
+                  b.end = $(this).find("input[name='e']").val();
+                  if (b.start && b.end) {
+                    b.type = $(this).find("input[name='type']").val();
+                    b.startlabel = $(this).find("input[name='slabel']").val();
+                    b.endlabel = $(this).find("input[name='elabel']").val();
+                    bridges.push(b);
+                  }
+                });
+        console.log(bridges);
+      }
+    </script>
+  </head>
+  <body >
+
+    <!--[if lt IE 7]>
+ <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">Protael</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">            
+            <li><a href="getting-started.html">Getting started</a></li>
+            <li><a href="#">Try it</a></li>
+            <li><a href="demo.html">Examples</a></li>
+            <!--            <li><a href="docs/">Docs</a></li>
+                        <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                          </ul>
+                        </li>-->
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div></div>
+    <div class="container-fluid">
+      <div class="row ">
+        <div class="col-md-12">
+          <h3>Input you data below to generate JSON and view it in Protael</h3>
+          <form role="form" onsubmit="editJson();
+              return false;">
+            <fieldset>
+              <div class="form-group">
+                <label for="inpSeq">Protein sequence</label>
+                <input type="text" class="form-control input-sm" id="inpSeq" placeholder="Enter protein sequence">
+              </div>
+            </fieldset>
+
+            <div class="panel-group" id="accordion">
+
+              <fieldset> <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeqColors">
+                        Sequence colors</a>
+                    </h4>
+                  </div>
+                  <div id="collapseSeqColors" class="panel-collapse collapse"><div class="panel-body">
+                      <div class="form-group ">
+                        <label for="inpSeqCol">Sequence colors data</label>
+                        <input type="text" class="form-control input-sm" id="inpSeqCol" placeholder="Enter sequence color data and press ENTER">
+                      </div>
+                      <div class="form-group" id="seqColorInputs">
+                        <label>Select color per data char:</label>
+                      </div>
+                    </div>
+                  </div></div>
+              </fieldset>
+              <fieldset>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseMark">
+                        Markers
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="collapseMark" class="panel-collapse collapse"><div class="panel-body">
+                      <p>Please note that in order  to keep this form simple all markers are black by default,
+                        if you want to change color you have to edit JSON manually: <code>"color": "your_color_here"</code></p>
+                      <div class="row ">
+                        <div class="col-sm-2"><label>Type</label></div>
+                        <div class="col-sm-2"><label>X</label></div>
+                        <div class="col-sm-2"><label>Position</label></div>
+                        <div class="col-sm-2"><label>Label</label></div>
+                        <div class="col-sm-2"> </div>
+                      </div>
+                      <div class="row rowgrid" id="markersGrid">
+                        <div class="form-group row">
+                          <div class="col-sm-2">    
+                            <select class="form-control input-sm" name="type">
+                              <option value="glycan">Glycan</option>
+                              <option value="oliglycan">Oliglycan</option>
+                              <option value="unknownglycan">Unknown glycan</option>
+                              <option value="gap">Gap</option>
+                              <option value="stick">Stick</option>
+                            </select>
+                          </div>
+                          <div class="col-sm-2">
+                            <input class="form-control input-sm" name="x"  
+                                   min="0" type="number" />
+                          </div>
+                          <div class="col-sm-2">    
+                            <select class="form-control input-sm" name="position">
+                              <option value="top">Top</option>
+                              <option value="bottom">Bottom</option>
+                            </select>
+                          </div>
+                          <div class="col-sm-2">
+                            <input class="form-control input-sm"  name="label" type="text" />
+                          </div>
+                          <div class="col-sm-2">
+                            <button type='button' class='btn btn-default btn-xs' onclick="addRow($(this).parents('.rowgrid'))">+</button>
+                            <button type='button' class='btn btn-default btn-xs' onclick="removeRow($(this).parents('.form-group'))">-</button>
+                          </div>
+                        </div>
+
+                      </div></div>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseBridg">
+                        Bridges
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="collapseBridg" class="panel-collapse collapse"><div class="panel-body">
+                      <p>Please note that in order to keep this form simple all bridges are black by default,
+                        if you want to change color you have to edit JSON manually: <code>"color": "your_color_here"</code></p>
+                      <div class="row">
+                        <div class="col-sm-2"><label>Type/label</label></div>
+                        <div class="col-sm-2"><label>Start</label></div>
+                        <div class="col-sm-2"><label>End</label></div>
+                        <div class="col-sm-2"><label>Start Label</label></div>
+                        <div class="col-sm-2"><label>End Label</label></div>
+                      </div>
+                      <div class="row rowgrid" id="bridgesGrid">
+                        <div class="form-group row">
+                          <div class="col-sm-2">
+                            <input class="form-control input-sm"  name="type" type="text" />
+                          </div>
+                          <div class="col-sm-2">
+                            <input class="form-control input-sm" name="s"  
+                                   min="0" type="number" />
+                          </div>
+                          <div class="col-sm-2">
+                            <input class="form-control input-sm" name="e"  
+                                   min="0" type="number" />
+                          </div>
+                          <div class="col-sm-2">
+                            <input class="form-control input-sm" name="slabel" type="text" />
+                          </div><div class="col-sm-2">
+                            <input class="form-control input-sm"  name="elabel" type="text" />
+                          </div>
+                          <div class="col-sm-2">
+                            <button type='button' class='btn btn-default btn-xs' onclick="addRow($(this).parents('.rowgrid'))">+</button>
+                            <button type='button' class='btn btn-default btn-xs' onclick="removeRow($(this).parents('.form-group'))">-</button>
+                          </div>
+                        </div>
+
+                      </div></div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>             <!--accordion-->
+          </form>
+        </div>
+      </div>
+
+      <div class="row ">
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-default" onclick="editJson()" style="margin:10px;">Submit</button>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+          <div class="alert alert-danger" role="alert" id="errorMsg"></div>
+        </div></div>
+      <div class="row ">
+        <div class="col-md-12">
+          <h3>Protael view</h3>
+          <div id ="protaelHolder" > </div>
+        </div>
+      </div> <div class="row ">
+        <div class="col-md-12">
+          <h3>This is your JSON:</h3>
+          <p>You can copy it into you webpage</p>
+          <textarea id="codeTextArea" class="form-control" style="width:100%; height:200px;font-family: monospace" disabled></textarea></div>
+      </div>
+    </div>
+
+    <script>
+      (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+      ga('create', 'UA-50502533-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+  </body></html>
