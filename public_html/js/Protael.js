@@ -906,8 +906,9 @@ var Protael = (function() {
         }
 
         paperproto.quantTrack = function(qtrack, topY, width, height) {
-            // console.log("Drawing qtrack: " + qtrack.label);
-            var x = [], i, j, jj,
+         //    console.log("Drawing qtrack: " + qtrack.values);
+            var //x = [],
+                    i, j, jj,
                     c = qtrack.color || "#F00",
                     fill = c,
                     max = Math.max.apply(Math, qtrack.values),
@@ -919,18 +920,20 @@ var Protael = (function() {
                     smooth = false,
                     X, Y, W = this.protael.W,
                     paper = this.paper;
-            console.log(max);
-            console.log(min);
-            for (i = 0; i <= width; i++) {
-                x[i] = i;
+//            console.log(max);
+//            console.log(min);
+            for (i = qtrack.values.length; i <= width; i++) {
+                qtrack.values[i] = 0;
             }
 
+             //TODO: use only one property instead of two
             if (!qtrack.values && qtrack.data) {
                 qtrack.values = (qtrack.data.indexOf(',') > 0) ? qtrack.data
                         .split(',') : qtrack.data.split('');
             }
 
             qtrack.values.splice(0, 0, 0);
+
             qtrack.values[width] = 0;
             if (smooth) {
                 for (j = 0, jj = W; j < jj; j++) {
