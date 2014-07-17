@@ -19,28 +19,24 @@
     <!--JQuery and jQueryUI are required:-->
     <link rel="stylesheet"
           href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-    <script type="text/javascript"
-    src="http://code.jquery.com/jquery-1.11.1.min.js"></script> 
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript"
-    src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
 
     <script src="js/vendor/bootstrap-colorpicker.min.js"></script>
     <!-- Snap 0.3.0 -->
     <script type="text/javascript" src="http://proteins.burnham.org:8080/Protael/js/snap.svg-min.js"></script>
-    <script src="http://code.angularjs.org/snapshot/angular.js"></script>
-
 
     <link rel="stylesheet" href="css/main.css">
 
     <style>
 
-      .seqColorpicker{
+      .seqColorpicker, .colorpick{
         background-color: #fff;
         color: #000;
       }
-      .seqColorpicker:hover{
+      .seqColorpicker:hover, .colorpick:hover{
         background-color: #fff;
         color: #000;
       }
@@ -51,7 +47,7 @@
 
       function includeProtael() {
 
-        // script will load dev version fo protael on localhost 
+        // script will load dev version fo protael on localhost
         // and minified on server
         var script = document.createElement('script');
         script.type = "text/javascript";
@@ -67,6 +63,7 @@
       $(document)
               .ready(function() {
                 includeProtael();
+                initCPickers();
                 $("#errorMsg").hide();
                 $('#inpSeqCol').bind('keypress', function(e) {
                   var code = e.keyCode || e.which;
@@ -75,10 +72,14 @@
                   }
                   processSeqColors();
                 });
+//                $('.popover-dismiss').popover({
+//                  trigger: 'focus'
+//                })
               });
+
       var proteinJson = {},
               seqColors = {},
-              markers = [], bridges = [];
+              markers = [], bridges = [], graphs = [], regions = [];
       seqColors.colors = {};
       seqColors.data = '';
       function editJson() {
@@ -87,8 +88,14 @@
         proteinJson.seqcolors = seqColors;
         saveMarkers();
         saveBridges();
+        saveGraphs();
+        saveRegions();
         proteinJson.markers = markers;
         proteinJson.bridges = bridges;
+        proteinJson.qtracks = graphs;
+        proteinJson.overlayfeatures = {"label": "regions",
+          "showLabels": "true", "features": regions};
+
         $("#codeTextArea").val(JSON.stringify(proteinJson, undefined, 2));
         applyJSON();
       }
@@ -142,6 +149,8 @@
         var rowClone = parent.find(".form-group").first().clone();
         rowClone.find("input").val(null); //reset all data
         rowClone.appendTo(parent);
+        initCPickers();
+
       }
       function removeRow(row) {
         if (row.siblings(".form-group").length > 0) {
@@ -184,6 +193,55 @@
                 });
         console.log(bridges);
       }
+      function initCPickers() {
+        $('.colorpick').colorpicker({"color": "#FFF"}).on('changeColor', function(ev) {
+          var newColor = ev.color.toHex().toString();
+          $(this).css("background-color", newColor);
+          $(this).attr('data-scolor', newColor);
+        });
+      }
+      function saveGraphs() {
+        graphs = [];
+        $("#graphsGroup .form-group").each(function() {
+          var g = {},
+                  c1 = $(this).find("button[name='c1']").attr('data-scolor'),
+                  c2 = $(this).find("button[name='c2']").attr('data-scolor'),
+                  c3 = $(this).find("button[name='c3']").attr('data-scolor'),
+                  data = String($(this).find("input[name='data']").val());
+
+          if (data) {
+            g.label = $(this).find("input[name='label']").val();
+
+
+            g.color = c1;
+            if (c1 && c2 && c3) {
+              g.color = [c1, c2, c3];
+            } else if (c1 && c2) {
+              g.color = [c1, c2];
+            }
+
+            g.values = data.replace(/\s/g, "").split(',');
+            graphs.push(g);
+          }
+        });
+      }
+
+      function saveRegions() {
+        regions = [];
+
+        $("#regionsGrid .form-group").each(
+                function() {
+                  var b = {};
+
+                  b.start = $(this).find("input[name='s']").val();
+                  b.end = $(this).find("input[name='e']").val();
+                  if (b.start && b.end) {
+                    b.type = $(this).find("input[name='label']").val();
+                    b.color = $(this).find("button[name='c1']").attr('data-scolor');
+                    regions.push(b);
+                  }
+                });
+      }
     </script>
   </head>
   <body >
@@ -203,21 +261,13 @@
           <a class="navbar-brand" href="index.html">Protael</a>
         </div>
         <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">            
+          <ul class="nav navbar-nav">
             <li><a href="getting-started.html">Getting started</a></li>
-            <li><a href="#">Try it</a></li>
+            <li><a href="try.html">Try it</a></li>
             <li><a href="demo.html">Examples</a></li>
-            <!--            <li><a href="docs/">Docs</a></li>
-                        <li class="dropdown">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                          <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
-                          </ul>
-                        </li>-->
-          </ul>
+            <li><a href="generator.html">JSON generator</a></li>
+    <li><a onClick="ga('send', 'event', 'Downloads', 'Click', '/Protael.zip');" href="Protael.zip" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
+         </ul>
         </div><!--/.navbar-collapse -->
       </div></div>
     <div class="container-fluid">
@@ -234,7 +284,6 @@
             </fieldset>
 
             <div class="panel-group" id="accordion">
-
               <fieldset> <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
@@ -257,9 +306,7 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
-                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseMark">
-                        Markers
-                      </a>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseMark">Markers</a>
                     </h4>
                   </div>
                   <div id="collapseMark" class="panel-collapse collapse"><div class="panel-body">
@@ -274,7 +321,7 @@
                       </div>
                       <div class="row rowgrid" id="markersGrid">
                         <div class="form-group row">
-                          <div class="col-sm-2">    
+                          <div class="col-sm-2">
                             <select class="form-control input-sm" name="type">
                               <option value="glycan">Glycan</option>
                               <option value="oliglycan">Oliglycan</option>
@@ -284,10 +331,10 @@
                             </select>
                           </div>
                           <div class="col-sm-2">
-                            <input class="form-control input-sm" name="x"  
+                            <input class="form-control input-sm" name="x"
                                    min="0" type="number" />
                           </div>
-                          <div class="col-sm-2">    
+                          <div class="col-sm-2">
                             <select class="form-control input-sm" name="position">
                               <option value="top">Top</option>
                               <option value="bottom">Bottom</option>
@@ -306,6 +353,7 @@
                   </div>
                 </div>
               </fieldset>
+
 
               <fieldset>
                 <div class="panel panel-default">
@@ -332,11 +380,11 @@
                             <input class="form-control input-sm"  name="type" type="text" />
                           </div>
                           <div class="col-sm-2">
-                            <input class="form-control input-sm" name="s"  
+                            <input class="form-control input-sm" name="s"
                                    min="0" type="number" />
                           </div>
                           <div class="col-sm-2">
-                            <input class="form-control input-sm" name="e"  
+                            <input class="form-control input-sm" name="e"
                                    min="0" type="number" />
                           </div>
                           <div class="col-sm-2">
@@ -353,6 +401,81 @@
                       </div></div>
                   </div>
                 </div>
+              </fieldset>
+
+              <fieldset>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOFeatur">Regions</a>
+                    </h4>
+                  </div>
+                  <div id="collapseOFeatur" class="panel-collapse collapse"><div class="panel-body">     
+                      <p>Regions are marked areas on the main protein sequence</p>
+
+                      <div class="row">
+                        <div class="col-sm-2"><label>Label</label></div>
+                        <div class="col-sm-2"><label>Start</label></div>
+                        <div class="col-sm-2"><label>End</label></div>
+                        <div class="col-sm-2"><label>Color</label></div>
+                      </div>
+                      <div class="row rowgrid" id="regionsGrid">
+                        <div class="form-group row">
+                          <div class="col-sm-2">
+                            <input class="form-control input-sm"  name="label" type="text" />
+                          </div>
+                          <div class="col-sm-2">
+                            <input class="form-control input-sm" name="s"
+                                   min="0" type="number" />
+                          </div>
+                          <div class="col-sm-2">
+                            <input class="form-control input-sm" name="e"
+                                   min="0" type="number" />
+                          </div>
+                          <div class="col-sm-2">
+                            <button type='button' class='btn btn-default btn-sm colorpick' name='c1'>Color</button>
+                          </div>
+                          <div class="col-sm-2">
+                            <button type='button' class='btn btn-default btn-xs' onclick="addRow($(this).parents('.rowgrid'))">+</button>
+                            <button type='button' class='btn btn-default btn-xs' onclick="removeRow($(this).parents('.form-group'))">-</button>
+                          </div>
+                        </div>
+                      </div></div>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset> <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseGraphs">
+                        Graphs</a>
+                    </h4>
+                  </div>
+                  <div id="collapseGraphs" class="panel-collapse collapse"><div class="panel-body">
+                      <div class="row rowgrid" id="graphsGroup">
+                        <div class="form-group">
+                          <label for="inpGraphData">Graphs data (comma-separated list of values)</label>
+                          <input type="text" class="form-control input-sm" name="data" placeholder="Graph values">
+
+                          <div class="row">
+                            <div class="col-sm-4">
+                              <input class="form-control input-sm"  name="label" type="text" placeholder="Graph label" /></div>
+                            <div class="col-sm-4">
+                              <label>Colors:</label>
+                              <button type='button' class='btn btn-default btn-sm colorpick' name='c1'>1</button>
+                              <button type='button' class='btn btn-default btn-sm colorpick' name='c2'>2</button>
+                              <button type='button' class='btn btn-default btn-sm colorpick' name='c3'>3</button>
+                            </div>
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-2">
+                              <button type='button' class='btn btn-default btn-xs' onclick="addRow($(this).parents('.rowgrid'))">+</button>
+                              <button type='button' class='btn btn-default btn-xs' onclick="removeRow($(this).parents('.form-group'))">-</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div></div>
               </fieldset>
             </div>             <!--accordion-->
           </form>

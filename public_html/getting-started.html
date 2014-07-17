@@ -43,7 +43,6 @@
     <script type="text/javascript" src="js/protael.0.1.0.min.js"></script>
 
     <script>
-
       var seq = "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGA",
               myProtein = {
                 "sequence": seq,
@@ -305,19 +304,12 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">            
-            <li><a href="#">Getting started</a></li>
+            <li><a href="getting-started.html">Getting started</a></li>
             <li><a href="try.html">Try it</a></li>
             <li><a href="demo.html">Examples</a></li>
-            <!--            <li><a href="docs/">Docs</a></li>
-                        <li class="dropdown">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                          <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
-                          </ul>
-                        </li>-->
+            <li><a href="generator.html">JSON generator</a></li>
+            <li><a onClick="ga('send', 'event', 'Downloads', 'Click', '/Protael.zip');" href="Protael.zip" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
+
           </ul>
         </div><!--/.navbar-collapse -->
       </div>
@@ -341,8 +333,17 @@
           <div><h1 class="page-header">Getting started</h1>
             <div class="alert alert-info"><span class="glyphicon glyphicon-exclamation-sign"></span> Protael requires 
               <a class="alert-link" href="http://jquery.com/download/" target="_blank">JQuery</a>, <a class="alert-link" href="http://jqueryui.com/download" target="_blank">JQueryUI</a> and <a class="alert-link" href="http://snapsvg.io" target="_blank">SnapSVG</a> to run.</div>
-
-            Download required libraries and Protael <a href="http://proteins.burnham.org:8080/Protael/css/Protael.css">CSS</a> and <a href="http://proteins.burnham.org:8080/Protael/js/protael.0.1.0.min.js">JS</a>.
+            <h3 style="padding-top:10px;">Quick start</h3>  <ol>
+              <li>Download Protael <a href="http://proteins.burnham.org:8080/Protael/Protael.zip">starter project</a>.<br />
+              <li>Unpack <code>Protael.zip</code> to any location (you don't need server to run it). 
+                Starter project contains JS and CSS files as well as a basic HTML file where you need to edit only protein data. 
+              </li>
+              <li>Download <a class="alert-link" href="http://snapsvg.io" target="_blank">SnapSVG</a>
+                library and place <code>snap.svg-min.js</code> file into <code>Protael/js/</code> folder</li>
+              <li>JQuery and JQueryUI will be autoloaded from CDN. If you want to run Protael offline you will have to 
+                download these libraries and edit paths accordingly.</li>
+              <li>Create your protein JSON object (hint: use our <a href="generator.html">JSON generator</a>) and paste it into starter HTML file.</li>
+            </ol> 
             <div>
               <h3 id="basic">Let's create very basic visualization</h3>
               <pre class="prettyprint" style="height:300px; overflow:scroll">
