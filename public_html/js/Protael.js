@@ -906,7 +906,7 @@ var Protael = (function() {
         }
 
         paperproto.quantTrack = function(qtrack, topY, width, height) {
-         //    console.log("Drawing qtrack: " + qtrack.values);
+            //    console.log("Drawing qtrack: " + qtrack.values);
             var //x = [],
                     i, j, jj,
                     c = qtrack.color || "#F00",
@@ -926,7 +926,7 @@ var Protael = (function() {
                 qtrack.values[i] = 0;
             }
 
-             //TODO: use only one property instead of two
+            //TODO: use only one property instead of two
             if (!qtrack.values && qtrack.data) {
                 qtrack.values = (qtrack.data.indexOf(',') > 0) ? qtrack.data
                         .split(',') : qtrack.data.split('');
@@ -1419,6 +1419,9 @@ var Protael = (function() {
                     // TODO: store as variable?
                     wd = $('#' + this.container + ' .protael_resizable').width(),
                     center = this.toOriginalX(scr + wd / 2);
+            if (center > this.W) {
+                center = this.W / 2;
+            }
             if (this.controlsEnabled) {
                 this.selectSlider.slider("values", [center - 1, center + 2]);
             }
