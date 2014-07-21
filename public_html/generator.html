@@ -30,6 +30,7 @@
 
     <link rel="stylesheet" href="css/main.css">
 
+        <script type="text/javascript" src="js/protael.0.1.0.min.js"></script>
     <style>
 
       .seqColorpicker, .colorpick{
@@ -45,24 +46,23 @@
     <script>
       // Ok, I know that all this processing is not the best, will think about it later
 
-      function includeProtael() {
-
-        // script will load dev version fo protael on localhost
-        // and minified on server
-        var script = document.createElement('script');
-        script.type = "text/javascript";
-        if (location.hostname != "localhost")
-        {
-          script.src = "js/protael.0.1.0.min.js";
-        } else {
-          script.src = "js/Protael.js";
-        }
-        document.getElementsByTagName('head')[0].appendChild(script);
-      }
+//      function includeProtael() {
+//        // script will load dev version fo protael on localhost
+//        // and minified on server
+//        var script = document.createElement('script');
+//        script.type = "text/javascript";
+//        if (location.hostname != "localhost")
+//        {
+//          script.src = "js/protael.0.1.0.min.js";
+//        } else {
+//          script.src = "js/Protael.js";
+//        }
+//        document.getElementsByTagName('head')[0].appendChild(script);
+//      }
 
       $(document)
               .ready(function() {
-                includeProtael();
+//                includeProtael();
                 initCPickers();
                 $("#errorMsg").hide();
                 $('#inpSeqCol').bind('keypress', function(e) {
@@ -79,7 +79,10 @@
 
       var proteinJson = {},
               seqColors = {},
-              markers = [], bridges = [], graphs = [], regions = [];
+              markers = [],
+              bridges = [],
+              graphs = [],
+              regions = [];
       seqColors.colors = {};
       seqColors.data = '';
       function editJson() {
@@ -104,7 +107,7 @@
         $(".protael_resizable").remove();
         $("#errorMsg").hide();
         try {
-          var t = proteinJson; //JSON.parse($("#codeTextArea").val());
+          var t = proteinJson;
 
           try {
             Protael(t, "protaelHolder", "100%", "100%", true).draw();
@@ -410,7 +413,7 @@
                       <a data-toggle="collapse" data-parent="#accordion" href="#collapseOFeatur">Regions</a>
                     </h4>
                   </div>
-                  <div id="collapseOFeatur" class="panel-collapse collapse"><div class="panel-body">     
+                  <div id="collapseOFeatur" class="panel-collapse collapse"><div class="panel-body">
                       <p>Regions are marked areas on the main protein sequence</p>
 
                       <div class="row">

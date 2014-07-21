@@ -34,27 +34,12 @@
     <script type="text/javascript" src="http://proteins.burnham.org:8080/Protael/js/snap.svg-min.js"></script>
     <link rel="stylesheet" href="css/main.css">
 
-    <script>
-      function includeProtael() {
-
-        // script will load dev version fo protael on localhost 
-        // and minified on server
-        var script = document.createElement('script');
-        script.type = "text/javascript";
-        if (location.hostname != "localhost")
-        {
-          script.src = "js/protael.0.1.0.min.js";
-        } else {
-          script.src = "js/Protael.js";
-        }
-        document.getElementsByTagName('head')[0].appendChild(script);
-      }
-    </script>
+        <script type="text/javascript" src="js/protael.0.1.0.min.js"></script>
 
     <script>
       $(document)
               .ready(function() {
-                includeProtael();
+               
                 $("#errorMsg").hide();
 
                 if (localStorage.testJson) {
