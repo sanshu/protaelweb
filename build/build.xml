@@ -9,7 +9,7 @@
     <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask"
              classpath="./tools/compiler.jar"/>
 
-    <target name="compile">
+<!--    <target name="compile">
         <jscomp compilationLevel="simple" warning="default" 
                 debug="false" output="${dir.js}/protael.0.1.0.min.js">
             <sources dir="${dir.js}">
@@ -25,14 +25,32 @@
             <fileset dir="${base}" includes="css/Protael.css"/>            
         </zip>
     </target>
+    -->
+    
+    <property name="protaelJSpath" value="../../ProtaelJS/public_html/"/>
+    
+    <target name="buildJS">
+        <exec executable="/bin/bash" dir="${protaelJSpath}">
+            <arg value="-c"/>
+        <arg value="export PATH=/usr/local/bin/:$PATH; /usr/local/bin/grunt"/>
+        </exec>
+    </target>
+
+    <target name="copyFromProtaelJS" depends="buildJS">
+        <!--       
+        We need to copy protael files from ProtaelJS project after grunt was run there
+        -->
+        <copy file="${protaelJSpath}/dist/protael.0.1.0.min.js" todir="${dir.js}"/>
+        <copy file="${protaelJSpath}/dist/Protael.zip" todir="${base}"/>
+    </target>    
            
-    <target name="deploy" depends="zip">
+    <target name="deploy" depends="copyFromProtaelJS">
         <echo message="Deploying.." />
         <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/" verbose="true">
-            <fileset dir="public_html/">
-                 <exclude name="**/protaelSeed.html"/>
+            <fileset dir="${base}/">
+                <exclude name="**/protaelSeed.html"/>
                 <include name="**/*.html"/>
-                 <include name="**/*.zip"/>
+                <include name="**/*.zip"/>
             </fileset>
         </scp>
         <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/js/" verbose="true">
