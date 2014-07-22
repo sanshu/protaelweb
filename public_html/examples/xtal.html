@@ -31,8 +31,7 @@
                         }).done(
                                 function(protein) {
                                   protein3 = protein;
-                                  Protael(protein, "svgholder3", "100%",
-                                          "100%", true).draw();
+                                  Protael(protein, "svgholder3",  true).draw();
                                 });
                       });
     </script>
@@ -52,7 +51,7 @@
                 format: "json"
             }).done(
                 function(protein3) {
-                    Protael(protein3, "svgholder3", "100%", "100%", true).draw();
+                    Protael(protein3, "svgholder3",  true).draw();
                 });
         });
       </pre>

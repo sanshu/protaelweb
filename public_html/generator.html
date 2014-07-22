@@ -110,7 +110,7 @@
           var t = proteinJson;
 
           try {
-            Protael(t, "protaelHolder", "100%", "100%", true).draw();
+            Protael(t, "protaelHolder", true).draw();
           } catch (err) {
             console.log(err);
             $("#errorMsg").html("Unable to display protein: " + err.name + ": " + err.message);

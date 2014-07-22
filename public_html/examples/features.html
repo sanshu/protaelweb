@@ -834,8 +834,7 @@
       $(document)
               .ready(
                       function() {
-                        Protael(protein, "svgholder", "100%", "100%",
-                                true).draw();
+                        Protael(protein, "svgholder",true).draw();
 
                         Snap.selectAll(".pfam_feature").forEach(
                                 function(t) {
@@ -858,7 +857,7 @@
   <body onload="prettyPrint()">
     <div>
       <h1 id="features">Features and quant tracks</h1>
-      <div><p class="lead">Static protein object, feature tracks, quantitative tracks, coloring sequence by SS predictions, 100% width/height  </p>             
+      <div><p class="lead">Static protein object, feature tracks, quantitative tracks, coloring sequence by SS predictions</p>             
         <div id="svgholder"></div>
         <h4>CSS</h4>
         <pre class="prettyprint lans-css">&lt;style type="text/css"&gt;
@@ -980,8 +979,7 @@
         </pre>     
         <h4>Javascript</h4>
         <pre class="prettyprint "  style="overflow:scroll">    /* display Protael */        
-    Protael(protein, "svgholder", "100%", "100%",
-        true).draw(); 
+    Protael(protein, "svgholder", true).draw(); 
     
     /* toggle feature class on click */
     Snap.selectAll(".pfam_feature").forEach(

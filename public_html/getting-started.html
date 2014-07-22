@@ -256,13 +256,13 @@
                 var myProtein2 = {
                   "sequence": "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGA",
                 },
-                        p1 = Protael(myProtein, "myProtaelContainer", "100%", "100%", true).draw(),
-                        p2 = Protael(myProtein2, "myProtaelContainer2", "100%", "100%", true).setColoringScheme("Clustal").draw(),
-                        p3 = Protael(myProtein3, "myProtaelContainer3", "100%", "100%", true).draw(),
-                        p4 = Protael(myProtein4, "myProtaelContainer4", "100%", "100%", true).draw(),
-                        p5 = Protael(myProtein5, "myProtaelContainer5", "100%", "100%", true).draw(),
-                        p6 = Protael(myProtein6, "myProtaelContainer6", "100%", "100%", true).draw(),
-                        p7 = Protael(myProtein7, "myProtaelContainer7", "100%", "100%", true).draw();
+                        p1 = Protael(myProtein, "myProtaelContainer", true).draw(),
+                        p2 = Protael(myProtein2, "myProtaelContainer2", true).setColoringScheme("Clustal").draw(),
+                        p3 = Protael(myProtein3, "myProtaelContainer3", true).draw(),
+                        p4 = Protael(myProtein4, "myProtaelContainer4", true).draw(),
+                        p5 = Protael(myProtein5, "myProtaelContainer5", true).draw(),
+                        p6 = Protael(myProtein6, "myProtaelContainer6", true).draw(),
+                        p7 = Protael(myProtein7, "myProtaelContainer7", true).draw();
               });
 
     </script>
@@ -335,7 +335,7 @@
               <li>Unpack <code>Protael.zip</code> to any location (you don't need server to run it). 
                 Starter project contains JS and CSS files as well as a basic HTML file where you need to edit only protein data. 
               </li>
-             
+
               <li>JQuery, JQueryUI and SnapSVG will be autoloaded from CDN. If you want to run Protael offline you will have to 
                 download these libraries and edit paths accordingly.</li>
               <li>Create your protein JSON object (hint: use our <a href="generator.html">JSON generator</a>) and paste it into starter HTML file.</li>
@@ -363,13 +363,13 @@
         
         // create Protael instance
         //Protael (proteinObject, containerID, width, height, enableControls)
-        var p = Protael(myProtein, "myProtaelContainer", "100%", "100%", true); 
+        var p = Protael(myProtein, "myProtaelContainer", true); 
 
         //draw your protein
         p.draw();
 
         // you can also chain method calls:
-        // var p = Protael(myProtein, "myProtaelContainer", "100%", "100%", true).draw();
+        // var p = Protael(myProtein, "myProtaelContainer", true).draw();
       });
     &lt;/script&gt;
 &lt;/head>
@@ -389,7 +389,7 @@
             <div> <h3 id="colors">Let's add some color</h3>
               <p>There are 5 predefined coloring schemas you can choose from: Clustal, Lesk, Cinema, MAEditor, ALI</p>
               <pre class="prettyprint">
-        var p = Protael(myProtein, "myProtaelContainer", "100%", "100%", true); 
+        var p = Protael(myProtein, "myProtaelContainer", true); 
 
         //set residues coloring scheme
         p.setColoringScheme("Clustal");
@@ -397,7 +397,7 @@
         p.draw();
 
         // or with chaining:
-        //var p = Protael(myProtein, "myProtaelContainer", "100%", "100%", true)
+        //var p = Protael(myProtein, "myProtaelContainer", true)
         //    .setColoringScheme("Clustal").draw();</pre>
 
               <p>That's how it looks:</p><div id="myProtaelContainer2"></div>

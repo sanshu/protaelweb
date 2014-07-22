@@ -11,14 +11,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.1.1/flatly/bootstrap.min.css">
-
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/main.css">
 
     <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-    <!--JQuery and jQueryUI are required:-->
-    <link rel="stylesheet"
-          href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
     <script type="text/javascript"
     src="http://code.jquery.com/jquery-1.11.1.min.js"></script> 
 
@@ -26,17 +23,9 @@
     src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
     <!-- Snap 0.3.0 -->
     <script type="text/javascript" src="http://proteins.burnham.org:8080/Protael/js/snap.svg-min.js"></script>
-    <link rel="stylesheet" href="css/main.css">
-
-    <!-- full -->
-    <!--<script type="text/javascript" src="js/Protael.js"></script>-->
-
-    <!-- min -->
     <script type="text/javascript" src="js/protael.0.1.0.min.js"></script>
 
-
     <script>
-
       function tryIt(protein) {
         if (protein) {
           localStorage.testJson = JSON.stringify(protein, undefined, 2);
@@ -51,7 +40,6 @@
               .ready(
                       function() {
                         var h = window.location.hash;
-                        console.log(h);
                         if (h.length) {
                           loadEx(h.substring(1));
                         } else {
@@ -61,7 +49,6 @@
     </script>
   </head>
   <body onload="prettyPrint()">
-
     <!--[if lt IE 7]>
   <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->

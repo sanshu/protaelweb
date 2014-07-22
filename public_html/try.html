@@ -53,7 +53,7 @@
           var t = JSON.parse($("#codeTextArea").val());
 
           try {
-            Protael(t, "protaelHolder", "100%", "100%", true).draw();
+            Protael(t, "protaelHolder", true).draw();
           } catch (err) {
             console.log(err);
             $("#errorMsg").html("Unable to display protein: " + err.message);

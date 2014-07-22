@@ -10,9 +10,10 @@
 .protael_resizable {
     padding: .1em;
     padding-bottom: .7em;
-    overflow: hidden
-;
+    overflow: hidden        ;
     margin-bottom: 30px;
+    width:100%;
+    height:100%;
 }
 .protael_zoomslider{
     width: 200px; 
@@ -70,11 +71,11 @@ svg{
 /* Features*/
 .pl-ftrack{
     text-anchor: middle;
-/*    font-style: normal; 
-    font-variant: normal; 
-    font-weight: normal; 
-    font-size: 7px; 
-    line-height: normal; */
+    /*    font-style: normal; 
+        font-variant: normal; 
+        font-weight: normal; 
+        font-size: 7px; 
+        line-height: normal; */
     font-family: Arial;
 }
 
@@ -138,3 +139,11 @@ svg{
     stroke: #ccc
 }
 
+.pl-bridge {
+    font-size: 10px;
+    font-family: Arial;
+    text-anchor: middle;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
