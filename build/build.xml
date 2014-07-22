@@ -27,7 +27,7 @@
     </target>
     -->
     
-    <property name="protaelJSpath" value="../../ProtaelJS/public_html/"/>
+    <property name="protaelJSpath" value="../../ProtaelJS/"/>
     
     <target name="buildJS">
         <exec executable="/bin/bash" dir="${protaelJSpath}">
@@ -41,6 +41,7 @@
         We need to copy protael files from ProtaelJS project after grunt was run there
         -->
         <copy file="${protaelJSpath}/dist/protael.0.1.0.min.js" todir="${dir.js}"/>
+        <copy file="${protaelJSpath}/dist/protael.css" todir="${dir.css}"/>
         <copy file="${protaelJSpath}/dist/Protael.zip" todir="${base}"/>
     </target>    
            
