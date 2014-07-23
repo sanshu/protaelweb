@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" href="css/main.css">
 
-        <script type="text/javascript" src="js/protael.0.1.0.min.js"></script>
+    <script type="text/javascript" src="js/protael.0.1.0.min.js"></script>
     <style>
 
       .seqColorpicker, .colorpick{
@@ -269,8 +269,8 @@
             <li><a href="try.html">Try it</a></li>
             <li><a href="demo.html">Examples</a></li>
             <li><a href="generator.html">JSON generator</a></li>
-    <li><a onClick="ga('send', 'event', 'Downloads', 'Click', '/Protael.zip');" href="Protael.zip" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
-         </ul>
+            <li><a onClick="ga('send', 'event', 'Downloads', 'click', '/Protael.zip');" href="Protael.zip" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
+          </ul>
         </div><!--/.navbar-collapse -->
       </div></div>
     <div class="container-fluid">
@@ -296,7 +296,7 @@
                   </div>
                   <div id="collapseSeqColors" class="panel-collapse collapse"><div class="panel-body">
                       <div class="form-group ">
-                        <label for="inpSeqCol">Sequence colors data</label>
+                        <label for="inpSeqCol">Sequence colors data</label>&nbsp;<a href="getting-started.html#colorsdata" target="info"><span class="glyphicon glyphicon-question-sign"></span></a>
                         <input type="text" class="form-control input-sm" id="inpSeqCol" placeholder="Enter sequence color data and press ENTER">
                       </div>
                       <div class="form-group" id="seqColorInputs">
@@ -314,7 +314,7 @@
                   </div>
                   <div id="collapseMark" class="panel-collapse collapse"><div class="panel-body">
                       <p>Please note that in order  to keep this form simple all markers are black by default,
-                        if you want to change color you have to edit JSON manually: <code>"color": "your_color_here"</code></p>
+                        if you want to change color you have to edit JSON manually: <code>"color": "your_color_here"</code> <a href="getting-started.html#markers" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></p>
                       <div class="row ">
                         <div class="col-sm-2"><label>Type</label></div>
                         <div class="col-sm-2"><label>X</label></div>
@@ -369,7 +369,7 @@
                   </div>
                   <div id="collapseBridg" class="panel-collapse collapse"><div class="panel-body">
                       <p>Please note that in order to keep this form simple all bridges are black by default,
-                        if you want to change color you have to edit JSON manually: <code>"color": "your_color_here"</code></p>
+                        if you want to change color you have to edit JSON manually: <code>"color": "your_color_here"</code> <a href="getting-started.html#bridges" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></p>
                       <div class="row">
                         <div class="col-sm-2"><label>Type/label</label></div>
                         <div class="col-sm-2"><label>Start</label></div>
@@ -455,11 +455,10 @@
                     </h4>
                   </div>
                   <div id="collapseGraphs" class="panel-collapse collapse"><div class="panel-body">
+                      Graphs data&nbsp;<a href="getting-started.html#graphs" target="info"><span class="glyphicon glyphicon-question-sign"></span></a>
                       <div class="row rowgrid" id="graphsGroup">
                         <div class="form-group">
-                          <label for="inpGraphData">Graphs data (comma-separated list of values)</label>
-                          <input type="text" class="form-control input-sm" name="data" placeholder="Graph values">
-
+                          <br />  <input type="text" class="form-control input-sm" name="data" placeholder="Graph values">
                           <div class="row">
                             <div class="col-sm-4">
                               <input class="form-control input-sm"  name="label" type="text" placeholder="Graph label" /></div>
@@ -501,7 +500,7 @@
       </div> <div class="row ">
         <div class="col-md-12">
           <h3>This is your JSON:</h3>
-          <p>You can copy it into you webpage</p>
+          <p>You can copy it into your webpage</p>
           <textarea id="codeTextArea" class="form-control" style="width:100%; height:200px;font-family: monospace" disabled></textarea></div>
       </div>
     </div>
