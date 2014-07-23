@@ -253,10 +253,11 @@
   <body onload="prettyPrint()">
     <div>
       <h1 id="bnab">HIV immunogen BG505 SOSIP.664 gp140</h1>
-      <div>Static protein object,markers (glycans and ss bridges), fixed width/height, disabled controls</div>
-      <div id="svgholder2"></div>
-      <h4>CSS</h4>
-      <pre class="prettyprint">    &lt;style type="text/css"&gt;
+      <div><p class="lead">Static protein object, markers (glycans and ss bridges), fixed width/height</p>
+        <p>More information about <a href="getting-started.html#markers">markers</a> and  <a href="getting-started.html#bridges">bridges</a> </p>
+        <div id="svgholder2"></div>
+        <h4>CSS</h4>
+        <pre class="prettyprint">    &lt;style type="text/css"&gt;
             /* change background color */
             #svgholder2 svg{
                 background: #EFEFEF;
@@ -269,9 +270,9 @@
                 stroke: red
             }
     &lt;/style&gt;
-      </pre>            
-      <h4>JSON Object</h4>
-      <pre class="prettyprint" style="height:300px; overflow:scroll">      
+        </pre>            
+        <h4>JSON Object</h4>
+        <pre class="prettyprint" style="height:300px; overflow:scroll">      
 var protein2 = {
         "sequence": "                              TEKLWVTVYYGVPVWKEATT...",
         "ftracks": [],
@@ -393,23 +394,30 @@ var protein2 = {
             "size": 10
         }
     };</pre>
-      <h4>Javascript</h4>
-      <pre class="prettyprint ">
+        <h4>Javascript</h4>
+        <pre class="prettyprint ">
     Protael(protein2, "svgholder2", "800px", "150px", false).draw();</pre>
-
+      </div>
       <button type="submit" class="btn btn-default" onclick="tryIt(protein2)">Try it yourself</button>
 
     </div>
 
-   <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <script>
+      (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-  ga('create', 'UA-50502533-2', 'auto');
-  ga('send', 'pageview');
+      ga('create', 'UA-50502533-2', 'auto');
+      ga('send', 'pageview');
 
-</script>
+    </script>
   </body>
 </html>
