@@ -9,17 +9,8 @@
     <title>Try it : Protael</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <style>
-      body {
-        padding-top: 50px; 
-        padding-bottom: 20px;
-      }
-
-    </style>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.1.1/flatly/bootstrap.min.css">
-
     <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 
     <!--JQuery and jQueryUI are required:-->
@@ -34,12 +25,12 @@
     <script type="text/javascript" src="http://proteins.burnham.org:8080/Protael/js/snap.svg-min.js"></script>
     <link rel="stylesheet" href="css/main.css">
 
-        <script type="text/javascript" src="js/protael.0.1.0.min.js"></script>
+    <script type="text/javascript" src="js/protael.0.1.0.min.js"></script>
 
     <script>
       $(document)
               .ready(function() {
-               
+
                 $("#errorMsg").hide();
 
                 if (localStorage.testJson) {
@@ -89,7 +80,7 @@
             <li><a href="try.html">Try it</a></li>
             <li><a href="demo.html">Examples</a></li>
             <li><a href="generator.html">JSON generator</a></li>
-   <li><a onClick="ga('send', 'event', 'Downloads', 'Click', '/Protael.zip');" href="Protael.zip" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
+            <li><a onClick="ga('send', 'event', 'Downloads', 'Click', '/Protael.zip');" href="Protael.zip" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
           </ul>
         </div><!--/.navbar-collapse -->
       </div></div>
@@ -141,4 +132,6 @@
       ga('create', 'UA-50502533-2', 'auto');
       ga('send', 'pageview');
     </script>
+
+    <script type="text/javascript" async="" src="js/vendor/FileSaver_Blob.js"></script>
   </body></html>

@@ -34,7 +34,7 @@
 }
 
 .featurette-divider {
-  margin-top: 5px; /* Space out the Bootstrap <hr> more */
+    margin-top: 5px; /* Space out the Bootstrap <hr> more */
 }
 /*
  * Main content
@@ -52,18 +52,18 @@
 .main .page-header {
     margin-top: 0;
 }
- body {
-        padding-top: 60px;
-        padding-bottom: 20px;
-      }
+body {
+    padding-top: 60px;
+    padding-bottom: 20px;
+}
 
- h3, .h3 {
-margin-top: 0px;
-padding-top:60px;
+h3, .h3 {
+    margin-top: 0px;
+    padding-top:60px;
 }
 
 .panel-group .panel {
-margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 
