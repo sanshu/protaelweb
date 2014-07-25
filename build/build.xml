@@ -50,14 +50,14 @@
            
     <target name="deploy" depends="copyFromProtaelJS">
         <echo message="Deploying.." />
-        <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/" verbose="true">
+        <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/" verbose="false">
             <fileset dir="${base}/">
                 <exclude name="**/protaelSeed.html"/>
                 <include name="**/*.html"/>
                 <include name="**/*.zip"/>
             </fileset>
         </scp>
-        <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/js/" verbose="true">
+        <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/js/" verbose="false">
             <fileset dir="${dir.js}">
                 <include name="**/protael.0.1.0.min.js"/>
                 <include name="**/main.js"/>
@@ -65,18 +65,18 @@
             </fileset>
             
         </scp>
-        <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/js/vendor" verbose="true">
+        <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/js/vendor" verbose="false">
             <fileset dir="${dir.js}/vendor">
                 <include name="**/*.js"/>
             </fileset>
             
         </scp>
-        <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/css/" verbose="true">
+        <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/css/" verbose="false">
             <fileset dir="${dir.css}">
                 <include name="**/*.css"/>
             </fileset>
         </scp>
-        <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/img/" verbose="true">
+        <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/img/" verbose="false">
             <fileset dir="${dir.img}">
                 <include name="**/*.*"/>
             </fileset>
