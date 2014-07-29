@@ -1,4 +1,3 @@
-
 @import "protael.css";
 @import "sunburst.css";
 
@@ -36,6 +35,7 @@
 .featurette-divider {
     margin-top: 5px; /* Space out the Bootstrap <hr> more */
 }
+
 /*
  * Main content
  */
@@ -60,6 +60,10 @@ body {
 h3, .h3 {
     margin-top: 0px;
     padding-top:60px;
+}
+h4, .h4 {
+    margin-top: 0px;
+    padding-top:20px;
 }
 
 .panel-group .panel {
