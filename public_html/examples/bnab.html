@@ -367,43 +367,35 @@ var protein2 = {
         "sequence": "                              TEKLWVTVYYGVPVWKEATT...",
         "ftracks": [],
         "markers": [{
-                "type": "gap",
-                "x": 511.5,
-                "label": "511*512",
-                "color": "#1240ab"
-            }, {
-                "type": "glycan",
-                "x": 88
-            }, {
-                "type": "glycan",
-                "x": 136
-            }, {
-                "type": "glycan",
-                "x": 141
-            }, {
-                "type": "glycan",
-                "x": 156
-            }, {
-                "type": "glycan",
-                "x": 160
-            }, {
-                "type": "unknownglycan",
-                "x": 186
-            }, {
-                "type": "glycan",
-                "x": 190
-            }, {
-                "type": "glycan",
-                "x": 197
-            }, {
-                "type": "oliglycan",
-                "x": 230
-            },
+            "type": "gap",
+            "x": 511.5,
+            "label": "511*512",
+            "color": "#1240ab"
+          }, {
+            "type": "glycan",
+            "x": 88,
+            "data": {
+              "Description": "Glycan at 88 position",
+              "Entropy score: Subtype B": 0.04,
+              "Entropy score: Subtype C": 0.05,
+              "Entropy score: Group M": 0.05
+            }
+          }, 
             // ...and some more...
             {
-                "type": "glycan",
-                "x": 468
-            }, {
+            "type": "glycan",
+            "x": 276,
+            "data": {
+              "Description": "Glycan at 276 position",
+              "Entropy score: Subtype B": 0.06,
+              "Entropy score: Subtype C": 0.17,
+              "Entropy score: Group M": 0.12,
+              "VRC01 contacts": "VRC01",
+              "NIH45-46 contacts": "NIH45-46 276N L 89Y 3.5 ; NIH45-46, VRC01 light chains interact with carbohydrate",
+              "Mutations affecting PGV04, b12, VRC01, CD4-IgG": "N276A reduces PGV04 neutralization, enhances VRC01, no impact CD4-IgG or b12",
+              "Signature prediction": "8ANC195: glycosylation at T276 is associated with increased susceptibility to neutralization; intermediate quality of support."
+            }
+          },  {
                 "label": "T322N",
                 "type": "stick",
                 "x": 322,
