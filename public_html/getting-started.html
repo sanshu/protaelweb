@@ -128,32 +128,123 @@
               }]
           }]
       },
-      chart = [0.7, 0.5, 0.4, 0.5, 1.0, 0.9, 0.8, 0.7, 0.4, 0.2,
-        0.1, 0.0, 0.0, 1.0, 0.9, 0.7, 0.5, 0.3, 0.1, 0,
-        -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 0, 0.8,
-        0.9, 0.96, 0.96, 0.95, 0.0, 0.88, 0.8, 0.3, 0.73, 0.7,
-        0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998, 0.998,
-        -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0, 0.998,
-        0.7, 0.75, 0.6, 0.3, 0.2, 1, 1, 0, 0, 0,
-        0.6, 0.995, 0.998, 0.998, 0.998, -0.4, -0.4, -0.8, -0.2, -1],
               myProtein5 = {
                 "sequence": seq,
                 "qtracks": [
                   {
-                    "label": "Single color",
+                    "label": "Single color; area",
                     "color": "yellow",
-                    "values": chart
+                    "type": "area",
+                    "values": [
+                      1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                      0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                      0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                      0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                      0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                      0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                      0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                    ],
+                    "topY": 65
                   },
                   {
-                    "label": "3-points gradient fill",
-                    "color": ["yellow", "green", "red"],
-                    "values": chart.slice(0)
+                    "label": "3-points gradient fill; area-spline",
+                    "color": [
+                      "yellow",
+                      "green",
+                      "red"
+                    ],
+                    "type": "area-spline",
+                    "values": [
+                      1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                      0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                      0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                      0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                      0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                      0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                      0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                    ]
                   },
                   {
-                    "label": "2-points gradient fill",
-                    "color": ["yellow", "red"],
-                    "values": chart.slice(0)
-                  }]},
+                    "label": "2-points gradient fill; area-spline",
+                    "color": [
+                      "yellow",
+                      "red"
+                    ],
+                    "values": [
+                      1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                      0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                      0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                      0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                      0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                      0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                      0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                    ]
+                  }, {
+                    "label": "Single color; spline",
+                    "color": "red",
+                    "type": "spline",
+                    "values": [
+                      1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                      0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                      0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                      0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                      0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                      0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                      0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                    ]
+                  },
+                  {
+                    "label": "3-points gradient fill; column",
+                    "color": [
+                      "yellow",
+                      "green",
+                      "red"
+                    ],
+                    "type": "column",
+                    "values": [
+                      1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                      0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                      0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                      0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                      0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                      0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                      0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                    ]
+                  },
+                  {
+                    "label": "2-points gradient fill; column",
+                    "color": [
+                      "yellow",
+                      "red"
+                    ],
+                    "type": "column",
+                    "values": [
+                      1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                      0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                      0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                      0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                      0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                      0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                      0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                    ]
+                  }, {
+                    "label": "2-points gradient; line",
+                    "color": [
+                      "green",
+                      "red"
+                    ],
+                    "type": "line",
+                    "values": [
+                      1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                      0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                      0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                      0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                      0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                      0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                      0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                    ]
+                  }
+                ]},
       myProtein6 = {
         sequence: seq,
         "markers": [{
@@ -499,41 +590,88 @@ var myProtein = {
               <hr class="featurette-divider">
             </div>
             <div>
-              <h3 id="graphs">Let's add graphs</h3>
+              <h3 id="graphs">Let's add graphs/charts</h3>
               <p>All quantitative data should go in to <code>qtracks</code> property of the protein.</p>
               <p>You can either provide array of values [1, 2, 3, 4,... ] or string with single-digit value per residue :"1234..."</p>
-              <p>There are 3 different coloring option:
-              <ol><li>Single color fill - specify color in HTML format</li>
+              <p>Currently use can use any of the following chart types:</p>
+              <ul>
+                <li><code>line</code> - basic line chart</li>
+               
+                <li><code>spline</code> - smooth lines (spline interpolation through data points)</li>
+                <li><code>area</code> - basic area chart</li>
+                <li><code>area-spline</code> - area chart using spline interpolation</li>
+                <li><code>column</code> - column chart</li>
+                  
+              </ul>
+              <p>There are 3 different coloring option which could be applied to any graph:</p>
+              <ul><li>Single color fill - specify color in HTML format</li>
                 <li>2-point gradient fill, requires 2 color values, first color for min values in the graph, second for the max value</li>
                 <li>3-point gradient fill, requires 3 color values, first color for min values in the graph, second for the zero value, thrird for the max value</li>
-
-              </ol>
+              </ul>
               <pre class="prettyprint" style="height:300px; overflow:scroll">
     var myProtein =  {
-        "sequence": "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGA",
+        "sequence": "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGA",        
         "qtracks": [
-          {
-            "label": "Single color",
-            "color": "yellow", // fill with yellow color
-            "values": [0.7, 0.5, 0.4, 0.5, 1.0, 0.9, 0.8, 0.7, 0.4, 0.2,
-              0.1, 0.0, 0.0, 1.0, 0.9, 0.7, 0.5, 0.3, 0.1, 0,
-              -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 0, 0.8,
-              0.9, 0.96, 0.96, 0.95, 0.0, 0.88, 0.8, 0.3, 0.73, 0.7,
-              0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998, 0.998,
-              -0.4, -0.4, -0.8, -1, -1, -0.8, -0.6, -0.2, 0, 0.998,
-              0.7, 0.75, 0.6, 0.3, 0.2, 1, 1, 0, 0, 0,
-              0.6, 0.995, 0.998, 0.998, 0.998,-0.4, -0.4, -0.8, -0.2, -1]
-          }, {
-            "label": "3-points gradient fill",
+        {
+            "label": "Single color; area",
+            "color": "yellow",
+            "type": "area",
+             "values": [ 1, 0.7, 0.5...]
+        },
+        {
+            "label": "3-points gradient fill; area-spline",
             // zero values are green, <0 gradient to yellow, >0 gradient to red
-            "color": ["yellow", "green", "red"], 
-            "values": [0.7, 0.5, 0.4, 0.5, 1.0,...]
-          }, {
-            "label": "2-points gradient fill",
+            "color": [
+                "yellow",
+                "green",
+                "red"
+            ],
+            "type": "area-spline",
+             "values": [ 1, 0.7, 0.5...]
+        },
+        {
+            "label": "2-points gradient fill; area-spline",
             // gradient from yellow to red, with zero values being 
             // colored differently depending on the graph values
-            "color": ["yellow",  "red"],
-            "values": [0.7, 0.5, 0.4, 0.5, 1.0, ...]
+            "color": [
+                "yellow",
+                "red"
+            ],
+             "values": [ 1, 0.7, 0.5...]
+        }, {
+            "label": "Single color; spline",
+            "color": "red",
+            "type": "spline",
+             "values": [ 1, 0.7, 0.5...]
+        },
+        {
+            "label": "3-points gradient fill; column",
+            "color": [
+                "yellow",
+                "green",
+                "red"
+            ],
+            "type": "column",
+             "values": [ 1, 0.7, 0.5...]
+        },
+        {
+            "label": "2-points gradient fill; column",
+            "color": [
+                "yellow",
+                "red"
+            ],
+            "type": "column",
+            "values": [ 1, 0.7, 0.5...]
+        }, {
+            "label": "2-points gradient; line",
+            "color": [
+                "green",
+                "red"
+            ],
+            "type": "line",
+            "values": [ 1, 0.7, 0.5...]
+        }
+    ]
           }
     ]};</pre>
 
