@@ -15,7 +15,6 @@
     <link rel="stylesheet" href ="css/bootstrap-colorpicker.min.css" />
 
     <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-    <!--JQuery and jQueryUI are required:-->
     <link rel="stylesheet"
           href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -24,211 +23,239 @@
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
 
     <script src="js/vendor/bootstrap-colorpicker.min.js"></script>
-    <!-- Snap 0.3.0 -->
     <script type="text/javascript" src="http://proteins.burnham.org:8080/Protael/js/snap.svg-min.js"></script>
 
     <link rel="stylesheet" href="css/main.css">
 
     <script type="text/javascript" src="js/protael.0.1.0.min.js"></script>
     <style>
-      .seqColorpicker, .colorpick{
+      .seqColorpicker,.gcolorpick , .colorpick{
         background-color: #fff;
         color: #000;
       }
-      .seqColorpicker:hover, .colorpick:hover{
+      .seqColorpicker:hover, .gcolorpick, .colorpick:hover{
         background-color: #fff;
         color: #000;
+      }
+      #protaelHolder{border: 2px solid #128f76; min-height: 30px}
+      #drop_zone {
+        border: 2px dashed #bbb;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        padding: 15px;
+        text-align: center;
+        color: #bbb;
+      } #drop_zone:hover {
+        border: 2px dashed #128f76;
       }
     </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.min.js"></script>
 
+    <script type='text/javascript' src="js/vendor/ko.observableDictionary.js"></script>
     <script>
-      // Ok, I know that all this processing is not the best, will think about it later
-      $(document)
-              .ready(function() {
-                initCPickers();
-                $("#errorMsg").hide();
-                $('#inpSeqCol').bind('keypress', function(e) {
-                  var code = e.keyCode || e.which;
-                  if (code != 13) { //Enter keycode
-                    return;
-                  }
-                  processSeqColors();
-                });
-              });
-
-      var proteinJson = {},
-              seqColors = {},
-              markers = [],
-              bridges = [],
-              graphs = [],
-              regions = [];
-      seqColors.colors = {};
-      seqColors.data = '';
-      function editJson() {
-        // processSeqColors();
-        proteinJson.sequence = $("#inpSeq").val();
-        proteinJson.seqcolors = seqColors;
-        saveMarkers();
-        saveBridges();
-        saveGraphs();
-        saveRegions();
-        proteinJson.markers = markers;
-        proteinJson.bridges = bridges;
-        proteinJson.qtracks = graphs;
-        proteinJson.overlayfeatures = {"label": "regions",
-          "showLabels": "true", "features": regions};
-
-        $("#codeTextArea").val(JSON.stringify(proteinJson, undefined, 2));
-        applyJSON();
-      }
-
-      function applyJSON() {
-        $(".protael_resizable").remove();
-        $("#errorMsg").hide();
-        try {
-          var t = proteinJson;
-
-          try {
-            Protael(t, "protaelHolder", true).draw();
-          } catch (err) {
-            console.log(err);
-            $("#errorMsg").html("Unable to display protein: " + err.name + ": " + err.message);
-            $("#errorMsg").show();
-          }
-        } catch (err) {
-          console.log(err);
-          $("#errorMsg").html("Invalid JSON: " + err.name + ": " + err.message);
-          $("#errorMsg").show();
+      var lastOpenedFile = '';
+      /* empty protein to bind initial form without any data*/
+      var emptyProtein = {
+        "sequence": "",
+        "seqcolors": {
+          "colors": {},
+          "data": ""
+        },
+        "markers": [{type: '', x: '', label: '', color: '#000'}],
+        "bridges": [{label: '', start: 0, end: 0, startlabel: '', endlabel: '', color: '#000'}],
+        "qtracks": [{values: '', label: '', color: ['', '', '']}],
+        "overlayfeatures": {
+          "label": "regions",
+          "showLabels": "true",
+          "features": [{label: '', start: '0', end: '0', color: '#fff'}]
         }
-      }
+      };
 
-      function processSeqColors(e) {
-        scolors = $('#inpSeqCol').val().toUpperCase();
-        seqColors.data = scolors;
-        var chars = scolors.split(''), i, l = chars.length, button;
-        // find unique chars
+      /** define ViewModel */
+      var viewModel = ko.mapping.fromJS(emptyProtein);
+      viewModel.seqcolors.colors = new ko.observableDictionary(emptyProtein.seqcolors.colors);
+      viewModel.addQtrack = function() {
+        viewModel.qtracks.push({values: '', label: '', type: '', color: ko.observableArray(['', '', ''])});
+        initgraphCPickers();
+      };
+      viewModel.removeQtrack = function(track) {
+        viewModel.qtracks.remove(track);
+      };
+      viewModel.addMarker = function() {
+        viewModel.markers.push({color: '#000'});
+        initCPickers();
+      };
+      viewModel.removeMarker = function(item) {
+        viewModel.markers.remove(item);
+      };
+      viewModel.addRegion = function() {
+        viewModel.overlayfeatures.features.push({});
+        initCPickers();
+      };
+      viewModel.removeRegion = function(item) {
+        viewModel.overlayfeatures.features.remove(item);
+      };
+      
+      viewModel.addFeature = function() {
+        viewModel.overlayfeatures.features.push({});
+        initCPickers();
+      };
+      viewModel.removeFeature = function(item) {
+        viewModel.overlayfeatures.features.remove(item);
+      };
+      viewModel.addBridge = function() {
+        viewModel.bridges.push({color: '#000'});
+        initCPickers();
+      };
+      viewModel.removeBridge = function(item) {
+        viewModel.bridges.remove(item);
+      };
+      viewModel.seqcolors.data.subscribe(function(newValue) {
+        var chars = newValue.toUpperCase().split(''), i, c, l = chars.length;
         for (i = 0; i < l; i++) {
-          if (typeof seqColors.colors[chars[i]] === 'undefined') {
-            seqColors.colors[chars[i]] = '';
+          c = chars[i];
+          if (typeof viewModel.seqcolors.colors[c] === 'undefined') {
+            // only set color if this char has no assignment yet
+            viewModel.setSeqColor(c, '#FFF');
           }
         }
-
-        $('#seqColorInputs').remove('.seqColorpicker');
-        // generate color pickers
-        for (i in seqColors.colors) {
-          $('#seqColorInputs').append("<button type='button' class='btn btn-default btn-sm seqColorpicker'>" + i + "</button>");
-        }
-
         $('.seqColorpicker').colorpicker({"color": "#FFF"}).on('changeColor', function(ev) {
           var newColor = ev.color.toHex().toString(),
                   text = $(this).text();
           $(this).css("background-color", newColor);
-          seqColors.colors[text] = newColor;
+          viewModel.setSeqColor(text, newColor);
         });
+      });
+      viewModel.setSeqColor = function(char, color) {
+        viewModel.seqcolors.colors.push(char, color);
+      };
+
+      $(document)
+              .ready(function() {
+                $("#errorMsg").hide();
+
+                ko.applyBindings(viewModel);
+
+                $('#saveJson').on('click', function() {
+                  saveJsonToFile.apply();
+                });
+                var fileInput = document.getElementById('fileInput');
+                fileInput.addEventListener('change', function(e) {
+                  var file = fileInput.files[0];
+                  lastOpenedFile = file.name;
+                  var textType = /text.*/, jsonType = 'application/json';
+                  if (file.type.match(textType) || file.type === jsonType) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                      codeTextArea.innerText = reader.result;
+                      protein = JSON.parse(reader.result);
+                      for (var q in protein.qtracks) {
+                        var color = protein.qtracks[q].color;
+                        if (!Array.isArray(color)) {
+                          protein.qtracks[q].color = [color, '', ''];
+                        } else {
+                          protein.qtracks[q].color[0] = protein.qtracks[q].color[0] || '';
+
+                          protein.qtracks[q].color[1] = protein.qtracks[q].color[1] || '';
+
+                          protein.qtracks[q].color[2] = protein.qtracks[q].color[2] || '';
+                        }
+                      }
+                      // need to process graph colors and convert single color to 
+                      ko.mapping.fromJS(protein, viewModel);
+                      initCPickers();
+                      initgraphCPickers();
+                      applyModel(protein);
+                    };
+                    reader.readAsText(file);
+                  } else {
+                    codeTextArea.innerText = "File not supported!" + file.type;
+                  }
+                });
+                initCPickers();
+                initgraphCPickers();
+              });
+
+      function submitJson() {
+        var jsonData = ko.mapping.toJSON(viewModel, null, 2);
+        applyModel(JSON.parse(jsonData));
       }
 
-      function addRow(parent) {
-        var rowClone = parent.find(".form-group").first().clone();
-        rowClone.find("input").val(null); //reset all data
-        rowClone.appendTo(parent);
-        initCPickers();
-
-      }
-      function removeRow(row) {
-        if (row.siblings(".form-group").length > 0) {
-          row.remove();
-        } else {
-
-          row.find("input").val(null); //reset all data
+      function applyModel(model) {
+        $("#protaelHolder").children('span').remove();
+        $(".protael_resizable").remove();
+        $("#errorMsg").hide();
+        try {
+          Protael(model, "protaelHolder", true).draw();
+        } catch (err) {
+          console.log(err);
+          $("#errorMsg").html("Unable to display protein: " + err.name + ": " + err.message);
+          $("#errorMsg").show();
         }
       }
-      function saveMarkers() {
-        markers = [];
 
-        $("#markersGrid .form-group").each(
-                function() {
-                  var mark = {"color": "#000"};
-                  mark.x = $(this).find("input[name='x']").val();
-                  if (mark.x) {
-                    mark.label = $(this).find("input[name='label']").val();
-                    mark.type = $(this).find("select[name='type']").val();
-                    mark.position = $(this).find("select[name='position']").val();
-                    markers.push(mark);
-                  }
-                });
-      }
-      function saveBridges() {
-        bridges = [];
-
-        $("#bridgesGrid .form-group").each(
-                function() {
-                  var b = {"color": "#000"};
-
-                  b.start = $(this).find("input[name='s']").val();
-                  b.end = $(this).find("input[name='e']").val();
-                  if (b.start && b.end) {
-                    b.type = $(this).find("input[name='type']").val();
-                    b.startlabel = $(this).find("input[name='slabel']").val();
-                    b.endlabel = $(this).find("input[name='elabel']").val();
-                    bridges.push(b);
-                  }
-                });
-        console.log(bridges);
+      function reset() {
+        ko.mapping.fromJS(emptyProtein, viewModel);
+        $(".protael_resizable").remove();
+        $("#errorMsg").hide();
       }
 
       function initCPickers() {
         $('.colorpick').colorpicker({"color": "#FFF"}).on('changeColor', function(ev) {
           var newColor = ev.color.toHex().toString();
           $(this).css("background-color", newColor);
-          $(this).attr('data-scolor', newColor);
+          $(this).text(newColor);
+          ko.dataFor($(this)[0]).color = newColor;
         });
       }
 
-      function saveGraphs() {
-        graphs = [];
-        $("#graphsGroup .form-group").each(function() {
-          var g = {},
-                  c1 = $(this).find("button[name='c1']").attr('data-scolor'),
-                  c2 = $(this).find("button[name='c2']").attr('data-scolor'),
-                  c3 = $(this).find("button[name='c3']").attr('data-scolor'),
-                  data = String($(this).find("input[name='data']").val());
-
-          if (data) {
-            g.label = $(this).find("input[name='label']").val();
-
-
-            g.color = c1;
-            if (c1 && c2 && c3) {
-              g.color = [c1, c2, c3];
-            } else if (c1 && c2) {
-              g.color = [c1, c2];
-            }
-
-            g.values = data.replace(/\s/g, "").split(',');
-            graphs.push(g);
-          }
+      function initgraphCPickers() {
+        $('.gcolorpick').colorpicker({"color": "#FFF"}).on('changeColor', function(ev) {
+          var newColor = ev.color.toHex().toString();
+          $(this).css("background-color", newColor);
+          $(this).text(newColor);
+          var context = ko.contextFor($(this)[0]);
+          var index = context.$index();
+          // var data = context.$data;
+          var colors = context.$parent.color();
+          colors[index] = newColor;
         });
       }
 
-      function saveRegions() {
-        regions = [];
-
-        $("#regionsGrid .form-group").each(
-                function() {
-                  var b = {};
-
-                  b.start = $(this).find("input[name='s']").val();
-                  b.end = $(this).find("input[name='e']").val();
-                  if (b.start && b.end) {
-                    b.type = $(this).find("input[name='label']").val();
-                    b.color = $(this).find("button[name='c1']").attr('data-scolor');
-                    regions.push(b);
-                  }
-                });
+      function saveJsonToFile() {
+        var text = ko.mapping.toJSON(viewModel, null, 2),
+                name = lastOpenedFile || 'protael_export.json';
+        blob = new Blob([text], {type: "application/json"});
+        // from FileSaver.js
+        saveAs(blob, name);
       }
     </script>
+
+    <script>
+      (function(id) {
+        function handleFileSelect(evt) {
+          evt.stopPropagation();
+          evt.preventDefault();
+          var files = evt.dataTransfer.files; // FileList object.
+          $(id).value(files[0].name);
+        }
+
+        function handleDragOver(evt) {
+          evt.stopPropagation();
+          evt.preventDefault();
+          evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+        }
+
+        //  // Setup the dnd listeners.
+        var dropZone = $(id);
+        dropZone.on('dragover', handleDragOver, false);
+        dropZone.on('drop', handleFileSelect, false);
+      }('#fileInput'));
+    </script>
   </head>
-  <body >
+  <body>
 
     <!--[if lt IE 7]>
  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -253,38 +280,51 @@
             <li><a onClick="ga('send', 'event', 'Downloads', 'click', '/Protael.zip');" href="Protael.zip" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
           </ul>
         </div><!--/.navbar-collapse -->
-      </div></div>
+      </div>
+    </div>
     <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <h3 style="padding-top: 25px">Select a JSON file: </h4>
+            <div id="drop_zone"><input type="file" id="fileInput"> 
+            </div>
+        </div>
+      </div>
       <div class="row ">
         <div class="col-md-12">
-          <h3>Input you data below to generate JSON and view it in Protael</h3>
+          <h3 style="padding-top: 25px">Enter you data below to generate JSON and view it in Protael</h3>
           <form role="form" onsubmit="editJson();
               return false;">
             <fieldset>
               <div class="form-group">
                 <label for="inpSeq">Protein sequence</label>
-                <input type="text" class="form-control input-sm" id="inpSeq" placeholder="Enter protein sequence">
+                <input type="text" class="form-control input-sm" id="inpSeq"
+                       placeholder="Enter protein sequence" data-bind="value: sequence">
               </div>
             </fieldset>
 
             <div class="panel-group" id="accordion">
-              <fieldset> <div class="panel panel-default">
+              <fieldset><div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
-                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeqColors">
-                        Sequence colors</a>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeqColors">Sequence colors</a>
                     </h4>
                   </div>
                   <div id="collapseSeqColors" class="panel-collapse collapse"><div class="panel-body">
                       <div class="form-group ">
                         <label for="inpSeqCol">Sequence colors data</label>&nbsp;<a href="getting-started.html#colorsdata" target="info"><span class="glyphicon glyphicon-question-sign"></span></a>
-                        <input type="text" class="form-control input-sm" id="inpSeqCol" placeholder="Enter sequence color data and press ENTER">
+                        <input type="text" class="form-control input-sm" id="inpSeqCol" placeholder="Enter sequence color data and press ENTER"
+                               data-bind="value: seqcolors.data">
                       </div>
                       <div class="form-group" id="seqColorInputs">
                         <label>Select color per data char:</label>
+                        <div data-bind="foreach : seqcolors.colors.items">
+                          <button type='button' class='btn btn-default btn-sm seqColorpicker' data-bind="text: key"></button>                          
+                        </div>
                       </div>
                     </div>
-                  </div></div>
+                  </div>
+                </div>
               </fieldset>
               <fieldset>
                 <div class="panel panel-default">
@@ -294,19 +334,21 @@
                     </h4>
                   </div>
                   <div id="collapseMark" class="panel-collapse collapse"><div class="panel-body">
-                      <p>Please note that in order  to keep this form simple all markers are black by default,
-                        if you want to change color you have to edit JSON manually: <code>"color": "your_color_here"</code> <a href="getting-started.html#markers" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></p>
+                      <p>  <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addMarker">Add marker</button> <a href="getting-started.html#markers" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></p>
+
+
                       <div class="row ">
                         <div class="col-sm-2"><label>Type</label></div>
-                        <div class="col-sm-2"><label>X</label></div>
+                        <div class="col-sm-1"><label>X</label></div>
                         <div class="col-sm-2"><label>Position</label></div>
                         <div class="col-sm-2"><label>Label</label></div>
-                        <div class="col-sm-2"> </div>
+                        <div class="col-sm-1"><label>Color</label></div>
+                        <div class="col-sm-1"> </div>
                       </div>
-                      <div class="row rowgrid" id="markersGrid">
+                      <div class="row rowgrid" id="markersGrid" data-bind="foreach: markers">
                         <div class="form-group row">
                           <div class="col-sm-2">
-                            <select class="form-control input-sm" name="type">
+                            <select class="form-control input-sm" name="type"  data-bind="value: $data.type">
                               <option value="glycan">Glycan</option>
                               <option value="oliglycan">Oliglycan</option>
                               <option value="unknownglycan">Unknown glycan</option>
@@ -314,30 +356,30 @@
                               <option value="stick">Stick</option>
                             </select>
                           </div>
-                          <div class="col-sm-2">
-                            <input class="form-control input-sm" name="x"
-                                   min="0" type="number" />
+                          <div class="col-sm-1">
+                            <input class="form-control input-sm" name="x" min="0" type="number"  data-bind="value: $data.x" />
                           </div>
                           <div class="col-sm-2">
-                            <select class="form-control input-sm" name="position">
+                            <select class="form-control input-sm" name="position"  data-bind="value: $data.position" >
                               <option value="top">Top</option>
                               <option value="bottom">Bottom</option>
                             </select>
                           </div>
                           <div class="col-sm-2">
-                            <input class="form-control input-sm"  name="label" type="text" />
+                            <input class="form-control input-sm"  name="label" type="text"  data-bind="value: $data.label" />
                           </div>
-                          <div class="col-sm-2">
-                            <button type='button' class='btn btn-default btn-xs' onclick="addRow($(this).parents('.rowgrid'))">+</button>
-                            <button type='button' class='btn btn-default btn-xs' onclick="removeRow($(this).parents('.form-group'))">-</button>
+                          <div class="col-sm-1">
+                            <button type='button' class='btn btn-default btn-sm colorpick' data-bind="style: {backgroundColor: $data.color}, text: $data.color|| 'Color'" name='c1'>Color</button>
+                          </div>
+                          <div class="col-sm-1">
+                            <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.removeMarker">-</button>
                           </div>
                         </div>
-
-                      </div></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </fieldset>
-
 
               <fieldset>
                 <div class="panel panel-default">
@@ -349,40 +391,42 @@
                     </h4>
                   </div>
                   <div id="collapseBridg" class="panel-collapse collapse"><div class="panel-body">
-                      <p>Please note that in order to keep this form simple all bridges are black by default,
-                        if you want to change color you have to edit JSON manually: <code>"color": "your_color_here"</code> <a href="getting-started.html#bridges" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></p>
+                      <p><button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addBridge">Add bridge</button> <a href="getting-started.html#bridges" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></p>
+
                       <div class="row">
                         <div class="col-sm-2"><label>Type/label</label></div>
-                        <div class="col-sm-2"><label>Start</label></div>
-                        <div class="col-sm-2"><label>End</label></div>
+                        <div class="col-sm-1"><label>Start</label></div>
+                        <div class="col-sm-1"><label>End</label></div>
                         <div class="col-sm-2"><label>Start Label</label></div>
                         <div class="col-sm-2"><label>End Label</label></div>
+                        <div class="col-sm-1"><label>Color</label></div>
+                        <div class="col-sm-1"><label></label></div>
                       </div>
-                      <div class="row rowgrid" id="bridgesGrid">
+                      <div class="row rowgrid" id="bridgesGrid" data-bind="foreach: bridges ">
                         <div class="form-group row">
                           <div class="col-sm-2">
-                            <input class="form-control input-sm"  name="type" type="text" />
+                            <input class="form-control input-sm"  name="type" type="text" data-bind="value: $data.type"/>
+                          </div>
+                          <div class="col-sm-1">
+                            <input class="form-control input-sm" name="s" min="0" type="number" data-bind="value: $data.start"/>
+                          </div>
+                          <div class="col-sm-1">
+                            <input class="form-control input-sm" name="e" min="0" type="number" data-bind="value: $data.end" />
                           </div>
                           <div class="col-sm-2">
-                            <input class="form-control input-sm" name="s"
-                                   min="0" type="number" />
-                          </div>
-                          <div class="col-sm-2">
-                            <input class="form-control input-sm" name="e"
-                                   min="0" type="number" />
-                          </div>
-                          <div class="col-sm-2">
-                            <input class="form-control input-sm" name="slabel" type="text" />
+                            <input class="form-control input-sm" name="slabel" type="text" data-bind="value: $data.startlabel"/>
                           </div><div class="col-sm-2">
-                            <input class="form-control input-sm"  name="elabel" type="text" />
+                            <input class="form-control input-sm"  name="elabel" type="text" data-bind="value: $data.endlabel"/>
                           </div>
-                          <div class="col-sm-2">
-                            <button type='button' class='btn btn-default btn-xs' onclick="addRow($(this).parents('.rowgrid'))">+</button>
-                            <button type='button' class='btn btn-default btn-xs' onclick="removeRow($(this).parents('.form-group'))">-</button>
+                          <div class="col-sm-1">
+                            <button type='button' class='btn btn-default btn-sm colorpick' data-bind="style: {backgroundColor: $data.color}, text: $data.color|| 'Color'" name='c1'>Color</button>
+                          </div>
+                          <div class="col-sm-1">
+                            <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.removeBridge">-</button>
                           </div>
                         </div>
-
-                      </div></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </fieldset>
@@ -397,31 +441,31 @@
                   <div id="collapseOFeatur" class="panel-collapse collapse"><div class="panel-body">
                       <p>Regions are marked areas on the main protein sequence</p>
 
+                      <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addRegion">Add region</button>
                       <div class="row">
                         <div class="col-sm-2"><label>Label</label></div>
                         <div class="col-sm-2"><label>Start</label></div>
                         <div class="col-sm-2"><label>End</label></div>
                         <div class="col-sm-2"><label>Color</label></div>
                       </div>
-                      <div class="row rowgrid" id="regionsGrid">
+                      <div class="row rowgrid" id="regionsGrid" data-bind="foreach: overlayfeatures.features ">
                         <div class="form-group row">
                           <div class="col-sm-2">
-                            <input class="form-control input-sm"  name="label" type="text" />
+                            <input class="form-control input-sm"  name="label" type="text"  data-bind="value: $data.label" />
                           </div>
                           <div class="col-sm-2">
                             <input class="form-control input-sm" name="s"
-                                   min="0" type="number" />
+                                   min="0" type="number"  data-bind="value: $data.start"/>
                           </div>
                           <div class="col-sm-2">
                             <input class="form-control input-sm" name="e"
-                                   min="0" type="number" />
+                                   min="0" type="number"  data-bind="value: $data.end"/>
                           </div>
                           <div class="col-sm-2">
-                            <button type='button' class='btn btn-default btn-sm colorpick' name='c1'>Color</button>
+                            <button type='button' class='btn btn-default btn-sm colorpick' data-bind="style: {backgroundColor: $data.color}, text: $data.color|| 'Color'" name='c1'>Color</button>
                           </div>
                           <div class="col-sm-2">
-                            <button type='button' class='btn btn-default btn-xs' onclick="addRow($(this).parents('.rowgrid'))">+</button>
-                            <button type='button' class='btn btn-default btn-xs' onclick="removeRow($(this).parents('.form-group'))">-</button>
+                            <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.removeRegion">-</button>
                           </div>
                         </div>
                       </div></div>
@@ -436,23 +480,30 @@
                     </h4>
                   </div>
                   <div id="collapseGraphs" class="panel-collapse collapse"><div class="panel-body">
-                      Graphs data&nbsp;<a href="getting-started.html#graphs" target="info"><span class="glyphicon glyphicon-question-sign"></span></a>
-                      <div class="row rowgrid" id="graphsGroup">
+                      <button type='button' class='btn btn-default btn-xs' data-bind="click : $root.addQtrack">Add new graph</button>&nbsp;<a href="getting-started.html#graphs" target="info"><span class="glyphicon glyphicon-question-sign"></span></a><br />
+
+                      <div class="row rowgrid" id="graphsGroup" data-bind="foreach: qtracks">
                         <div class="form-group">
-                          <br />  <input type="text" class="form-control input-sm" name="data" placeholder="Graph values">
+                          <br />  <input type="text" class="form-control input-sm" name="data" placeholder="Graph values" data-bind="value: $data.values">
                           <div class="row">
-                            <div class="col-sm-4">
-                              <input class="form-control input-sm"  name="label" type="text" placeholder="Graph label" /></div>
-                            <div class="col-sm-4">
-                              <label>Colors:</label>
-                              <button type='button' class='btn btn-default btn-sm colorpick' name='c1'>1</button>
-                              <button type='button' class='btn btn-default btn-sm colorpick' name='c2'>2</button>
-                              <button type='button' class='btn btn-default btn-sm colorpick' name='c3'>3</button>
-                            </div>
-                            <div class="col-sm-2"></div>
+                            <div class="col-sm-3">
+                              <input class="form-control input-sm"  name="label" type="text" placeholder="Graph label" data-bind="value: $data.label" /></div>
                             <div class="col-sm-2">
-                              <button type='button' class='btn btn-default btn-xs' onclick="addRow($(this).parents('.rowgrid'))">+</button>
-                              <button type='button' class='btn btn-default btn-xs' onclick="removeRow($(this).parents('.form-group'))">-</button>
+                              <select class="form-control input-sm" name="type"  data-bind="value: $data.type">
+                                <option value="area-spline">Area-spline</option>
+                                <option value="area">Area</option>
+                                <option value="line">Line</option>
+                                <option value="spline">Spline</option>
+                                <option value="column">Column</option>
+                              </select></div>
+                            <div class="col-sm-3">
+                              <label>Colors:</label>
+                              <span data-bind="foreach: {data: color, as: 'colr'}">
+                                <button type='button' class='btn btn-default btn-sm gcolorpick' data-bind="style: {backgroundColor: colr}, text: colr || ''" name='c1'>Color</button></span>
+                            </div>
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2">
+                              <button type='button' class='btn btn-default btn-xs' data-bind="click : $root.removeQtrack">Remove</button>
                             </div>
                           </div>
                         </div>
@@ -460,29 +511,34 @@
                     </div>
                   </div></div>
               </fieldset>
-            </div>             <!--accordion-->
+            </div><!--accordion-->
           </form>
         </div>
       </div>
 
       <div class="row ">
-        <div class="col-md-1">
-          <button type="submit" class="btn btn-default" onclick="editJson()" style="margin:10px;">Submit</button>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-default" onclick="submitJson()" style="margin:10px;">Submit</button>
+          <button type="submit" class="btn btn-default" onclick="reset()" style="margin:10px;">Reset</button>
         </div>
         <div class="col-md-1"></div>
         <div class="col-md-4">
           <div class="alert alert-danger" role="alert" id="errorMsg"></div>
-        </div></div>
+        </div>
+      </div>
       <div class="row ">
         <div class="col-md-12">
           <h3>Protael view</h3>
-          <div id ="protaelHolder" > </div>
+          <div id ="protaelHolder"><span>No data to display. Did you enter your data and click 'Submit' button above?</span></div>
         </div>
-      </div> <div class="row ">
+      </div>
+      <div class="row ">
         <div class="col-md-12">
           <h3>This is your JSON:</h3>
-          <p>You can copy it into your webpage</p>
-          <textarea id="codeTextArea" class="form-control" style="width:100%; height:200px;font-family: monospace" disabled></textarea></div>
+          <p>You can copy it into your webpage or <a href="#" id="saveJson"  class="btn btn-default" style="margin:10px;">Save to file</a>
+
+            <textarea id="codeTextArea" class="form-control"  data-bind="value: ko.mapping.toJSON($data, null, 2)"
+                      style="width:100%; height:200px;font-family: monospace" disabled></textarea></div>
       </div>
     </div>
 
@@ -501,6 +557,6 @@
       ga('create', 'UA-50502533-2', 'auto');
       ga('send', 'pageview');
     </script>
-
     <script type="text/javascript" async="" src="js/vendor/FileSaver_Blob.js"></script>
-  </body></html>
+  </body>
+</html>
