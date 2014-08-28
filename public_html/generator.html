@@ -97,7 +97,7 @@
       viewModel.removeRegion = function(item) {
         viewModel.overlayfeatures.features.remove(item);
       };
-      
+
       viewModel.addFeature = function() {
         viewModel.overlayfeatures.features.push({});
         initCPickers();
@@ -112,6 +112,7 @@
       viewModel.removeBridge = function(item) {
         viewModel.bridges.remove(item);
       };
+
       viewModel.seqcolors.data.subscribe(function(newValue) {
         var chars = newValue.toUpperCase().split(''), i, c, l = chars.length;
         for (i = 0; i < l; i++) {
@@ -128,6 +129,7 @@
           viewModel.setSeqColor(text, newColor);
         });
       });
+
       viewModel.setSeqColor = function(char, color) {
         viewModel.seqcolors.colors.push(char, color);
       };
@@ -142,39 +144,56 @@
                   saveJsonToFile.apply();
                 });
                 var fileInput = document.getElementById('fileInput');
-                fileInput.addEventListener('change', function(e) {
-                  var file = fileInput.files[0];
-                  lastOpenedFile = file.name;
-                  var textType = /text.*/, jsonType = 'application/json';
-                  if (file.type.match(textType) || file.type === jsonType) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                      codeTextArea.innerText = reader.result;
-                      protein = JSON.parse(reader.result);
-                      reset();
-                      for (var q in protein.qtracks) {
-                        var color = protein.qtracks[q].color;
-                        if (!Array.isArray(color)) {
-                          protein.qtracks[q].color = [color, '', ''];
-                        } else {
-                          protein.qtracks[q].color[0] = protein.qtracks[q].color[0] || '';
 
-                          protein.qtracks[q].color[1] = protein.qtracks[q].color[1] || '';
+                if (!(window.File && window.FileReader && window.FileList)) {
+                  $("#fileInput").attr("disabled", "disabled");
+                  message = '<p>The ' +
+                          '<a href="http://dev.w3.org/2006/webapi/FileAPI/" target="_blank">File API</a>s ' +
+                          'are not fully supported by this browser.</p>' +
+                          '<p>Upgrade your browser to the latest version.</p>';
 
-                          protein.qtracks[q].color[2] = protein.qtracks[q].color[2] || '';
+                  displayError(message);
+                } else {
+                  fileInput.addEventListener('change', function(e) {
+                    var file = fileInput.files[0];
+                    lastOpenedFile = file.name;
+                    var textType = 'text/json', jsonType = 'application/json';
+
+                    if (file.type.match(textType) || file.type === jsonType) {
+                      var reader = new FileReader();
+                      reader.onload = function(e) {
+                        try {
+                          codeTextArea.innerText = reader.result;
+                          protein = JSON.parse(reader.result);
+                          reset();
+                          for (var q in protein.qtracks) {
+                            var color = protein.qtracks[q].color;
+                            if (!Array.isArray(color)) {
+                              protein.qtracks[q].color = [color, '', ''];
+                            } else {
+                              protein.qtracks[q].color[0] = protein.qtracks[q].color[0] || '';
+
+                              protein.qtracks[q].color[1] = protein.qtracks[q].color[1] || '';
+
+                              protein.qtracks[q].color[2] = protein.qtracks[q].color[2] || '';
+                            }
+                          }
+                          // need to process graph colors and convert single color to 
+                          ko.mapping.fromJS(protein, viewModel);
+                          initCPickers();
+                          initgraphCPickers();
+                          applyModel(protein);
                         }
-                      }
-                      // need to process graph colors and convert single color to 
-                      ko.mapping.fromJS(protein, viewModel);
-                      initCPickers();
-                      initgraphCPickers();
-                      applyModel(protein);
-                    };
-                    reader.readAsText(file);
-                  } else {
-                    codeTextArea.innerText = "File not supported!" + file.type;
-                  }
-                });
+                        catch (err) {
+                          displayError("<p>Unable to open file: " + err.message+"</p>");
+                        }
+                      };
+                      reader.readAsText(file);
+                    } else {
+                      displayError("File type not supported! " + file.type +"<br/>Please make sure you are opening a JSON file.");
+                    }
+                  });
+                }
                 initCPickers();
                 initgraphCPickers();
               });
@@ -192,9 +211,13 @@
           Protael(model, "protaelHolder", true).draw();
         } catch (err) {
           console.log(err);
-          $("#errorMsg").html("Unable to display protein: " + err.name + ": " + err.message);
-          $("#errorMsg").show();
+          displayError("Unable to display protein: " + err.name + ": " + err.message);
         }
+      }
+
+      function displayError(msg) {
+        $("#errorMsg").html("<h4>Warning:</h4>"+msg);
+        $("#errorMsg").show();
       }
 
       function reset() {
@@ -289,6 +312,9 @@
           <h3 style="padding-top: 25px">Select a JSON file: </h4>
             <div id="drop_zone"><input type="file" id="fileInput"> 
             </div>
+        </div>
+        <div class="col-md-4" style="padding-top: 35px">           
+          <div class="alert alert-danger" role="alert" id="errorMsg"></div>
         </div>
       </div>
       <div class="row ">
@@ -523,9 +549,7 @@
           <button type="submit" class="btn btn-default" onclick="reset()" style="margin:10px;">Reset</button>
         </div>
         <div class="col-md-1"></div>
-        <div class="col-md-4">
-          <div class="alert alert-danger" role="alert" id="errorMsg"></div>
-        </div>
+        
       </div>
       <div class="row ">
         <div class="col-md-12">
