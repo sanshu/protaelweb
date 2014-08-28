@@ -151,6 +151,7 @@
                     reader.onload = function(e) {
                       codeTextArea.innerText = reader.result;
                       protein = JSON.parse(reader.result);
+                      reset();
                       for (var q in protein.qtracks) {
                         var color = protein.qtracks[q].color;
                         if (!Array.isArray(color)) {
