@@ -159,7 +159,8 @@
                     lastOpenedFile = file.name;
                     var textType = 'text/json', jsonType = 'application/json';
 
-                    if (file.type.match(textType) || file.type === jsonType) {
+                    if (file.type.match(textType) || file.type === jsonType || file.type === '' || fileType === undefined) {
+                      
                       var reader = new FileReader();
                       reader.onload = function(e) {
                         try {
@@ -262,7 +263,7 @@
         function handleFileSelect(evt) {
           evt.stopPropagation();
           evt.preventDefault();
-          var files = evt.dataTransfer.files; // FileList object.
+          var files = evt.target.files || evt.dataTransfer.files; // FileList object.
           $(id).value(files[0].name);
         }
 
@@ -270,6 +271,7 @@
           evt.stopPropagation();
           evt.preventDefault();
           evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+          evt.target.className = (evt.type == "dragover" ? "hover" : "");
         }
 
         //  // Setup the dnd listeners.
