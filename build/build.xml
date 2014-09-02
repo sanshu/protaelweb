@@ -55,8 +55,10 @@
                 <exclude name="**/protaelSeed.html"/>
                 <include name="**/*.html"/>
                 <include name="**/*.zip"/>
+                <include name="**/*.json"/>
             </fileset>
         </scp>
+       
         <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/js/" verbose="false">
             <fileset dir="${dir.js}">
                 <include name="**/protael.0.1.0.min.js"/>
