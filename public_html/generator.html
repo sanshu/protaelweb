@@ -50,7 +50,7 @@
         border: 2px dashed #128f76;
       }
     </style>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.min.js"></script>
 
     <script type='text/javascript' src="js/vendor/ko.observableDictionary.js"></script>
@@ -63,7 +63,7 @@
           "colors": {},
           "data": ""
         },
-        "markers": [{type: '', x: '', label: '', color: '#000'}],
+        "markers": [{type: '', position: 'top', x: '', label: '', color: '#000', auto: false}],
         "bridges": [{label: '', start: 0, end: 0, startlabel: '', endlabel: '', color: '#000'}],
         "qtracks": [{values: '', label: '', color: ['', '', '']}],
         "overlayfeatures": {
@@ -80,16 +80,59 @@
         viewModel.qtracks.push({values: '', label: '', type: '', color: ko.observableArray(['', '', ''])});
         initgraphCPickers();
       };
+
       viewModel.removeQtrack = function(track) {
         viewModel.qtracks.remove(track);
       };
+
       viewModel.addMarker = function() {
         viewModel.markers.push({color: '#000'});
         initCPickers();
       };
+
       viewModel.removeMarker = function(item) {
         viewModel.markers.remove(item);
       };
+
+      viewModel.addAutoMarker = function(position, lbl) {
+        var newMark = {
+          color: '#000',
+          x: ko.observable(position),
+          auto: true,
+          label: ko.observable(''),
+          type: ko.observable('glycan'),
+          position: ko.observable('top'),
+          "data": {
+            "Description": "Predicted N-GlycoSite [" + lbl + "] at " + position + " position"
+          }
+        };
+        // set.auto = false after any change
+        newMark.x.subscribe(function(newVal) {
+          newMark.auto = false;
+        });
+        newMark.type.subscribe(function(newVal) {
+          newMark.auto = false;
+        });
+        newMark.position.subscribe(function(newVal) {
+          newMark.auto = false;
+        });
+        newMark.label.subscribe(function(newVal) {
+          newMark.auto = false;
+        });
+        viewModel.markers.push(newMark);
+        initCPickers();
+      };
+
+      viewModel.clearAutoMarkers = function() {
+        var l = viewModel.markers().length, i, m;
+        for (i = l - 1; i > 0; i--) {
+          m = viewModel.markers()[i];
+          if (m.auto) {
+            viewModel.removeMarker(m);
+          }
+        }
+      };
+
       viewModel.addRegion = function() {
         viewModel.overlayfeatures.features.push({});
         initCPickers();
@@ -111,6 +154,17 @@
       };
       viewModel.removeBridge = function(item) {
         viewModel.bridges.remove(item);
+      };
+
+      viewModel.findGlycoSites = function() {
+        var re = /(N.[T|S])/ig, match,
+                seq = viewModel.sequence();
+        viewModel.clearAutoMarkers();
+
+        while ((match = re.exec(seq))) {
+          // need to +1
+          viewModel.addAutoMarker(match.index + 1, match[1]);
+        }
       };
 
       viewModel.seqcolors.data.subscribe(function(newValue) {
@@ -309,9 +363,9 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3">
-          <h3 style="padding-top: 25px">Select a JSON file: </h4>
-            <div id="drop_zone"><input type="file" id="fileInput"> 
-            </div>
+          <h3 style="padding-top: 25px">Select a JSON file: </h3>
+          <div id="drop_zone"><input type="file" id="fileInput"> 
+          </div>
         </div>
         <div class="col-md-4" style="padding-top: 35px">           
           <div class="alert alert-danger" role="alert" id="errorMsg"></div>
@@ -360,8 +414,20 @@
                       <a data-toggle="collapse" data-parent="#accordion" href="#collapseMark">Markers</a>
                     </h4>
                   </div>
-                  <div id="collapseMark" class="panel-collapse collapse"><div class="panel-body">
-                      <p>  <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addMarker">Add marker</button> <a href="getting-started.html#markers" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></p>
+                  <div id="collapseMark" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      <div class="row ">
+                        <div class="col-sm-3"><button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addMarker">Add marker</button>  
+                          <a href="getting-started.html#markers" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></div>
+                      </div>
+                      <div class="row ">
+                        <div class="col-sm-6">Predict N-linked glycosylation sites based on <code>N.[ST]</code> pattern:</div><div class="col-sm-3">
+                        </div>
+                      </div>
+                      <div class="row ">
+                        <div class="col-sm-4"> <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.findGlycoSites">Mark N-GlycoSites</button> 
+                          <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.clearAutoMarkers">Remove N-GlycoSites</button></div>
+                      </div>
 
 
                       <div class="row ">
@@ -544,12 +610,11 @@
       </div>
 
       <div class="row ">
-        <div class="col-md-2">
+        <div class="col-md-3">
           <button type="submit" class="btn btn-default" onclick="submitJson()" style="margin:10px;">Submit</button>
           <button type="submit" class="btn btn-default" onclick="reset()" style="margin:10px;">Reset</button>
         </div>
         <div class="col-md-1"></div>
-
       </div>
       <div class="row ">
         <div class="col-md-12">
@@ -561,7 +626,6 @@
         <div class="col-md-12">
           <h3>This is your JSON:</h3>
           <p>You can copy it into your webpage or <a href="#" id="saveJson"  class="btn btn-default" style="margin:10px;">Save to file</a>
-
             <textarea id="codeTextArea" class="form-control"  data-bind="value: ko.mapping.toJSON($data, null, 2)"
                       style="width:100%; height:200px;font-family: monospace" disabled></textarea></div>
       </div>
