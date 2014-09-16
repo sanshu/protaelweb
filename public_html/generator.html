@@ -193,7 +193,10 @@
                 $("#errorMsg").hide();
 
                 ko.applyBindings(viewModel);
-                
+                viewModel.markers.removeAll();
+                viewModel.bridges.removeAll();
+                viewModel.overlayfeatures.features.removeAll();
+                viewModel.qtracks.removeAll();
 
                 $('#saveJson').on('click', function() {
                   saveJsonToFile.apply();
