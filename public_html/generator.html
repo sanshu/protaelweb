@@ -193,6 +193,7 @@
                 $("#errorMsg").hide();
 
                 ko.applyBindings(viewModel);
+                
 
                 $('#saveJson').on('click', function() {
                   saveJsonToFile.apply();
@@ -373,7 +374,7 @@
       </div>
       <div class="row ">
         <div class="col-md-12">
-          <h3 style="padding-top: 25px">Enter you data below to generate JSON and view it in Protael</h3>
+          <h4 style="padding-top: 25px">Enter you data below to generate JSON and view it in Protael</h3>
           <form role="form" onsubmit="editJson();
               return false;">
             <fieldset>
@@ -411,7 +412,7 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
-                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseMark">Markers</a>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseMark">Markers</a><span class="badge pull-right" data-bind="text: $root.markers().length"></span>
                     </h4>
                   </div>
                   <div id="collapseMark" class="panel-collapse collapse">
@@ -420,16 +421,17 @@
                         <div class="col-sm-3"><button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addMarker">Add marker</button>  
                           <a href="getting-started.html#markers" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></div>
                       </div>
-                      <div class="row ">
-                        <div class="col-sm-6">Predict N-linked glycosylation sites based on <code>N.[ST]</code> pattern:</div><div class="col-sm-3">
+                      <div class="row " style="margin:10px;">
+                        <div class="panel panel-info">
+                          <div class="panel-heading">Predict N-linked glycosylation sites based on <code>N.[ST]</code> pattern</div>
+                          <div class="panel-body">
+                            <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.findGlycoSites">Mark N-GlycoSites</button> 
+                            <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.clearAutoMarkers">Remove N-GlycoSites</button>
+                          </div>
                         </div>
-                      </div>
-                      <div class="row ">
-                        <div class="col-sm-4"> <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.findGlycoSites">Mark N-GlycoSites</button> 
-                          <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.clearAutoMarkers">Remove N-GlycoSites</button></div>
-                      </div>
 
-
+                      </div>
+                      
                       <div class="row ">
                         <div class="col-sm-2"><label>Type</label></div>
                         <div class="col-sm-1"><label>X</label></div>
@@ -481,11 +483,11 @@
                       <a data-toggle="collapse" data-parent="#accordion" href="#collapseBridg">
                         Bridges
                       </a>
+                      <span class="badge pull-right" data-bind="text: $root.bridges().length"></span>
                     </h4>
                   </div>
                   <div id="collapseBridg" class="panel-collapse collapse"><div class="panel-body">
                       <p><button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addBridge">Add bridge</button> <a href="getting-started.html#bridges" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></p>
-
                       <div class="row">
                         <div class="col-sm-2"><label>Type/label</label></div>
                         <div class="col-sm-1"><label>Start</label></div>
@@ -528,7 +530,7 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
-                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOFeatur">Regions</a>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOFeatur">Regions</a><span class="badge pull-right" data-bind="text: $root.overlayfeatures.features().length">42</span>
                     </h4>
                   </div>
                   <div id="collapseOFeatur" class="panel-collapse collapse"><div class="panel-body">
@@ -569,7 +571,7 @@
                   <div class="panel-heading">
                     <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
                       <a data-toggle="collapse" data-parent="#accordion" href="#collapseGraphs">
-                        Graphs</a>
+                        Graphs</a><span class="badge pull-right" data-bind="text: $root.qtracks().length">42</span>
                     </h4>
                   </div>
                   <div id="collapseGraphs" class="panel-collapse collapse"><div class="panel-body">
@@ -624,11 +626,12 @@
       </div>
       <div class="row ">
         <div class="col-md-12">
-          <h3>This is your JSON:</h3>
-          <p>You can copy it into your webpage or <a href="#" id="saveJson"  class="btn btn-default" style="margin:10px;">Save to file</a>
+          <h3>JSON:</h3>
+          <p>You can copy JSON into your webpage or <a href="#" id="saveJson"  class="btn btn-default" style="margin:10px;">Save to file</a>
             <textarea id="codeTextArea" class="form-control"  data-bind="value: ko.mapping.toJSON($data, null, 2)"
                       style="width:100%; height:200px;font-family: monospace" disabled></textarea></div>
       </div>
+      <!--<div id="feedback">FEEDBACK</div>-->
     </div>
 
     <script>
@@ -647,5 +650,37 @@
       ga('send', 'pageview');
     </script>
     <script type="text/javascript" async="" src="js/vendor/FileSaver_Blob.js"></script>
+    <script>
+      UserVoice = window.UserVoice || [];
+      (function() {
+        var uv = document.createElement('script');
+        uv.type = 'text/javascript';
+        uv.async = true;
+        uv.src = '//widget.uservoice.com/fOsDxyHzBBW8D2H6Qa4NQ.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(uv, s)
+      })();
+
+      UserVoice.push(['set', {
+  accent_color: '#149C82',
+  trigger_color: 'white',
+  trigger_background_color: '#149C82'
+}]);
+
+// Identify the user and pass traits
+// To enable, replace sample data with actual user traits and uncomment the line
+UserVoice.push(['identify', {
+
+}]);
+
+// Add default trigger to the bottom-right corner of the window:
+UserVoice.push(['addTrigger', { mode: 'contact', trigger_position: 'bottom-right' }]);
+
+// Or, use your own custom trigger:
+//UserVoice.push(['addTrigger', '#id', { mode: 'contact' }]);
+
+// Autoprompt for Satisfaction and SmartVote (only displayed under certain conditions)
+UserVoice.push(['autoprompt', {}]);
+    </script>
   </body>
 </html>
