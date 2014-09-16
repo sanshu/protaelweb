@@ -279,6 +279,10 @@
 
       function reset() {
         ko.mapping.fromJS(emptyProtein, viewModel);
+          viewModel.markers.removeAll();
+                viewModel.bridges.removeAll();
+                viewModel.overlayfeatures.features.removeAll();
+                viewModel.qtracks.removeAll();
         $(".protael_resizable").remove();
         $("#errorMsg").hide();
       }
