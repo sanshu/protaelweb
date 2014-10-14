@@ -246,18 +246,16 @@
                               }
                           };
                           reader.readAsText(file);
-//                    }
-//                    else {
-//                      displayError("File type not supported! " + file.type +"<br/>Please make sure you are opening a JSON file.");
-//                    }
                       });
                   }
                   initCPickers();
                   initgraphCPickers();
+
+                  initFileDND('#fileInput');
               });
 
       function submitJson() {
-          var jsonData = ko.mapping.toJSON(viewModel, null, 2);
+          var jsonData = ko.mapFing.toJSON(viewModel, null, 2);
           applyModel(JSON.parse(jsonData));
       }
 
@@ -318,29 +316,6 @@
           saveAs(blob, name);
       }
     </script>
-
-    <script>
-      (function (id) {
-          function handleFileSelect(evt) {
-              evt.stopPropagation();
-              evt.preventDefault();
-              var files = evt.target.files || evt.dataTransfer.files; // FileList object.
-              $(id).value(files[0].name);
-          }
-
-          function handleDragOver(evt) {
-              evt.stopPropagation();
-              evt.preventDefault();
-              evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-              evt.target.className = (evt.type == "dragover" ? "hover" : "");
-          }
-
-          //  // Setup the dnd listeners.
-          var dropZone = $(id);
-          dropZone.on('dragover', handleDragOver, false);
-          dropZone.on('drop', handleFileSelect, false);
-      }('#fileInput'));
-    </script>
   </head>
   <body>
 
@@ -384,7 +359,7 @@
         <div class="col-md-12">
           <h4 style="padding-top: 25px">Enter you data below to generate JSON and view it in Protael</h3>
             <form role="form" onsubmit="editJson();
-                return false;">
+                  return false;">
               <fieldset>
                 <div class="form-group">
                   <label for="inpSeq">Protein sequence</label>
@@ -643,21 +618,21 @@
     </div>
     <!--feedback -->
     <div id="feedback"><i class="fa fa-comments"></i></div>
-     <script>
+    <script>
       UserVoice = window.UserVoice || [];
-      (function() {
-        var uv = document.createElement('script');
-        uv.type = 'text/javascript';
-        uv.async = true;
-        uv.src = '//widget.uservoice.com/fOsDxyHzBBW8D2H6Qa4NQ.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(uv, s)
-      })();
+     (function() {
+       var uv = document.createElement('script');
+       uv.type = 'text/javascript';
+       uv.async = true;
+       uv.src = '//widget.uservoice.com/fOsDxyHzBBW8D2H6Qa4NQ.js';
+       var s = document.getElementsByTagName('script')[0];
+       s.parentNode.insertBefore(uv, s)
+     })();
 
-      UserVoice.push(['set', {
-  accent_color: '#149C82',
-  trigger_color: 'white',
-  trigger_background_color: '#149C82'
+     UserVoice.push(['set', {
+ accent_color: '#149C82',
+ trigger_color: 'white',
+ trigger_background_color: '#149C82'
 }]);
 
 UserVoice.push(['identify', {}]);
@@ -681,6 +656,6 @@ UserVoice.push(['autoprompt', {}]);
       ga('send', 'pageview');
     </script>
     <script type="text/javascript" async="" src="js/vendor/FileSaver_Blob.js"></script>
-   
+
   </body>
 </html>
