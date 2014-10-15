@@ -1,20 +1,27 @@
-function initFileDND(id) {
-          function handleFileSelect(evt) {
-              evt.stopPropagation();
-              evt.preventDefault();
-              var files = evt.target.files || evt.dataTransfer.files; // FileList object.
-              $(id).value(files[0].name);
-          }
+function initFileDND(id, callback) {
+    function handleFileSelect(evt) {
+        if (evt.originalEvent.dataTransfer) {
+            if (evt.originalEvent.dataTransfer.files.length) {
+                evt.stopPropagation();
+                evt.preventDefault();
+                var files = evt.originalEvent.dataTransfer.files ||evt.target.files ; // FileList object.
+                callback(files);
+            }
+        }
+    }
 
-          function handleDragOver(evt) {
-              evt.stopPropagation();
-              evt.preventDefault();
-              evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-              evt.target.className = (evt.type == "dragover" ? "hover" : "");
-          }
+    function handleDragOver(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        if (evt.originalEvent.dataTransfer) {
+            evt.originalEvent.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+        }
+        dropZone.className = (evt.type == "dragover" ? "hover" : "");
+    }
 
-          //  // Setup the dnd listeners.
-          var dropZone = $(id);
-          dropZone.on('dragover', handleDragOver, false);
-          dropZone.on('drop', handleFileSelect, false);
-      };
+    //  // Setup the dnd listeners.
+    var dropZone = $(id);
+    dropZone.on('dragover', handleDragOver);
+    dropZone.on('drop', handleFileSelect);
+}
+;

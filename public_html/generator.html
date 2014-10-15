@@ -246,16 +246,18 @@
                               }
                           };
                           reader.readAsText(file);
+//                    }
+//                    else {
+//                      displayError("File type not supported! " + file.type +"<br/>Please make sure you are opening a JSON file.");
+//                    }
                       });
                   }
                   initCPickers();
                   initgraphCPickers();
-
-                  initFileDND('#fileInput');
               });
 
       function submitJson() {
-          var jsonData = ko.mapFing.toJSON(viewModel, null, 2);
+          var jsonData = ko.mapping.toJSON(viewModel, null, 2);
           applyModel(JSON.parse(jsonData));
       }
 
@@ -315,6 +317,29 @@
           // from FileSaver.js
           saveAs(blob, name);
       }
+    </script>
+
+    <script>
+      (function (id) {
+          function handleFileSelect(evt) {
+              evt.stopPropagation();
+              evt.preventDefault();
+              var files = evt.target.files || evt.dataTransfer.files; // FileList object.
+              $(id).value(files[0].name);
+          }
+
+          function handleDragOver(evt) {
+              evt.stopPropagation();
+              evt.preventDefault();
+              evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+              evt.target.className = (evt.type == "dragover" ? "hover" : "");
+          }
+
+          //  // Setup the dnd listeners.
+          var dropZone = $(id);
+          dropZone.on('dragover', handleDragOver, false);
+          dropZone.on('drop', handleFileSelect, false);
+      }('#fileInput'));
     </script>
   </head>
   <body>
