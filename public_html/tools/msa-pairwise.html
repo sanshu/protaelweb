@@ -170,7 +170,12 @@
                       seq.sequence = seq.sequence.concat(f);
                   }
               }
+
           }
+          // and last one!
+          sequences[seq.id] = seq.sequence;
+          seqids.push(seq.id);
+          
           viewModel.seqIds = seqids;
           viewModel.seqHash = sequences;
           console.log('parsed');
@@ -309,8 +314,8 @@
           <p> This tool will extract pairwise alignment from multiple sequence alignment.</p>
           <ol><li>Select MSA FASTA file or paste FASTA into the text box.</li>
             <li>Click <kbd>Parse MSA</kbd>  button.</li>
-             <li>After you see "Ready" message start typing sequence IDs in the text boxes. You will see suggestions as you type.</li>
-             <li>Click <kbd>Start</kbd> button to extract pairwise alignment for selected sequences and calculate originat->target position conversion table.</li>
+            <li>After you see "Ready" message start typing sequence IDs in the text boxes. You will see suggestions as you type.</li>
+            <li>Click <kbd>Start</kbd> button to extract pairwise alignment for selected sequences and calculate originat->target position conversion table.</li>
           </ol>
           <i>NOTE: all processing is done in the browser, so for very large MSAs convertor might crash. <br/>Safari browser seems to be able to handle larger data set than Chrome, Opera and Firefox.</i>
         </div>
