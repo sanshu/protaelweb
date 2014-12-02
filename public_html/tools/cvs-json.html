@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>CSV to JSON Converter</title>
+    <title>Table to JSON Converter</title>
     <style>
       #drop {
           border:5px solid #000;
@@ -13,40 +13,50 @@
     </style>  
   </head>
   <body>
-    <h1>Drag and Drop CSV to JSON Conversion (from techSlides.net)</h1>
-    <p><a href="http://techslides.com/convert-csv-to-json-in-javascript/">Original</a></p>
-    <p>MODIFICATIONS: store headers and data separately to reduce file size (more that 10 time in some cases); will not output empty data cells; trim  headers and data before saving</p>
+    <h1>Drag and Drop CSV to JSON Conversion</h1>
+    <p>MODIFICATIONS: store headers and data separately to reduce file size (more that 10 time in some cases); will not output empty data cells; trim headers and data before saving</p>
     <div id="drop">
-      DROP!<button onclick="document.querySelector('input').click()">Or Select</button>
+      DROP <button onclick="document.querySelector('input').click()">Or Select</button>
       <input style="visibility: collapse; width: 0px;" type="file" onchange="upload(this.files[0])">
     </div>
 
     <div id="output"></div>
+    <textarea style="width:100%;height:300px;" id="txt_json"></textarea>
 
     <script type="text/javascript">
-      var output = document.getElementById("output");
+      var output = document.getElementById("output"), txt = document.getElementById("txt_json");
 
       //var csv is the CSV file with headers
       function csvJSON(csv) {
 
           var lines = csv.split("\n"),
                   data = [],
-                  headers = lines[0].split(",");
+                  separator = "\t",
+                  delim = "\"", h;
+          headers = lines[0].split(separator) 
+          labels = {};
 
           for (var j = 0; j < headers.length; j++) {
-              headers[j] = headers[j].trim()
+              h = headers[j].trim();
+              if (h.charAt(0) === delim && h.charAt(h.length - 1) === delim) {
+                  h = h.substr(1, h.length - 2);
+              }
+              labels[j] = h;
           }
 
           for (var i = 1; i < lines.length; i++) {
 
               var obj = {};  // this is a line from the table
-              var currentline = lines[i].split(",");
-              var val;
+              var currentline = lines[i].split(separator);
+              var val = '';
 
               for (var j = 0; j < headers.length; j++) {
                   if (currentline[j]) {
                       val = currentline[j].trim();
                       if (val) {
+                          if (val.charAt(0) === delim && val.charAt(val.length - 1) === delim) {
+                              val = val.substr(1, val.length - 2);
+                          }
                           obj[j] = val;
                       }
                   }
@@ -54,12 +64,10 @@
 
               data.push(obj);
           }
-          //return result; //JavaScript object
-          //final resulting object: 
           var result = {};
-          result['headers'] = headers;
+          result['headers'] = labels;
           result['data'] = data;
-          return JSON.stringify(result); //JSON
+          return result;
       }
       ;
 
@@ -82,12 +90,12 @@
 
       /* main upload function */
       function upload(file) {
-          if (file.type.match(/text\/csv/)) {
+          if (file.type.match(/text\/*/)) {
               oFReader = new FileReader();
               oFReader.onloadend = function () {
-                  var json = csvJSON(this.result);
-
-                  var blob = new Blob([json], {type: 'application/json'});
+                  var jsonString = csvJSON(this.result);
+                  txt.value = JSON.stringify(jsonString, null, "\t");
+                  var blob = new Blob([JSON.stringify(jsonString)], {type: 'application/json'});
                   var url = URL.createObjectURL(blob);
                   output.innerHTML = '<a href="' + url + '">JSON file</a>';
               };
