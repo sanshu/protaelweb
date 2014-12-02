@@ -73,7 +73,15 @@
     border-left: 0px;
     border-right: 0px;
 }
-
+/*Protael link*/
+#prref{
+    fill: #18bc9c;
+    text-anchor:end;
+    font-size: 8px;
+}
+#prref:hover {
+    cursor: pointer;
+}
 /* GRAPH ELEMENTS*/
 svg{
     background: #FFF;
@@ -81,7 +89,7 @@ svg{
 
 /* Features*/
 .pl-ftrack{
-    text-anchor: middle;
+    text-anchor: left;
     /*    font-style: normal; 
         font-variant: normal; 
         font-weight: normal; 
