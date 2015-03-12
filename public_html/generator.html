@@ -24,7 +24,7 @@
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
 
     <script src="js/vendor/bootstrap-colorpicker.min.js"></script>
-    <script type="text/javascript" src="http://proteins.burnham.org:8080/Protael/js/snap.svg-min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.3.0/snap.svg-min.js"></script>
 
     <link rel="stylesheet" href="css/main.css">
 
@@ -71,7 +71,22 @@
               "label": "regions",
               "showLabels": "true",
               "features": [{label: '', start: '0', end: '0', color: '#fff'}]
-          }
+          },
+          "ftracks": [{
+                  "label": "1",
+                  "color": "blue",
+                  "allowOverlap": "true",
+                  "showLine": "true",
+                  "features": [{label: '', start: '0', end: '0'}]
+
+              }, {
+                  "label": "2",
+                  "color": "green",
+                  "allowOverlap": "true",
+                  "showLine": "true",
+                  "features": [{label: '', start: '0', end: '0'}]
+
+              }]
       };
 
       /** define ViewModel */
@@ -84,6 +99,22 @@
 
       viewModel.removeQtrack = function (track) {
           viewModel.qtracks.remove(track);
+      };
+
+      viewModel.addFtrack = function () {
+          viewModel.ftracks.push({
+              label: ko.observable('New ftrack'),
+              allowOverlap: ko.observable(false),
+              showLine : ko.observable(true),
+              display: ko.observable('block'),
+              color: ko.observable(''),
+              features: ko.observableArray([{label: '', start: '0', end: '0'}])
+          });
+          initgraphCPickers();
+      };
+
+      viewModel.removeFtrack = function (track) {
+          viewModel.ftracks.remove(track);
       };
 
       viewModel.addMarker = function () {
@@ -142,9 +173,10 @@
           viewModel.overlayfeatures.features.remove(item);
       };
 
-      viewModel.addFeature = function () {
-          viewModel.overlayfeatures.features.push({});
-          initCPickers();
+      viewModel.addFeature = function (item) {
+        console.log(item);
+          item.features.push({label: '', start: '0', end: '0'});
+       //   initCPickers();
       };
       viewModel.removeFeature = function (item) {
           viewModel.overlayfeatures.features.remove(item);
@@ -198,6 +230,7 @@
                   viewModel.bridges.removeAll();
                   viewModel.overlayfeatures.features.removeAll();
                   viewModel.qtracks.removeAll();
+                  viewModel.ftracks.removeAll();
 
                   $('#saveJson').on('click', function () {
                       saveJsonToFile.apply();
@@ -235,7 +268,7 @@
                                           protein.qtracks[q].color[2] = protein.qtracks[q].color[2] || '';
                                       }
                                   }
-                                  // need to process graph colors and convert single color to 
+                                  // need to process graph colors and convert single color to
                                   ko.mapping.fromJS(protein, viewModel);
                                   initCPickers();
                                   initgraphCPickers();
@@ -284,6 +317,7 @@
           viewModel.bridges.removeAll();
           viewModel.overlayfeatures.features.removeAll();
           viewModel.qtracks.removeAll();
+          viewModel.ftracks.removeAll();
           $(".protael_resizable").remove();
           $("#errorMsg").hide();
       }
@@ -373,10 +407,10 @@
       <div class="row">
         <div class="col-md-3">
           <h3 style="padding-top: 25px">Select a JSON file: </h3>
-          <div id="drop_zone"><input type="file" id="fileInput"> 
+          <div id="drop_zone"><input type="file" id="fileInput">
           </div>
         </div>
-        <div class="col-md-4" style="padding-top: 35px">           
+        <div class="col-md-4" style="padding-top: 35px">
           <div class="alert alert-danger" role="alert" id="errorMsg"></div>
         </div>
       </div>
@@ -409,7 +443,7 @@
                         <div class="form-group" id="seqColorInputs">
                           <label>Select color per data char:</label>
                           <div data-bind="foreach : seqcolors.colors.items">
-                            <button type='button' class='btn btn-default btn-sm seqColorpicker' data-bind="text: key"></button>                          
+                            <button type='button' class='btn btn-default btn-sm seqColorpicker' data-bind="text: key"></button>
                           </div>
                         </div>
                       </div>
@@ -426,14 +460,14 @@
                     <div id="collapseMark" class="panel-collapse collapse">
                       <div class="panel-body">
                         <div class="row ">
-                          <div class="col-sm-3"><button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addMarker">Add marker</button>  
+                          <div class="col-sm-3"><button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addMarker">Add marker</button>
                             <a href="getting-started.html#markers" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></div>
                         </div>
                         <div class="row " style="margin:10px;">
                           <div class="panel panel-info">
                             <div class="panel-heading">Predict N-linked glycosylation sites based on <code>N.[ST]</code> pattern</div>
                             <div class="panel-body">
-                              <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.findGlycoSites">Mark N-GlycoSites</button> 
+                              <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.findGlycoSites">Mark N-GlycoSites</button>
                               <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.clearAutoMarkers">Remove N-GlycoSites</button>
                             </div>
                           </div>
@@ -554,7 +588,7 @@
                         <div class="row rowgrid" id="regionsGrid" data-bind="foreach: overlayfeatures.features ">
                           <div class="form-group row">
                             <div class="col-sm-2">
-                              <input class="form-control input-sm"  name="label" type="text"  data-bind="value: $data.label" />
+                              <input class="form-control input-sm" name="label" type="text"  data-bind="value: $data.label" />
                             </div>
                             <div class="col-sm-2">
                               <input class="form-control input-sm" name="s"
@@ -571,7 +605,103 @@
                               <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.removeRegion">-</button>
                             </div>
                           </div>
-                        </div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFeatur">Features</a><span class="badge pull-right" data-bind="text: $root.ftracks().length">42</span>
+                      </h4>
+                    </div>
+                    <div id="collapseFeatur" class="panel-collapse collapse">
+                      <div class="panel-body">
+                        <p>Features and annotations are grouped in <i>ftracks</i></p>
+                        <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addFtrack">Add ftrack</button>
+                        <div class="panel-group" id="accordFT">
+                          <div id="collapseFTrack">
+                            <div class="panel-body">
+                              <div class="row">
+                                <div class="col-sm-2"><label>Label</label></div>
+                                <div class="col-sm-2"><label>Display</label></div>
+                                <div class="col-sm-2"><label>Overlap</label></div>
+                                <div class="col-sm-2"><label>Baseline</label></div>
+                                <div class="col-sm-2"><label>Color</label></div>
+                              </div>
+                              <div data-bind="foreach: {data:$root.ftracks, as:'ftrack'}"> <!-------------->
+                                <div class="row rowgrid" id="ftracksGrid" >
+                                  <div class="form-group row">
+                                    <div class="col-sm-2">
+                                      <input class="form-control input-sm"  name="label" type="text"  data-bind="value: ftrack.label" />
+                                    </div>
+                                    <div class="col-sm-2">
+                                      <select class="form-control input-sm" name="type"  data-bind="value: ftrack.display">
+                                        <option value="block">Block</option>
+                                        <option value="line">Line</option>
+                                      </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                      <input type="checkbox" data-bind="checked: ftrack.allowOverlap" /> Allow
+                                    </div>
+                                    <div class="col-sm-2">
+                                      <input type="checkbox" data-bind="checked: ftrack.showLine" /> Show
+                                    </div>
+                                    <div class="col-sm-2">
+                                      <button type='button' class='btn btn-default btn-sm colorpick' data-bind="style: {backgroundColor: ftrack.color}, text: ftrack.color|| 'Color'" name='c1'>Color</button>
+                                    </div>
+                                    <div class="col-sm-2">
+                                      <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.removeFtrack">-</button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="panel panel-default">
+                                  <div class="panel-heading">
+                                    <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                                      <a data-toggle="collapse" data-parent="#accordFT" data-bind="text: ftrack.label() + ': features', attr : { 'href': '#collapse' + $index() }">Features</a>
+                                      <span class="badge pull-right" data-bind="text:ftrack.features().length">5</span>
+                                    </h4>
+                                  </div>
+                                  <div>
+                                    <div data-bind="attr : { 'id': 'collapse' + $index() }"  class="panel-collapse collapse">
+                                      <div class="panel-body">
+                                        <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addFeature">Add feature</button>
+                                        <div class="row">
+                                          <div class="col-sm-2"><label>Label</label></div>
+                                          <div class="col-sm-2"><label>Start</label></div>
+                                          <div class="col-sm-2"><label>End</label></div>
+                                        </div>
+                                        <div class="row rowgrid" id="regionsGrid" data-bind="foreach: {data: ftrack.features, as :'feature' }">
+                                          <div class="form-group row">
+                                            <div class="col-sm-2">
+                                              <input class="form-control input-sm" name="label" type="text"  data-bind="value: feature.label" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                              <input class="form-control input-sm" name="s"
+                                                     min="0" type="number"  data-bind="value: feature.start"/>
+                                            </div>
+                                            <div class="col-sm-2">
+                                              <input class="form-control input-sm" name="e"
+                                                     min="0" type="number"  data-bind="value: feature.end"/>
+                                            </div>
+
+                                            <div class="col-sm-2">
+                                              <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.removeFeature">-</button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                </div>                              <!-------------->
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </fieldset>
