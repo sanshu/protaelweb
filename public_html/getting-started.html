@@ -9,42 +9,35 @@
     <title>Examples : Protael</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.1.1/flatly/bootstrap.min.css">
-
     <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
     <!--Only needed to display code on this page-->
     <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
-
     <!--JQuery and jQueryUI are required:-->
-    <link rel="stylesheet"
-          href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script> 
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
-
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.3.0/snap.svg-min.js"></script>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/main.css">
-
     <script type="text/javascript" src="js/protael.0.1.0.min.js"></script>
     <script>
       var seq = "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGA",
               myProtein = {
-                  "sequence": seq,
+                  "sequence": seq
               },
-              myProtein3 = {
-                  "sequence": seq,
-                  "seqcolors": {
-                      // 'data' contains either comma-separated values, or string with 1 datachar per residue, ex: 'CCCCCHHHHH...'  
-                      "data": "CCCCCHHHHHCCCCCCCCCCEHEHEHCCCCCCCCCCCCCCCCCHHHHHCCCCCCCCCCEEEEHHCCCEC",
-                      "colors": {
-                          "H": "red",
-                          "E": "blue"
-                      }
-                  }
-              },
+      myProtein3 = {
+          "sequence": seq,
+          "seqcolors": {
+              // 'data' contains either comma-separated values, or string with 1 datachar per residue, ex: 'CCCCCHHHHH...'  
+              "data": "CCCCCHHHHHCCCCCCCCCCEHEHEHCCCCCCCCCCCCCCCCCHHHHHCCCCCCCCCCEEEEHHCCCEC",
+              "colors": {
+                  "H": "red",
+                  "E": "blue"
+              }
+          }
+      },
       myProtein4 = {
           "sequence": seq,
           "seqcolors": {
@@ -509,9 +502,9 @@
               function () {
 
                   var myProtein2 = {
-                      "sequence": "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGA",
+                      "sequence": "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGA"
                   },
-                          p1 = Protael(myProtein, "myProtaelContainer", true).draw(),
+                  p1 = Protael(myProtein, "myProtaelContainer", true).draw(),
                           p2 = Protael(myProtein2, "myProtaelContainer2", true).draw().setColoringScheme("Clustal");
                   p3 = Protael(myProtein3, "myProtaelContainer3", true).draw(),
                           p4 = Protael(myProtein4, "myProtaelContainer4", true).draw(),
@@ -525,7 +518,6 @@
     </script>
   </head>
   <body onload="prettyPrint()">
-
     <!--[if lt IE 7]>
  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
@@ -1043,7 +1035,7 @@ var myProtein = {
       UserVoice.push(['autoprompt', {}]);
     </script>
     <!--/ feedback -->
-     <script>
+    <script>
       (function (i, s, o, g, r, a, m) {
           i['GoogleAnalyticsObject'] = r;
           i[r] = i[r] || function () {
