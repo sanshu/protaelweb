@@ -53,10 +53,10 @@
           </ul>
         </div><!--/.navbar-collapse -->
       </div>
-     
+
       <a href='https://github.com/sanshu/protaeljs' 
-                     style='position:fixed;padding:5px 45px;width:222px;background-color:#149c82;color:#fff;font-size:13px;font-family:sans-serif;text-decoration:none; font-weight:bold;-webkit-backface-visibility:hidden;letter-spacing: .5px;border:2px dotted #fff;box-shadow:0 0 0 3px #149c82;text-shadow:0 0 0 #fff;top:50px;right:-50px;-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-webkit-transform:rotate(45deg);transform: rotate(45deg);'>
-                    Fork me on GitHub</a> 
+         style='position:fixed;padding:5px 45px;width:222px;background-color:#149c82;color:#fff;font-size:13px;font-family:sans-serif;text-decoration:none; font-weight:bold;-webkit-backface-visibility:hidden;letter-spacing: .5px;border:2px dotted #fff;box-shadow:0 0 0 3px #149c82;text-shadow:0 0 0 #fff;top:50px;right:-50px;-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-webkit-transform:rotate(45deg);transform: rotate(45deg);'>
+        Fork me on GitHub</a> 
 
       <!--[if lt IE 7]>
       
@@ -69,7 +69,10 @@
       <div class="container ">
         <div class="row">
           <div class="col-md-4">
-            <h1>Protael</h1> <h6> v.0.1.0 in beta-testing</h6>
+            <h1>Protael</h1>
+            <h5>v.0.1.0 &middot; <a href="https://github.com/sanshu/protaeljs" title="Find on GitHub"><i class="fa fa-github"></i></a>
+              <a href ="https://github.com/sanshu/protaeljs/issues/new" title="Report a bug"><i class="fa fa-bug"></i></a>
+              <a href="https://twitter.com/protael" title="Follow on Twitter"><i class="fa fa-twitter"></i></a></h5>
             <p>JavaScript library for visualizing biological sequences and related data.</p>
             <p><a class="btn btn-primary btn-lg" role="button" href="demo.html">Learn more &raquo;</a></p>
           </div>
@@ -100,7 +103,7 @@
                                       //.carousel 
                        </div>-->
           </div>
-        </div> 
+        </div>
       </div>
     </div>
 
@@ -162,26 +165,30 @@
       <footer>
         <p class="pull-right"><a href="#">Back to top</a></p>
         <p><a href="http://www.sanfordburnham.org" target="_blank"><img src="img/SB_icon_solid.svg" width="35" height="35" alt="Sanford-Burnham Medical Research Institute"></a>
-          &middot; &copy; 2014 <a href="http://www.godziklab.org" target="_blank">Godzik Lab</a> &middot; <a href="mailto:msedova@sanfordburnham.org"><span class="glyphicon glyphicon-envelope"></span> Contact</a> &middot;</p>
+          &middot; &copy; 2014 <a href="http://www.godziklab.org" target="_blank">Godzik Lab</a> &middot; 
+          <a href="mailto:msedova@sanfordburnham.org"><i class="fa fa-envelope"></i> Contact</a> &middot;
+          <a href="https://github.com/sanshu/protaeljs" title="Find on GitHub"><i class="fa fa-github"></i></a>&middot;
+          <a href ="https://github.com/sanshu/protaeljs/issues/new" title="Report a bug"><i class="fa fa-bug"></i></a>&middot;
+          <a href="https://twitter.com/protael" title="Follow on Twitter"><i class="fa fa-twitter"></i></a></p>
       </footer>
     </div> <!-- /container --> 
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script>
-(function (i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r;
-    i[r] = i[r] || function () {
-        (i[r].q = i[r].q || []).push(arguments)
-    }, i[r].l = 1 * new Date();
-    a = s.createElement(o),
-            m = s.getElementsByTagName(o)[0];
-    a.async = 1;
-    a.src = g;
-    m.parentNode.insertBefore(a, m)
-})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+              (function (i, s, o, g, r, a, m) {
+                  i['GoogleAnalyticsObject'] = r;
+                  i[r] = i[r] || function () {
+                      (i[r].q = i[r].q || []).push(arguments)
+                  }, i[r].l = 1 * new Date();
+                  a = s.createElement(o),
+                          m = s.getElementsByTagName(o)[0];
+                  a.async = 1;
+                  a.src = g;
+                  m.parentNode.insertBefore(a, m)
+              })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-ga('create', 'UA-50502533-2', 'auto');
-ga('send', 'pageview');
+              ga('create', 'UA-50502533-2', 'auto');
+              ga('send', 'pageview');
     </script>
   </body>
 </html>
