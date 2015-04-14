@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Examples : Protael</title>
+    <title>Documentation : Protael</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -59,14 +59,14 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="#">JSON structure</a></li>
+            <li><a href="#json">JSON structure</a></li>
 
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <div><h1 class="page-header">JSON configuration</h1>
+          <div><a id="json"></a><h1 class="page-header">JSON configuration</h1>
             <h3 style="padding-top:10px;">Protein object</h3>
-            <div>Sequence obejct is the main object required by Protael.</div>
+            <div>Sequence object is the main object required by Protael.</div>
             <pre class="prettyprint">
 seq = {
   "sequence"  : string,     // REQUIRED, main sequence
@@ -91,8 +91,8 @@ FTrack =  {
     "display"      : string,     // Defines how the feature will be drawn. 
                              // "block"(default) will render a rectangle and a label inside
                              // "line" will render a line and a label above it 
-    "showLine"     : boolean,    // Whether or not show center line
-    "allowOverlap" : boolean, // Whether or nor allow overlapping sequnces
+    "showLine"     : boolean,    // Whether or not show center line; DEFAULT = TRUE
+    "allowOverlap" : boolean, // Whether or nor allow overlapping sequences
     "clazz"        : string,     // CSS class name
     "features"     : [ Feature ] // Array of features in this track
 }
