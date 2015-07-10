@@ -175,7 +175,7 @@
           // and last one!
           sequences[seq.id] = seq.sequence;
           seqids.push(seq.id);
-
+          
           viewModel.seqIds = seqids;
           viewModel.seqHash = sequences;
           $('#the-basics-1 .typeahead').typeahead('destroy');
@@ -248,10 +248,13 @@
 /// for typeahead
       var substringMatcher = function (strs) {
           return function findMatches(q, cb) {
+              var matches, substrRegex;
+
               // an array that will be populated with substring matches
-              var matches = [],
-                      // regex used to determine if a string contains the substring `q`
-                      substrRegex = new RegExp(q, 'i');
+              matches = [];
+
+              // regex used to determine if a string contains the substring `q`
+              substrRegex = new RegExp(q, 'i');
 
               // iterate through the pool of strings and for any string that
               // contains the substring `q`, add it to the `matches` array

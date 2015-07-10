@@ -16,15 +16,11 @@
     <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
-
     <script src="js/vendor/bootstrap-colorpicker.min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.3.0/snap.svg-min.js"></script>
-
     <link rel="stylesheet" href="css/main.css">
-
     <script type="text/javascript" src="js/protael.0.1.0.min.js"></script>
     <style>
       .seqColorpicker,.gcolorpick , .colorpick{
@@ -102,7 +98,7 @@
           viewModel.ftracks.push({
               label: ko.observable('New ftrack'),
               allowOverlap: ko.observable(false),
-              showLine : ko.observable(true),
+              showLine: ko.observable(true),
               display: ko.observable('block'),
               color: ko.observable(''),
               features: ko.observableArray([{label: '', start: '0', end: '0'}])
@@ -171,9 +167,9 @@
       };
 
       viewModel.addFeature = function (item) {
-        console.log(item);
+          console.log(item);
           item.features.push({label: '', start: '0', end: '0'});
-       //   initCPickers();
+          //   initCPickers();
       };
       viewModel.removeFeature = function (item) {
           viewModel.overlayfeatures.features.remove(item);
@@ -378,27 +374,7 @@
     <!--[if lt IE 7]>
  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="index.html">Protael</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="getting-started.html">Getting started</a></li>
-            <li><a href="try.html">Try it</a></li>
-            <li><a href="demo.html">Examples</a></li>
-            <li><a href="generator.html">ProteinDesigner</a></li>
-            <li><a onClick="ga('send', 'event', 'Downloads', 'click', '/Protael.zip');" href="Protael.zip" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
-          </ul>
-        </div><!--/.navbar-collapse -->
-      </div>
+    <div id="nav">
     </div>
     <div class="container-fluid">
       <div class="row">
@@ -468,9 +444,7 @@
                               <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.clearAutoMarkers">Remove N-GlycoSites</button>
                             </div>
                           </div>
-
                         </div>
-
                         <div class="row ">
                           <div class="col-sm-2"><label>Type</label></div>
                           <div class="col-sm-1"><label>X</label></div>
@@ -770,6 +744,11 @@
     </div>
     <!--feedback -->
     <div id="feedback"><i class="fa fa-comments"></i></div>
+    <script> $(document)
+             .ready(function () {
+                 $("#nav").load('assets/navbar.html');
+             });
+    </script>
     <script>
       UserVoice = window.UserVoice || [];
      (function() {
@@ -808,6 +787,5 @@ UserVoice.push(['autoprompt', {}]);
       ga('send', 'pageview');
     </script>
     <script type="text/javascript" async="" src="js/vendor/FileSaver_Blob.js"></script>
-
   </body>
 </html>
