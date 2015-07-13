@@ -104,7 +104,7 @@ QTrack = {
                                   // for ex. "012345654321"
 }            </pre>
             <h3 style="padding-top:10px;">Markers and bridges</h3>
-            <div></div>
+            <div>Markers and bridges are diaplayed in the main sequence area.</div>
             <pre class="prettyprint">
 Marker = {
   "type": string      // REQUIRED, determines the shape of the marker.
@@ -115,10 +115,20 @@ Marker = {
   "color": string,    // HTML color string.
   "position": string  // position of the marker relative to the main sequence, DEFAULT: "top"
                       // "top" || "bottom"
-}</pre>
+}
+
+Bridge = {
+  "start": integer,      // REQUIRED. Bridge start 
+  "end": integer,        // REQUIRED. Bridge end. 
+  "type": string,         // Bridge label. 
+  "startlabel": string,  // Label for start position
+  "endlabel": string,    // Label for end position. 
+  "color": string,       // HTML color string.
+}           
+            </pre>
           </div> 
         </div>
-   </div>
+      </div>
     </div>
     <!--feedback -->
     <div id="feedback"><i class="fa fa-comments"></i></div>
