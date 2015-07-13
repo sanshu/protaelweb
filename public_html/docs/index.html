@@ -68,27 +68,27 @@ seq = {
 FTrack =  {
     "label"        : string,     // track label, shown on the left-hand side of the view
     "display"      : string,     // Defines how the feature will be drawn. 
-                             // "block"(default) will render a rectangle and a label inside
-                             // "line" will render a line and a label above it 
+                                 // "block"(default) will render a rectangle and a label inside
+                                 // "line" will render a line and a label above it 
     "showLine"     : boolean,    // Whether or not show center line; DEFAULT = TRUE
-    "allowOverlap" : boolean, // Whether or nor allow overlapping sequences
+    "allowOverlap" : boolean,    // Whether or nor allow overlapping sequences
     "clazz"        : string,     // CSS class name
     "features"     : [ Feature ] // Array of features in this track
 }
 
 Feature = {                       
     "id"          : string,
-    "label"       : string,   // REQUIRED, Label will be displayed inside on feature drawing
-    "start"       : integer,  // REQUIRED, start position of the feature
-    "end"         : integer,  // REQUIRED, start position of the feature
-    "clazz"       : string,   // CSS class name 
-    "properties"  : {         // Additional properties, will be converted to data-d attribute
+    "label"       : string,    // REQUIRED, Label will be displayed inside on feature drawing
+    "start"       : integer,   // REQUIRED, start position of the feature
+    "end"         : integer,   // REQUIRED, start position of the feature
+    "clazz"       : string,    // CSS class name 
+    "properties"  : {          // Additional properties, will be converted to data-d attribute
         prop_name : prop_value // string: string
     },
     "dbxrefs"  : {             // Links to external resources
         prop_name : prop_value // string: string : {"PFAM": "http://pfam.janelia.org/family/RRM_4"}
     },
-    "description" : string    // Short description, will be shown in tooltip
+    "description" : string     // Short description, will be shown in tooltip
     "regionType"  : string   
 }           </pre>
             <h3 style="padding-top:10px;">Quantitative track</h3>
@@ -102,14 +102,23 @@ QTrack = {
   "values" : [double] || string   // REQUIRED, either array of values or, 
                                   // for single-digit data, string containing 1 digit per residue
                                   // for ex. "012345654321"
-}
-            </pre>
+}            </pre>
             <h3 style="padding-top:10px;">Markers and bridges</h3>
             <div></div>
-            <pre class="prettyprint"></pre>
+            <pre class="prettyprint">
+Marker = {
+  "type": string      // REQUIRED, determines the shape of the marker.
+                      // possible values: "gap" || "stick" || "glycan" || "oliglycan" || "unknownglycan".   
+  "x": number,        // REQUIRED, if value is integer the marker will be placed in the center of the corresponding residue, 
+                      // if fractional (10.5) - between two residues, useful for ex. for gaps.
+  "label": string,    // marker label
+  "color": string,    // HTML color string.
+  "position": string  // position of the marker relative to the main sequence, DEFAULT: "top"
+                      // "top" || "bottom"
+}</pre>
           </div> 
         </div>
-      </div>
+   </div>
     </div>
     <!--feedback -->
     <div id="feedback"><i class="fa fa-comments"></i></div>
