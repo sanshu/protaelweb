@@ -50,10 +50,10 @@
 seq = {
   "sequence"  : string,     // REQUIRED, main sequence
   "seqcolors" : {
-    "data"    : "C,C,C,C,C,H,H,H,H,H,C,...",
+    "data"    : string,     // Comma-separated data set, ex: "C,C,C,C,C,H,H,H,H,H,C,...",
+                            // Each element could be use to assign specific background color to a residue
     "colors"  : {
-      "H"     : "red",
-      "E"     : "blue"
+      string     : string   // Colors assigned to specific data values, ex "C" : "red"   
     }
   },
   "ftracks"   : [ FTrack ], // Array of feature tracks
