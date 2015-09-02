@@ -8,25 +8,6 @@
     <property name="dir.img" value="${base}/img" />
     <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask"
              classpath="./tools/compiler.jar"/>
-
-<!--    <target name="compile">
-        <jscomp compilationLevel="simple" warning="default" 
-                debug="false" output="${dir.js}/protael.0.1.0.min.js">
-            <sources dir="${dir.js}">
-                <file name="Protael.js"/>
-            </sources>
-        </jscomp>
-    
-    </target>
-    <target name="zip" depends="compile">
-        <zip destfile="${base}/Protael.zip" update="true">
-            <fileset dir="${base}" includes="protaelSeed.html"/>
-            <fileset dir="${base}" includes="js/protael.0.1.0.min.js"/>
-            <fileset dir="${base}" includes="css/Protael.css"/>            
-        </zip>
-    </target>
-    -->
-    
     <property name="protaelJSpath" value="../../ProtaelJS/"/>
     
     <target name="buildJS">
