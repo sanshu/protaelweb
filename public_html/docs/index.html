@@ -49,7 +49,7 @@
                 <li><a href="#ali">Alignment</a></li>
               </ul>
             </li>
-            <li><a href="#json">CSS styling</a></li>
+            <li><a href="#css">CSS styling</a></li>
             <li>
               <ul style="list-style-type: none">
                 <li><a href="#bground">Background</a></li>
@@ -187,70 +187,131 @@ Bridge = {
               <div></div>
               <pre class="prettyprint">
 Alignment = {
-  "sequence"    : string,   // REQUIRED
-  "CS"          : string,   // Name of the coloring schema for this sequence
-                            // by default 'ALI' is used (gray background for aligned regions)
-  "id"          : string,   // sequence id
-  "label"       : string,   // label for tooltip (will be used in case "data" is not set, see below)
-  "start"       : integer,  // start position of the alignment
+  "sequence"    : string,   // REQUIRED.
+  "CS"          : string,   // Name of the coloring schema for this sequence,
+                            // by default 'ALI' is used (gray background for aligned regions).
+  "id"          : string,   // Sequence id
+  "label"       : string,   // Label for tooltip (will be used in case "properties" is not set, see below).
+  "start"       : integer,  // Start position of the alignment.
   "properties"  : Object,   // <a href="#props" style="text-decoration: underline">Additional properties</a>
   "dbxrefs"     : Object    // <a href="#props" style="text-decoration: underline">Links to external resources</a>
-
-},
+}
               </pre>
             </div>
           </div>
-        </div>
-      </div>
-      <!--feedback -->
-      <div id="feedback"><i class="fa fa-comments"></i></div>
-      <script> $(document)
-                .ready(function () {
-                    $("#nav").load('../assets/navbarsub.html');
-                });
-      </script>
-      <script>
-        UserVoice = window.UserVoice || [];
-        (function () {
-            var uv = document.createElement('script');
-            uv.type = 'text/javascript';
-            uv.async = true;
-            uv.src = '//widget.uservoice.com/fOsDxyHzBBW8D2H6Qa4NQ.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(uv, s)
-        })();
+          <div><br/>
+            <a id="css"></a><h1 class="page-header">CSS styling</h1>
+            <div>Most of the elements on Protael SVG display could be styled using CSS. Each element type (features, markers etc) has it's own CSS class name assigned.
+              <br/>
+              For some elements (qtracks chart, markers, bridges) styling could be done only by providing corresponding parameters in JSON object.<br />
 
-        UserVoice.push(['set', {
-                accent_color: '#149C82',
-                trigger_color: 'white',
-                trigger_background_color: '#149C82'
-            }]);
+              <div class="alert alert-success">NOTE: Protael uses <a href="http://www.w3.org/TR/SVG/styling.html">SVG set</a> of CSS properties.
+              </div>
 
-        UserVoice.push(['identify', {}]);
-        UserVoice.push(['addTrigger', '#feedback', {mode: 'contact', trigger_position: 'bottom-right'}]);
-        UserVoice.push(['autoprompt', {}]);
-      </script>
-      <!--/ feedback -->
+            </div>
+            <div><h3 id="cssclasses">List of available CSS classes</h3>
+              <div>Default background color is white.  To override it use <code>background</code> property.</div>
+            </div>
+            <div><h3 id="bground">Display background</h3>
+              <div>Default background color is white.  To override it use <code>background</code> property.</div>
+              <pre class="prettyprint lang-css" lang='css'>
+// This will change background color to 'black' and fill color for sequence text
+// and markers/bridges (without JSON-specified color) to 'white'
+<i>containerId</i> svg{
+  background: black;
+  fill: white;
+}              </pre>
+            </div>
+
+            <div><h3 id="cssaxes">Axes</h3>
+              <div>There are two types of axes in Protael
+                <ul><li><code>major</code> - drawn every 50 residues</li>
+                  <li><code>minor</code> - drawn every 10 residues.</div>
+                    <table class="table table-striped table-bordered">
+                      <tr><th>Element type</th><th>CSS class/ID</th><th>Comment</th></tr>
+                      <tr><td>Axes</td><td>#axes</td><td>Defines strike width and fill for all axes.</td></tr>
+                      <tr><td>Axes</td><td>.pl-axeslbl</td><td>Defines style for axes labels.</td></tr>
+                      <tr><td>Major axes</td><td>#axes .major </td><td>Use to change major axes color and stroke width.</td></tr>
+                      <tr><td>Minor axes</td><td>#axes .minor</td><td>Use to change minor axes color and stroke width.</td></tr>
+                    </table>
+                    </div>
+                    <div>
+                      <h3 id="cssftrack">Features</h3>
+                      <table class="table table-striped table-bordered">
+                        <tr><th>Element type</th><th>CSS class</th><th>Comment</th></tr>
+                        <tr><td>Feature track</td><td>.pl-ftrack</td><td>Defines style for ftracks.</td></tr>
+                        <tr><td>Feature track</td><td>.pl-ftrack-label</td><td>Defines style for feature track label</td></tr>
+                        <tr><td>Feature</td><td>.pl-feature</td><td>Defines style for individual feature, such as fill and stroke. Could be used with <code>:hover</code> selector to enable feature highlighting</td></tr>
+                        <tr><td>Feature</td><td>.pl-feature-label</td><td>Defines style for feature labels, such as font size and color. To change color use <code>fill</code> property.
+                            Do not use <code>stroke</code>.</td></tr>
+                        <tr><td></td><td></td><td></td></tr>
+                      </table>
+                    </div>
+                    <div>
+                      <h3 id="cssqtrack">Qantitative tracks</h3>
+                      <table class="table table-striped table-bordered">
+                        <tr><th>Element type</th><th>CSS class/ID</th><th>Comment</th></tr>
+                        <tr><td>Qtrack group</td><td>.pl-chart</td><td>This class is used only to "label" the whole qtrack group (label, scale lines, chart) to enable JavaScript interaction.</td></tr>
+                        <tr><td>Qtrack scale lines</td><td>.pl-chart-top</td><td>Define style for max value scale line. Hidden by default. Use <code>stroke</code> property to change color.</td></tr>
+                        <tr><td>Qtrack scale lines</td><td>.pl-chart-bottom</td><td>Define style for min value scale line. Hidden by default. Use <code>stroke</code> property to change color.</td></tr>
+                        <tr><td>Qtrack scale lines</td><td>.pl-chart-center</td><td>Define style for center value scale line. Visible by default. Use <code>stroke</code> property to change color.</td></tr>
+                        <tr><td>Qtrack label</td><td>.pl-chart-label</td><td>Defines style for qtrack label.</td></tr>
+                        <tr><td>Qtrack chart</td><td>.pl-chart-area</td><td>Use to change <code>stroke-*</code> properties for the chart. Cannot be used to define <code>fill</code> color, this is done via JSON object.</td></tr>
+                      </table>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    <!--feedback -->
+                    <div id="feedback"><i class="fa fa-comments"></i></div>
+                    <script> $(document)
+                              .ready(function () {
+                                  $("#nav").load('../assets/navbarsub.html');
+                              });
+                    </script>
+                    <script>
+                      UserVoice = window.UserVoice || [];
+                      (function () {
+                          var uv = document.createElement('script');
+                          uv.type = 'text/javascript';
+                          uv.async = true;
+                          uv.src = '//widget.uservoice.com/fOsDxyHzBBW8D2H6Qa4NQ.js';
+                          var s = document.getElementsByTagName('script')[0];
+                          s.parentNode.insertBefore(uv, s)
+                      })();
+
+                      UserVoice.push(['set', {
+                              accent_color: '#149C82',
+                              trigger_color: 'white',
+                              trigger_background_color: '#149C82'
+                          }]);
+
+                      UserVoice.push(['identify', {}]);
+                      UserVoice.push(['addTrigger', '#feedback', {mode: 'contact', trigger_position: 'bottom-right'}]);
+                      UserVoice.push(['autoprompt', {}]);
+                    </script>
+                    <!--/ feedback -->
 
 
-      <!--Only needed to display code on this page-->
-      <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
-      <script>
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function () {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                    m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+                    <!--Only needed to display code on this page-->
+                    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+                    <script>
+                      (function (i, s, o, g, r, a, m) {
+                          i['GoogleAnalyticsObject'] = r;
+                          i[r] = i[r] || function () {
+                              (i[r].q = i[r].q || []).push(arguments)
+                          }, i[r].l = 1 * new Date();
+                          a = s.createElement(o),
+                                  m = s.getElementsByTagName(o)[0];
+                          a.async = 1;
+                          a.src = g;
+                          m.parentNode.insertBefore(a, m)
+                      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-        ga('create', 'UA-50502533-2', 'auto');
-        ga('send', 'pageview');
+                      ga('create', 'UA-50502533-2', 'auto');
+                      ga('send', 'pageview');
 
-      </script>
-  </body>
-</html>
+                    </script>
+                    </body>
+                    </html>
