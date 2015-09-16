@@ -222,96 +222,103 @@ Alignment = {
   fill: white;
 }              </pre>
             </div>
-
             <div><h3 id="cssaxes">Axes</h3>
-              <div>There are two types of axes in Protael
+              <div>There are two types of axes in Protael:
                 <ul><li><code>major</code> - drawn every 50 residues</li>
-                  <li><code>minor</code> - drawn every 10 residues.</div>
-                    <table class="table table-striped table-bordered">
-                      <tr><th>Element type</th><th>CSS class/ID</th><th>Comment</th></tr>
-                      <tr><td>Axes</td><td>#axes</td><td>Defines strike width and fill for all axes.</td></tr>
-                      <tr><td>Axes</td><td>.pl-axeslbl</td><td>Defines style for axes labels.</td></tr>
-                      <tr><td>Major axes</td><td>#axes .major </td><td>Use to change major axes color and stroke width.</td></tr>
-                      <tr><td>Minor axes</td><td>#axes .minor</td><td>Use to change minor axes color and stroke width.</td></tr>
-                    </table>
-                    </div>
-                    <div>
-                      <h3 id="cssftrack">Features</h3>
-                      <table class="table table-striped table-bordered">
-                        <tr><th>Element type</th><th>CSS class</th><th>Comment</th></tr>
-                        <tr><td>Feature track</td><td>.pl-ftrack</td><td>Defines style for ftracks.</td></tr>
-                        <tr><td>Feature track</td><td>.pl-ftrack-label</td><td>Defines style for feature track label</td></tr>
-                        <tr><td>Feature</td><td>.pl-feature</td><td>Defines style for individual feature, such as fill and stroke. Could be used with <code>:hover</code> selector to enable feature highlighting</td></tr>
-                        <tr><td>Feature</td><td>.pl-feature-label</td><td>Defines style for feature labels, such as font size and color. To change color use <code>fill</code> property.
-                            Do not use <code>stroke</code>.</td></tr>
-                        <tr><td></td><td></td><td></td></tr>
-                      </table>
-                    </div>
-                    <div>
-                      <h3 id="cssqtrack">Qantitative tracks</h3>
-                      <table class="table table-striped table-bordered">
-                        <tr><th>Element type</th><th>CSS class/ID</th><th>Comment</th></tr>
-                        <tr><td>Qtrack group</td><td>.pl-chart</td><td>This class is used only to "label" the whole qtrack group (label, scale lines, chart) to enable JavaScript interaction.</td></tr>
-                        <tr><td>Qtrack scale lines</td><td>.pl-chart-top</td><td>Define style for max value scale line. Hidden by default. Use <code>stroke</code> property to change color.</td></tr>
-                        <tr><td>Qtrack scale lines</td><td>.pl-chart-bottom</td><td>Define style for min value scale line. Hidden by default. Use <code>stroke</code> property to change color.</td></tr>
-                        <tr><td>Qtrack scale lines</td><td>.pl-chart-center</td><td>Define style for center value scale line. Visible by default. Use <code>stroke</code> property to change color.</td></tr>
-                        <tr><td>Qtrack label</td><td>.pl-chart-label</td><td>Defines style for qtrack label.</td></tr>
-                        <tr><td>Qtrack chart</td><td>.pl-chart-area</td><td>Use to change <code>stroke-*</code> properties for the chart. Cannot be used to define <code>fill</code> color, this is done via JSON object.</td></tr>
-                      </table>
-                    </div>
-                    </div>
-                    </div>
-                    </div>
-                    </div>
-                    <!--feedback -->
-                    <div id="feedback"><i class="fa fa-comments"></i></div>
-                    <script> $(document)
-                              .ready(function () {
-                                  $("#nav").load('../assets/navbarsub.html');
-                              });
-                    </script>
-                    <script>
-                      UserVoice = window.UserVoice || [];
-                      (function () {
-                          var uv = document.createElement('script');
-                          uv.type = 'text/javascript';
-                          uv.async = true;
-                          uv.src = '//widget.uservoice.com/fOsDxyHzBBW8D2H6Qa4NQ.js';
-                          var s = document.getElementsByTagName('script')[0];
-                          s.parentNode.insertBefore(uv, s)
-                      })();
+                  <li><code>minor</code> - drawn every 10 residues.</li></ul></div>
+              <table class="table table-striped table-bordered">
+                <tr><th>Element type</th><th>CSS class/ID</th><th>Comment</th></tr>
+                <tr><td>Axes</td><td>#axes</td><td>Defines strike width and fill for all axes.</td></tr>
+                <tr><td>Axes</td><td>.pl-axeslbl</td><td>Defines style for axes labels.</td></tr>
+                <tr><td>Major axes</td><td>#axes .major </td><td>Use to change major axes color and stroke width.</td></tr>
+                <tr><td>Minor axes</td><td>#axes .minor</td><td>Use to change minor axes color and stroke width.</td></tr>
+              </table>
+            </div>
+            <div>
+              <h3 id="cssftrack">Features</h3>
+              <table class="table table-striped table-bordered">
+                <tr><th>Element type</th><th>CSS class</th><th>Comment</th></tr>
+                <tr><td>Feature track</td><td>.pl-ftrack</td><td>Defines style for ftracks.</td></tr>
+                <tr><td>Feature track</td><td>.pl-ftrack-label</td><td>Defines style for feature track label.</td></tr>
+                <tr><td>Feature</td><td>.pl-feature</td><td>Defines style for individual feature, such as fill and stroke. Could be used with <code>:hover</code> selector to enable feature highlighting.</td></tr>
+                <tr><td>Feature</td><td>.pl-feature-label</td><td>Defines style for feature labels, such as font size and color. To change color use <code>fill</code> property.
+                    Do not use <code>stroke</code>.</td></tr>
+              </table>
+            </div>
+            <div>
+              <h3 id="cssqtrack">Qantitative tracks</h3>
+              <table class="table table-striped table-bordered">
+                <tr><th>Element type</th><th>CSS class/ID</th><th>Comment</th></tr>
+                <tr><td>Qtrack group</td><td>.pl-chart</td><td>This class is used only to "label" the whole qtrack group (label, scale lines, chart) to enable JavaScript interaction.</td></tr>
+                <tr><td>Qtrack scale lines</td><td>.pl-chart-top</td><td>Define style for max value scale line. Hidden by default. Use <code>stroke</code> property to change color.</td></tr>
+                <tr><td>Qtrack scale lines</td><td>.pl-chart-bottom</td><td>Define style for min value scale line. Hidden by default. Use <code>stroke</code> property to change color.</td></tr>
+                <tr><td>Qtrack scale lines</td><td>.pl-chart-center</td><td>Define style for center value scale line. Visible by default. Use <code>stroke</code> property to change color.</td></tr>
+                <tr><td>Qtrack label</td><td>.pl-chart-label</td><td>Defines style for qtrack label.</td></tr>
+                <tr><td>Qtrack chart</td><td>.pl-chart-area</td><td>Use to change <code>stroke-*</code> properties for the chart. Cannot be used to define <code>fill</code> color, this is done via JSON object.</td></tr>
+              </table>
+            </div>
+            <div>
+              <h3 id="cssother">Other elementss</h3>
+              <table class="table table-striped table-bordered">
+                <tr><th>Element type</th><th>CSS class/ID</th><th>Comment</th></tr>
+                <tr><td>Tooltip</td><td>.ui-tooltip</td><td>This is a standard <a href="https://jqueryui.com/tooltip/" target="_blank">JQuery UI tooltip</a> class.</td></tr>
+                <tr><td>Bridge</td><td>.pl-bridge</td><td>Defines font and stroke for bridges. It is not recommended to change CSS properties for bridges.</td></tr> 
+                <tr><td>Marker</td><td>.pl-marker</td><td>Used only to "label" markers to enable JavaScript interaction.</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--feedback -->
+    <div id="feedback"><i class="fa fa-comments"></i></div>
+    <script> $(document)
+              .ready(function () {
+                  $("#nav").load('../assets/navbarsub.html');
+              });
+    </script>
+    <script>
+      UserVoice = window.UserVoice || [];
+      (function () {
+          var uv = document.createElement('script');
+          uv.type = 'text/javascript';
+          uv.async = true;
+          uv.src = '//widget.uservoice.com/fOsDxyHzBBW8D2H6Qa4NQ.js';
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(uv, s)
+      })();
 
-                      UserVoice.push(['set', {
-                              accent_color: '#149C82',
-                              trigger_color: 'white',
-                              trigger_background_color: '#149C82'
-                          }]);
+      UserVoice.push(['set', {
+              accent_color: '#149C82',
+              trigger_color: 'white',
+              trigger_background_color: '#149C82'
+          }]);
 
-                      UserVoice.push(['identify', {}]);
-                      UserVoice.push(['addTrigger', '#feedback', {mode: 'contact', trigger_position: 'bottom-right'}]);
-                      UserVoice.push(['autoprompt', {}]);
-                    </script>
-                    <!--/ feedback -->
+      UserVoice.push(['identify', {}]);
+      UserVoice.push(['addTrigger', '#feedback', {mode: 'contact', trigger_position: 'bottom-right'}]);
+      UserVoice.push(['autoprompt', {}]);
+    </script>
+    <!--/ feedback -->
 
 
-                    <!--Only needed to display code on this page-->
-                    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
-                    <script>
-                      (function (i, s, o, g, r, a, m) {
-                          i['GoogleAnalyticsObject'] = r;
-                          i[r] = i[r] || function () {
-                              (i[r].q = i[r].q || []).push(arguments)
-                          }, i[r].l = 1 * new Date();
-                          a = s.createElement(o),
-                                  m = s.getElementsByTagName(o)[0];
-                          a.async = 1;
-                          a.src = g;
-                          m.parentNode.insertBefore(a, m)
-                      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    <!--Only needed to display code on this page-->
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+    <script>
+      (function (i, s, o, g, r, a, m) {
+          i['GoogleAnalyticsObject'] = r;
+          i[r] = i[r] || function () {
+              (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date();
+          a = s.createElement(o),
+                  m = s.getElementsByTagName(o)[0];
+          a.async = 1;
+          a.src = g;
+          m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-                      ga('create', 'UA-50502533-2', 'auto');
-                      ga('send', 'pageview');
+      ga('create', 'UA-50502533-2', 'auto');
+      ga('send', 'pageview');
 
-                    </script>
-                    </body>
-                    </html>
+    </script>
+  </body>
+</html>
