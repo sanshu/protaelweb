@@ -38,7 +38,7 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="#json">JSON structure</a></li>
+            <li><a href="#json">JSON specification</a></li>
             <li>
               <ul style="list-style-type: none">
                 <li><a href="#prot">Sequence object</a></li>
@@ -53,17 +53,17 @@
             <li>
               <ul style="list-style-type: none">
                 <li><a href="#bground">Background</a></li>
-                <li><a href="#cssaxes">Axes</a></li>
+                <li><a href="#cssgrid">Grid lines</a></li>
                 <li><a href="#cssftrack">Features</a></li>
                 <li><a href="#cssqtrack">Quantitative track</a></li>
-                 <li><a href="#cssother">Other</a></li>
+                <li><a href="#cssother">Other elements</a></li>
               </ul>
             </li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <div>
-            <a id="json"></a><h1 class="page-header">JSON configuration</h1>
+            <a id="json"></a><h1 class="page-header">Protael JSON specification</h1>
             <div><h3 id="prot">Sequence object</h3>
               <div>Sequence object is the main object required by Protael.</div>
               <pre class="prettyprint">
@@ -71,9 +71,9 @@ seq = {
   "sequence"  : string,     // REQUIRED, main sequence.
   "seqcolors" : {
     "data"    : string,     // Comma-separated data set, ex: "C,C,C,C,C,H,H,H,H,H,C,...".
-                            // Each element could be use to assign specific background color to a residue.
+                            // Each element is used to assign specific background color to a residue.
     "colors"  : {
-      string     : string   // Colors assigned to specific data values, ex "C" : "red".
+      string     : string   // Colors assigned to specific data values, e.g. "C" : "red".
     }
   },
   "ftracks"    : [ <a href="#ftrack" style="text-decoration: underline">FTrack</a> ],   // Array of feature tracks.
@@ -88,7 +88,7 @@ seq = {
                 <br /><code>properties</code> will be converted to <code>data-d</code>
                 HTML attribute and by default used to display properties table in an object tooltip. If there is a property named <code>pdbid</code>
                 Protael will try to fetch image of the corresponding structure from PDB and place it in the tooltip.
-                <br /><code>dbxrefs</code> contains links (ie. to external databases) and will be converted to <code>data-x</code>
+                <br /><code>dbxrefs</code> contains links (for example to external databases) and will be converted to <code>data-x</code>
                 HTML attribute and by default used to display dialog with external links when object is clicked.</div>
               <pre class="prettyprint">
 "properties" = {
@@ -96,12 +96,12 @@ seq = {
 };
 
 Example:
-    "properties" = {
+    "properties" : {
       "pdbid"  : "1bo4"
     };
 
 "dbxrefs" = {
-  string:string       // name:values pairs
+  string:string       // name:value pairs
 };
 
 Example:
@@ -139,30 +139,31 @@ Feature = {
             </div>
             <div>
               <h3 id="qtrack">Quantitative track</h3>
-              <div>Quantitative tracks are displayed as chart, where each datapoint correspond to a residue. </div>
+              <div>Quantitative tracks are displayed as chart, where each datapoint corresponds to a residue. </div>
               <pre class="prettyprint">
 QTrack = {
-  "label"      : string,              // Track label.
-  "color"      : string || [string],  // HTML color string. Could be single color, or
-                                      // array of 2 or 3 colors for gradient fill
-  "type"       : string,              // chart type, area/area-spline(default)/line/spline/column.
-  "values"     : [double] || string,  // REQUIRED, either array of values or,
-                                      // for single-digit data, string containing 1 digit per residue
-                                      // for ex. "012345654321".
-  "properties" : Object,              // <a href="#props" style="text-decoration: underline">Additional properties</a>.
-  "dbxrefs"    : Object               // <a href="#props" style="text-decoration: underline">Links to external resources</a>.
+  "label"        : string,              // Track label.
+  "color"        : string || [string],  // HTML color string. Could be single color, or
+                                        // array of 2 or 3 colors for gradient fill. DEFAULT="orange"
+  "type"         : string,              // chart type, area/area-spline(default)/line/spline/column.
+  "values"       : [double] || string,  // REQUIRED, either array of values or,
+                                        // for single-digit data, string containing 1 digit per residue
+                                        // e.g. "012345654321".
+  "displayScale" : boolean,             // When TRUE will display min and max values for the chart
+  "properties"   : Object,              // <a href="#props" style="text-decoration: underline">Additional properties</a>.
+  "dbxrefs"      : Object               // <a href="#props" style="text-decoration: underline">Links to external resources</a>.
 }
               </pre>
             </div>
             <div>
-              <h3 id="marker" >Markers and bridges</h3>
+              <h3 id="marker">Marker and bridge</h3>
               <div>Markers and bridges are displayed in the main sequence area.</div>
               <pre class="prettyprint">
 Marker = {
   "type"        : string    // REQUIRED, determines the shape of the marker.
                             // possible values: "gap" || "stick" || "glycan" || "oliglycan" || "unknownglycan".
   "x"           : number,   // REQUIRED, if value is integer the marker will be placed in the center of the corresponding residue,
-                            // if fractional (10.5) - between two residues, useful for ex. for gaps.
+                            // if fractional (10.5) - between two residues, useful for example to mark gaps.
   "label"       : string,   // marker label
   "color"       : string,   // HTML color string.
   "position"    : string,   // position of the marker relative to the main sequence, DEFAULT: "top"
@@ -202,17 +203,12 @@ Alignment = {
           </div>
           <div><br/>
             <a id="css"></a><h1 class="page-header">CSS styling</h1>
-            <div>Most of the elements on Protael SVG display could be styled using CSS. Each element type (features, markers etc) has it's own CSS class name assigned.
-              <br/>
+            <div>Most of the elements on Protael SVG display could be styled using CSS. Each element type (features, markers etc) has it's own CSS class name assigned.<br/>
               For some elements (qtracks chart, markers, bridges) styling could be done only by providing corresponding parameters in JSON object.<br />
-
-              <div class="alert alert-success">NOTE: Protael uses <a href="http://www.w3.org/TR/SVG/styling.html">SVG set</a> of CSS properties.
-              </div>
-
+              <div class="alert alert-success">NOTE: Protael uses <a href="http://www.w3.org/TR/SVG/styling.html">SVG set</a> of CSS properties.</div>
             </div>
-           
-            <div><h3 id="bground">Display background</h3>
-              <div>Default background color is white.  To override it use <code>background</code> property.</div>
+            <div><h3 id="bground">Background</h3>
+              <div>Default background color is white. To override it use <code>background</code> property.</div>
               <pre class="prettyprint lang-css" lang='css'>
 // This will change background color to 'black' and fill color for sequence text
 // and markers/bridges (without JSON-specified color) to 'white'
@@ -221,16 +217,16 @@ Alignment = {
   fill: white;
 }              </pre>
             </div>
-            <div><h3 id="cssaxes">Axes</h3>
-              <div>There are two types of axes in Protael:
+            <div><h3 id="cssgrid">Grid lines</h3>
+              <div>There are two types of grid lines in Protael:
                 <ul><li><code>major</code> - drawn every 50 residues</li>
                   <li><code>minor</code> - drawn every 10 residues.</li></ul></div>
               <table class="table table-striped table-bordered">
                 <tr><th>Element type</th><th>CSS class/ID</th><th>Comment</th></tr>
-                <tr><td>Axes</td><td>#axes</td><td>Defines strike width and fill for all axes.</td></tr>
-                <tr><td>Axes</td><td>.pl-axeslbl</td><td>Defines style for axes labels.</td></tr>
-                <tr><td>Major axes</td><td>#axes .major </td><td>Use to change major axes color and stroke width.</td></tr>
-                <tr><td>Minor axes</td><td>#axes .minor</td><td>Use to change minor axes color and stroke width.</td></tr>
+                <tr><td>Grid</td><td>#gridlines</td><td>Defines strike width and fill for all grid lines.</td></tr>
+                <tr><td>Grid</td><td>.pl-grid-label</td><td>Defines style for grid labels.</td></tr>
+                <tr><td>Major grid lines</td><td>.pl-grid-major</td><td>Use to change major grid lines color and stroke width.</td></tr>
+                <tr><td>Minor grid lines</td><td>.pl-grid-minor</td><td>Use to change minor grid lines color and stroke width.</td></tr>
               </table>
             </div>
             <div>
@@ -245,7 +241,7 @@ Alignment = {
               </table>
             </div>
             <div>
-              <h3 id="cssqtrack">Qantitative tracks</h3>
+              <h3 id="cssqtrack">Quantitative tracks</h3>
               <table class="table table-striped table-bordered">
                 <tr><th>Element type</th><th>CSS class/ID</th><th>Comment</th></tr>
                 <tr><td>Qtrack group</td><td>.pl-chart</td><td>This class is used only to "label" the whole qtrack group (label, scale lines, chart) to enable JavaScript interaction.</td></tr>
