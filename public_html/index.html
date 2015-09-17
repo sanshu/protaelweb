@@ -44,12 +44,13 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">            
-            <li><a href="./getting-started.html">Getting started</a></li>
             <li><a href="./try.html">Try it</a></li>
-            <li><a href="./demo.html">Examples</a></li>
-            <li><a href="./docs/index.html">Documentation</a></li>
+            <li><a href="./getting-started.html">Getting started</a></li>
             <li><a href="./generator.html">ProteinDesigner</a></li>
+            <li><a href="./docs/index.html">Documentation</a></li>
             <li><a onClick="ga('send', 'event', 'Downloads', 'Click', '/Protael.zip');" href="./Protael.zip" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
+
+            <li><a href="./demo.html">Examples</a></li>
           </ul>
         </div><!--/.navbar-collapse -->
       </div>
@@ -154,7 +155,7 @@
           </div>
           <div class="col-md-4 col-sm-6 col-xs-12">
             <h4><i class="fa fa-pencil"></i> Scalability</h4>
-            Protael generates scalable vector graphics that would look great on any display at any zoom.
+            Protael generates scalable vector graphics that would look great on any display at any zoom level.
           </div>
         </div>
       </section>
@@ -190,20 +191,20 @@
                   });
         </script>-->
     <script>
-          (function (i, s, o, g, r, a, m) {
-              i['GoogleAnalyticsObject'] = r;
-              i[r] = i[r] || function () {
-                  (i[r].q = i[r].q || []).push(arguments)
-              }, i[r].l = 1 * new Date();
-              a = s.createElement(o),
-                      m = s.getElementsByTagName(o)[0];
-              a.async = 1;
-              a.src = g;
-              m.parentNode.insertBefore(a, m)
-          })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+              (function (i, s, o, g, r, a, m) {
+                  i['GoogleAnalyticsObject'] = r;
+                  i[r] = i[r] || function () {
+                      (i[r].q = i[r].q || []).push(arguments)
+                  }, i[r].l = 1 * new Date();
+                  a = s.createElement(o),
+                          m = s.getElementsByTagName(o)[0];
+                  a.async = 1;
+                  a.src = g;
+                  m.parentNode.insertBefore(a, m)
+              })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-          ga('create', 'UA-50502533-2', 'auto');
-          ga('send', 'pageview');
+              ga('create', 'UA-50502533-2', 'auto');
+              ga('send', 'pageview');
     </script>
   </body>
 </html>
