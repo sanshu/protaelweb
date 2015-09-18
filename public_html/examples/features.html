@@ -846,7 +846,7 @@
     </script>
 
     <style type="text/css">
-      #svgholder #axes .minor {
+      #svgholder .pl-grid-minor{
         stroke: none
       }
       .pfam_feature{fill:orange; stroke:red}
@@ -856,13 +856,13 @@
   </head>
   <body onload="prettyPrint()">
     <div>
-      <h1 id="features">Features and quant tracks</h1>
+      <h1 id="features">Construct design</h1>
       <div><p class="lead">Static protein object, feature tracks, quantitative tracks, coloring sequence by SS predictions</p>             
         <div id="svgholder"></div>
         <h4>CSS</h4>
         <pre class="prettyprint lans-css">&lt;style type="text/css"&gt;
         /* hide minor axes */       
-         #svgholder #axes .minor {
+         #svgholder .pl-grid-minor {
             stroke: none
         }
         /* override style for some of the features*/
