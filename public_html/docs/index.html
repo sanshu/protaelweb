@@ -150,6 +150,8 @@ QTrack = {
                                         // for single-digit data, string containing 1 digit per residue
                                         // e.g. "012345654321".
   "displayScale" : boolean,             // When TRUE will display min and max values for the chart
+  "displayMax"   : number,              // Max value to display on scale. DEFAULT = chart max value
+  "displayMin"   : number,              // Min value to display on scale. DEFAULT = chart min value
   "properties"   : Object,              // <a href="#props" style="text-decoration: underline">Additional properties</a>.
   "dbxrefs"      : Object               // <a href="#props" style="text-decoration: underline">Links to external resources</a>.
 }
@@ -202,7 +204,7 @@ Alignment = {
             </div>
           </div>
           <div><br/>
-            <a id="css"></a><h1 class="page-header">CSS styling</h1>
+            <a id="css"></a><h1 class="page-header" style="padding-top:60px">CSS styling</h1>
             <div>Most of the elements on Protael SVG display could be styled using CSS. Each element type (features, markers etc) has it's own CSS class name assigned.<br/>
               For some elements (qtracks chart, markers, bridges) styling could be done only by providing corresponding parameters in JSON object.<br />
               <div class="alert alert-success">NOTE: Protael uses <a href="http://www.w3.org/TR/SVG/styling.html">SVG set</a> of CSS properties.</div>
