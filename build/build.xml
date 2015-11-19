@@ -5,6 +5,8 @@
     <property name="base" value="../public_html" />
     <property name="dir.js" value="${base}/js" />
     <property name="dir.css" value="${base}/css" />
+    <property name="dir.fonts" value="${base}/fonts" />
+   
     <property name="dir.img" value="${base}/img" />
     <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask"
              classpath="./tools/compiler.jar"/>
@@ -45,6 +47,7 @@
                 <include name="**/protael.0.1.0.min.js"/>
                 <include name="**/main.js"/>
                 <include name="**/snap.svg-min.js"/>
+                <include name="**/social-share-kit.min.js"/>
             </fileset>
             
         </scp>
@@ -57,6 +60,11 @@
         <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/css/" verbose="false">
             <fileset dir="${dir.css}">
                 <include name="**/*.css"/>
+            </fileset>
+        </scp>
+        <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/fonts/" verbose="false">
+            <fileset dir="${dir.fonts}">
+                <include name="**/*.*"/>
             </fileset>
         </scp>
         <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/img/" verbose="false">
