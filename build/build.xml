@@ -23,7 +23,7 @@
         <!--       
         We need to copy protael files from ProtaelJS project after grunt was run there
         -->
-        <copy file="${protaelJSpath}/dist/protael.0.1.0.min.js" todir="${dir.js}"/>
+        <copy file="${protaelJSpath}/dist/protael.1.1.0.min.js" todir="${dir.js}"/>
         <copy file="${protaelJSpath}/dist/protael.css" todir="${dir.css}"/>
         <copy file="${protaelJSpath}/dist/Protael.zip" todir="${base}"/>   
         <copy todir="${dir.js}/vendor">
@@ -44,7 +44,7 @@
        
         <scp keyfile="${user.home}/.ssh/id_rsa" todir="msedova@proteins:apache-tomcat-7.0.42/webapps/Protael/js/" verbose="false">
             <fileset dir="${dir.js}">
-                <include name="**/protael.0.1.0.min.js"/>
+                <include name="**/protael.1.1.0.min.js"/>
                 <include name="**/main.js"/>
                 <include name="**/snap.svg-min.js"/>
                 <include name="**/social-share-kit.min.js"/>
