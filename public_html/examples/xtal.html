@@ -7,32 +7,32 @@
     <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
     <script>
       var urlParams;
-      (window.onpopstate = function() {
-        var match, pl = /\+/g, // Regex for replacing addition symbol with a space
-                search = /([^&=]+)=?([^&]*)/g, decode = function(s) {
-                  return decodeURIComponent(s.replace(pl, " "));
-                }, query = window.location.search.substring(1);
-        urlParams = {};
-        while (match = search.exec(query)) {
-          urlParams[decode(match[1])] = decode(match[2]);
-        }
+      (window.onpopstate = function () {
+          var match, pl = /\+/g, // Regex for replacing addition symbol with a space
+                  search = /([^&=]+)=?([^&]*)/g, decode = function (s) {
+                      return decodeURIComponent(s.replace(pl, " "));
+                  }, query = window.location.search.substring(1);
+          urlParams = {};
+          while (match = search.exec(query)) {
+              urlParams[decode(match[1])] = decode(match[2]);
+          }
       })();
-      var dir = urlParams["dir"] || 'db/CSGID/cs/_IDP00005_',
+      var dir = urlParams["dir"] || 'db/CSGID/all/IDP05622.1.331',
               limit = urlParams["limit"] || 20,
               showAli = urlParams["ali"] || true,
               jsonurl = 'http://proteins.burnham.org:8080/Json4PV/getjson?dir=' + dir + '&limit=' + limit + '&ali=' + showAli,
               protein3;// will read via getjson
-
+      
       $(document)
               .ready(
-                      function() {
-                        $.getJSON(jsonurl, {
-                          format: "json"
-                        }).done(
-                                function(protein) {
-                                  protein3 = protein;
-                                  Protael(protein, "svgholder3",  true).draw();
-                                });
+                      function () {
+                          $.getJSON(jsonurl, {
+                              format: "json"
+                          }).done(
+                                  function (protein) {
+                                      protein3 = protein;
+                                      Protael(protein, "svgholder3", true).draw();
+                                  });
                       });
     </script>
   </head>
@@ -59,16 +59,16 @@
       <button type="submit" class="btn btn-default" onclick="tryIt(protein3)">Try it yourself</button>
     </div>
     <script>
-      (function(i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r;
-        i[r] = i[r] || function() {
-          (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * new Date();
-        a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-        a.async = 1;
-        a.src = g;
-        m.parentNode.insertBefore(a, m)
+      (function (i, s, o, g, r, a, m) {
+          i['GoogleAnalyticsObject'] = r;
+          i[r] = i[r] || function () {
+              (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date();
+          a = s.createElement(o),
+                  m = s.getElementsByTagName(o)[0];
+          a.async = 1;
+          a.src = g;
+          m.parentNode.insertBefore(a, m)
       })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
       ga('create', 'UA-50502533-2', 'auto');
