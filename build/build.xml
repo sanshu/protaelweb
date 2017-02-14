@@ -46,7 +46,6 @@
             <fileset dir="${dir.js}">
                 <include name="**/protael.1.1.0.min.js"/>
                 <include name="**/main.js"/>
-                <include name="**/snap.svg-min.js"/>
                 <include name="**/social-share-kit.min.js"/>
             </fileset>
             
