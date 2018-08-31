@@ -4,7 +4,7 @@
 
     <property name="base" value="../public_html" />
     
-    <property name="docs" value="../docst" />
+    <property name="docs" value="../docs" />
     <property name="dir.js" value="${base}/js" />
     <property name="dir.css" value="${base}/css" />
     <property name="dir.fonts" value="${base}/fonts" />
