@@ -3,6 +3,8 @@
 <project name="Protael Build" default="build" basedir=".">
 
     <property name="base" value="../public_html" />
+    
+    <property name="docs" value="../docst" />
     <property name="dir.js" value="${base}/js" />
     <property name="dir.css" value="${base}/css" />
     <property name="dir.fonts" value="${base}/fonts" />
@@ -30,6 +32,50 @@
             <fileset dir="${protaelJSpath}/lib/"/>
         </copy>     
     </target>    
+    
+        
+    <target name="publish" depends="copyFromProtaelJS">
+        <echo message="Deploying.." />
+        <copy todir="${docs}" verbose="false">    
+            <fileset dir="${base}/">
+                <exclude name="**/protaelSeed.html"/>
+                <include name="**/*.html"/>
+                <include name="**/*.zip"/>
+                <include name="**/*.json"/>
+            </fileset>
+        </copy>
+        <copy todir="${docs}/js" verbose="false">    
+            <fileset dir="${dir.js}">
+                <include name="**/protael.1.1.0.min.js"/>
+                <include name="**/main.js"/>
+                <include name="**/social-share-kit.min.js"/>
+            </fileset>
+        </copy>
+        <copy todir="${docs}/js/vendor" verbose="false">    
+            <fileset dir="${dir.js}/vendor">
+                <include name="**/*.js"/>
+            </fileset>
+        </copy>
+        <copy todir="${docs}/css" verbose="false">    
+       
+            <fileset dir="${dir.css}">
+                <include name="**/*.css"/>
+            </fileset>
+        </copy>
+        <copy todir="${docs}/fonts" verbose="false">    
+       
+            <fileset dir="${dir.fonts}">
+                <include name="**/*.*"/>
+            </fileset>
+        </copy>
+        <copy todir="${docs}/img" verbose="false">    
+       
+            <fileset dir="${dir.img}">
+                <include name="**/*.*"/>
+            </fileset>
+        </copy>
+    </target>
+    
            
     <target name="deploy" depends="copyFromProtaelJS">
         <echo message="Deploying.." />
