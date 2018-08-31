@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Table to JSON Converter</title>
+    <style>
+      #drop {
+          border:5px solid #000;
+          margin-bottom:20px;
+          padding:10px;
+          font-size: smaller;
+      }
+    </style>  
+  </head>
+  <body>
+    <h1>Drag and Drop CSV to JSON Conversion</h1>
+    <p>MODIFICATIONS: store headers and data separately to reduce file size (more that 10 time in some cases); will not output empty data cells; trim headers and data before saving</p>
+    <div id="drop">
+      DROP <button onclick="document.querySelector('input').click()">Or Select</button>
+      <input style="visibility: collapse; width: 0px;" type="file" onchange="upload(this.files[0])">
+    </div>
+
+    <div id="output"></div>
+    <textarea style="width:100%;height:300px;" id="txt_json"></textarea>
+
+    <script type="text/javascript">
+      var output = document.getElementById("output"), txt = document.getElementById("txt_json");
+
+      //var csv is the CSV file with headers
+      function csvJSON(csv) {
+
+          var lines = csv.split("\n"),
+                  data = [],
+                  separator = "\t",
+                  delim = "\"", h;
+          headers = lines[0].split(separator) 
+          labels = {};
+
+          for (var j = 0; j < headers.length; j++) {
+              h = headers[j].trim();
+              if (h.charAt(0) === delim && h.charAt(h.length - 1) === delim) {
+                  h = h.substr(1, h.length - 2);
+              }
+              labels[j] = h;
+          }
+
+          for (var i = 1; i < lines.length; i++) {
+
+              var obj = {};  // this is a line from the table
+              var currentline = lines[i].split(separator);
+              var val = '';
+
+              for (var j = 0; j < headers.length; j++) {
+                  if (currentline[j]) {
+                      val = currentline[j].trim();
+                      if (val) {
+                          if (val.charAt(0) === delim && val.charAt(val.length - 1) === delim) {
+                              val = val.substr(1, val.length - 2);
+                          }
+                          obj[j] = val;
+                      }
+                  }
+              }
+
+              data.push(obj);
+          }
+          var result = {};
+          result['headers'] = labels;
+          result['data'] = data;
+          return result;
+      }
+      ;
+
+
+
+      /* Drag drop stuff */
+      window.ondragover = function (e) {
+          e.preventDefault()
+      };
+      window.ondrop = function (e) {
+          e.preventDefault();
+          console.log("Reading...");
+          var length = e.dataTransfer.items.length;
+          if (length > 1) {
+              console.log("Please only drop 1 file.");
+          } else {
+              upload(e.dataTransfer.files[0]);
+          }
+      };
+
+      /* main upload function */
+      function upload(file) {
+          if (file.type.match(/text\/*/)) {
+              oFReader = new FileReader();
+              oFReader.onloadend = function () {
+                  var jsonString = csvJSON(this.result);
+                  txt.value = JSON.stringify(jsonString, null, "\t");
+                  var blob = new Blob([JSON.stringify(jsonString)], {type: 'application/json'});
+                  var url = URL.createObjectURL(blob);
+                  output.innerHTML = '<a href="' + url + '">JSON file</a>';
+              };
+              oFReader.readAsText(file);
+          } else {
+              console.log("This file does not seem to be a CSV.");
+          }
+      }
+    </script>
+
+    <script>
+      (function (i, s, o, g, r, a, m) {
+          i['GoogleAnalyticsObject'] = r;
+          i[r] = i[r] || function () {
+              (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date();
+          a = s.createElement(o),
+                  m = s.getElementsByTagName(o)[0];
+          a.async = 1;
+          a.src = g;
+          m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+      ga('create', 'UA-50502533-2', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>

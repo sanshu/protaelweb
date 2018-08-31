@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    <style type="text/css">
+      #svgholder2 svg{
+          background: #EFEFEF;
+      }
+      #svgholder2 .pl-grid-minor {
+          stroke: #BBB
+      }
+      #svgholder2 .pl-grid-major {
+          stroke: red
+      }
+    </style>
+    <script>
+
+      var protein2 = {
+          "sequence": "                              TEKLWVTVYYGVPVWKEATTTLFCASDAKAYDTEVHNVWATHACVPTDPNPQEVVLVNVTENFNMWKNDMVEQMHEDIISLWDQSLKPCVKLTPLCVSLKCTDLKNDTNTNSSSGRMIMEKGEIKNCSFNISTSIRGKVQKEYAFFYKLDIIPIDNDTTSYKLTSCNTSVITQACPKVSFEPIPIHYCAPAGFAILKCNNKTFNGTGPCTNVSTVQCTHGIRPVVSTQLLLNGSLAEEEVVIRSVNFTDNAKTIIVQLNTSVEINCTRPNNNTRKRIRIQRGPGRAFVTIGKIGNMRQAHCNISRAKWNNTLKQIASKLREQFGNNKTIIFKQSSGGDPEIVTHSFNCGGEFFYCNSTQLFNSTWFNSTWSTEGSNNTEGSDTITLPCRIKQIINMWQKVGKAMYAPPISGQIRCSSNITGLLLTRDGGNSNNESEIFRPGGGDMRDNWRSELYKYKVVKIEPLGVAPTKAKRRVVQREKRAVGIGALFLGFLGAAGSTMGAASMTLTVQARQLLSGIVQQQNNLLRAIEAQQHLLQLTVWGIKQLQARILAVERYLKDQQLLGIWGCSGKLICTTAVPWNASWSNKSLEQIWNHTTWMEWDREINNYTSLIHSLIEESQNQQEKNEQELLELD",
+          "ftracks": [],
+          "markers": [{
+                  "type": "gap",
+                  "x": 511.5,
+                  "label": "511*512",
+                  "color": "#1240ab"
+              }, {
+                  "type": "glycan",
+                  "x": 88,
+                  "data": {
+                      "Description": "Glycan at 88 position",
+                      "Entropy score: Subtype B": 0.04,
+                      "Entropy score: Subtype C": 0.05,
+                      "Entropy score: Group M": 0.05
+                  }
+              }, {
+                  "type": "glycan",
+                  "x": 136,
+                  "data": {
+                      "Description": "Glycan at 136 position",
+                      "Entropy score: Subtype B": 2.30,
+                      "Entropy score: Subtype C": 2.58,
+                      "Entropy score: Group M": 2.54
+                  }
+              }, {
+                  "type": "glycan",
+                  "x": 141,
+                  "data": {
+                      "Description": "Glycan at 141 position",
+                      "Entropy score: Subtype B": 2.08,
+                      "Entropy score: Subtype C": 2.15,
+                      "Entropy score: Group M": 2.22
+                  }
+              }, {
+                  "type": "glycan",
+                  "x": 156,
+                  "data": {
+                      "Description": "Glycan at 156 position",
+                      "Entropy score: Subtype B": 0.22,
+                      "Entropy score: Subtype C": 0.22,
+                      "Entropy score: Group M": 0.22
+                  }
+              }, {
+                  "type": "glycan",
+                  "x": 160,
+                  "data": {
+                      "Description": "Glycan at 160 position.",
+                      "Entropy score: Subtype B": 0.45,
+                      "Entropy score: Subtype C": 0.36,
+                      "Entropy score: Group M": 0.40,
+                      "PG9 contacts": "PG9 glycan contact",
+                      "PG9 sensitivity": "Loss of glycan confers resistance",
+                      "Signature prediction": "PG9: N160 is associated with increased susceptibility to neutralization; intermediate quality of support. PG16: glycosylation at N160 is associated with increased susceptibility to neutralization; intermediate quality of support.      "
+                  }
+              }, {
+                  "type": "unknownglycan",
+                  "x": 186,
+                  "data": {
+                      "Description": "Glycan at 186 position",
+                      "Entropy score: Subtype B": 1.59,
+                      "Entropy score: Subtype C": 1.82,
+                      "Entropy score: Group M": 1.87
+                  }
+              }, {
+                  "type": "glycan",
+                  "x": 190,
+                  "data": {
+                      "Description": "Glycan at 190 position",
+                      "Entropy score: Subtype B": 1.20,
+                      "Entropy score: Subtype C": 1.70,
+                      "Entropy score: Group M": 1.98
+                  }
+              }, {
+                  "type": "glycan",
+                  "x": 197,
+                  "data": {
+                      "Description": "Glycan at 197 position",
+                      "Entropy score: Subtype B": 0.08,
+                      "Entropy score: Subtype C": 0.11,
+                      "Entropy score: Group M": 0.11,
+                      "CD4 independence": "Loss of glycosylation site caused Ada strain to become CD4 independent, and increased CCR5 binding to gp120 in the absence of CD4. Like changes in gp41 at 625, 626 and 674, the change increased the formation/exposure of the HR1 coiled coil on gp41, promoting the infection of CD4-negative cells expressing CCR5. Increases neutralization sensitivity to CD4i antibodies, but not to CD4bs antibody b12, which interacts in this region.",
+                      "Mutations affecting sensitivity": "N197H confers generalized sensitivity to b12, sCD4, 4E10, but resistance to PG9, which depends on glycans."
+                  }
+              }, {
+                  "type": "oliglycan",
+                  "x": 230,
+                  "data": {
+                      "Description": "Glycan at 230 position",
+                      "Entropy score: Subtype B": 0.90,
+                      "Entropy score: Subtype C": 0.54,
+                      "Entropy score: Group M": 0.95,
+                      "Signature prediction": "8ANC195: glycosylation at N230 is associated with increased resistance to neutralization; high quality of support."
+                  }
+              }, {
+                  "type": "oliglycan",
+                  "x": 241,
+                  "data": {
+                      "Description": "Glycan at 241 position",
+                      "Entropy score: Subtype B": 0.18,
+                      "Entropy score: Subtype C": 0.13,
+                      "Entropy score: Group M": 0.17
+                  }
+              }, {
+                  "type": "glycan",
+                  "x": 276,
+                  "data": {
+                      "Description": "Glycan at 276 position",
+                      "Entropy score: Subtype B": 0.06,
+                      "Entropy score: Subtype C": 0.17,
+                      "Entropy score: Group M": 0.12,
+                      "VRC01 contacts": "VRC01",
+                      "NIH45-46 contacts": "NIH45-46 276N L 89Y 3.5 ; NIH45-46, VRC01 light chains interact with carbohydrate",
+                      "Mutations affecting PGV04, b12, VRC01, CD4-IgG": "N276A reduces PGV04 neutralization, enhances VRC01, no impact CD4-IgG or b12",
+                      "Signature prediction": "8ANC195: glycosylation at T276 is associated with increased susceptibility to neutralization; intermediate quality of support."
+                  }
+              }, {
+                  "type": "oliglycan",
+                  "x": 295,
+                  "data": {
+                      "Description": "Glycan at 295 position",
+                      "Entropy score: Subtype B": 0.74,
+                      "Entropy score: Subtype C": 1.56,
+                      "Entropy score: Group M": 1.35,
+                      "Signature prediction": "2G12: glycosylation at N295 is associated with increased susceptibility to neutralization; intermediate quality of support."
+                  }
+              }, {
+                  "type": "glycan",
+                  "x": 301,
+                  "data": {
+                      "Description": "Glycan at 301 position",
+                      "Entropy score: Subtype B": 0.18,
+                      "Entropy score: Subtype C": 0.10,
+                      "Entropy score: Group M": 0.26,
+                      "Signature prediction": "1E8: glycosylation at N301 is associated with increased resistance to neutralization; intermediate quality of support."
+                  }
+              }, {
+                  "type": "oliglycan",
+                  "x": 322,
+                  "color": "red"
+              }, {
+                  "type": "oliglycan",
+                  "x": 339
+              }, {
+                  "type": "glycan",
+                  "x": 356
+              }, {
+                  "type": "unknownglycan",
+                  "x": 374
+              }, {
+                  "type": "oliglycan",
+                  "x": 387
+              }, {
+                  "type": "oliglycan",
+                  "x": 395
+              }, {
+                  "type": "oliglycan",
+                  "x": 404
+              }, {
+                  "type": "unknownglycan",
+                  "x": 411
+              }, {
+                  "type": "oliglycan",
+                  "x": 417
+              }, {
+                  "type": "oliglycan",
+                  "x": 440
+              }, {
+                  "type": "glycan",
+                  "x": 468
+              }, {
+                  "label": "T322N",
+                  "type": "stick",
+                  "x": 322,
+                  "color": "red",
+                  "position": "bottom"
+              }, {
+                  "label": "I559P",
+                  "type": "stick",
+                  "x": 559,
+                  "color": "red"
+              }, {
+                  "type": "unknownglycan",
+                  "x": 610
+              }, {
+                  "type": "unknownglycan",
+                  "x": 630
+              }, {
+                  "type": "unknownglycan",
+                  "x": 640
+              }],
+          "bridges": [{
+                  "type": "S-S",
+                  "start": 501,
+                  "end": 605,
+                  "startlabel": "A501C",
+                  "endlabel": "T605C",
+                  "color": "red"
+              }],
+          "overlayfeatures": {
+              "label": "regions",
+              "showLabels": "true",
+              "features": [{
+                      "regionType": "conserved",
+                      "start": 31,
+                      "end": 131,
+                      "label": "C1",
+                      "color": "#FFB300"
+                  }, {
+                      "regionType": "variable",
+                      "start": 132,
+                      "end": 156,
+                      "label": "V1",
+                      "color": "#D94409"
+                  }, {
+                      "regionType": "conserved",
+                      "start": 157,
+                      "end": 157,
+                      "label": "",
+                      "color": "#FFB300"
+                  }, {
+                      "regionType": "variable",
+                      "start": 158,
+                      "end": 196,
+                      "label": "V2",
+                      "color": "#D94409"
+                  }, {
+                      "regionType": "conserved",
+                      "start": 197,
+                      "end": 297,
+                      "label": "C2",
+                      "color": "#FFB300"
+                  }, {
+                      "regionType": "variable",
+                      "start": 298,
+                      "end": 331,
+                      "label": "V3",
+                      "color": "#D94409"
+                  }, {
+                      "regionType": "conserved",
+                      "start": 332,
+                      "end": 385,
+                      "label": "C3",
+                      "color": "#FFB300"
+                  }, {
+                      "regionType": "variable",
+                      "start": 386,
+                      "end": 418,
+                      "label": "V4",
+                      "color": "#D94409"
+                  }, {
+                      "regionType": "conserved",
+                      "start": 419,
+                      "end": 459,
+                      "label": "C4",
+                      "color": "#FFB300"
+                  }, {
+                      "regionType": "variable",
+                      "start": 460,
+                      "end": 469,
+                      "label": "V5",
+                      "color": "#D94409"
+                  }, {
+                      "regionType": "conserved",
+                      "start": 470,
+                      "end": 511,
+                      "label": "C5",
+                      "color": "#FFB300"
+                  },
+                  //-----
+                  {
+                      "regionType": "conserved",
+                      "start": 512,
+                      "end": 530,
+                      "label": "",
+                      "color": "#FFB300"
+                  }, {
+                      "regionType": "variable",
+                      "start": 530,
+                      "end": 600,
+                      "label": "HR1",
+                      "color": "#D94409"
+                  }, {
+                      "regionType": "conserved",
+                      "start": 600,
+                      "end": 615,
+                      "label": "",
+                      "color": "#FFB300"
+                  }, {
+                      "regionType": "variable",
+                      "start": 615,
+                      "end": 664,
+                      "label": "HR2",
+                      "color": "#D94409"
+                  }, {
+                      "regionType": "mper",
+                      "start": 657,
+                      "end": 664,
+                      "label": "mper",
+                      "color": "#FFB300"
+                  }]
+          },
+          "qtracks": [],
+          "dbxrefs": {},
+          "label": "BG505",
+          "description": "No description",
+          "gap": {
+              "at": 511,
+              "size": 10
+          }
+      };
+      $(document)
+              .ready(
+                      function () {
+                          Protael(protein2, "svgholder2",
+                                  true).draw();
+                      });
+    </script>
+  </head>
+  <body onload="prettyPrint()">
+    <div>
+      <h1 id="bnab">HIV immunogen construct BG505 SOSIP.664 gp140</h1>
+      <div><p class="lead">Static protein object, markers (glycans and ss bridges)</p>
+        <p>More information about <a href="getting-started.html#markers">markers</a> and  <a href="getting-started.html#bridges">bridges</a> </p>
+        <div id="svgholder2"></div>
+        <h4>CSS</h4>
+        <pre class="prettyprint">    &lt;style type="text/css"&gt;
+            /* change background color */
+            #svgholder2 svg{
+                background: #EFEFEF;
+            }
+            /* change axes color */
+            #svgholder2 .pl-grid-minor {
+                stroke: #BBB
+            }
+            #svgholder2 .pl-grid-major {
+                stroke: red
+            }
+    &lt;/style&gt;
+        </pre>
+        <h4>JSON Object</h4>
+        <pre class="prettyprint" style="height:300px; overflow:scroll">
+var protein2 = {
+        "sequence": "                              TEKLWVTVYYGVPVWKEATT...",
+        "ftracks": [],
+        "markers": [{
+            "type": "gap",
+            "x": 511.5,
+            "label": "511*512",
+            "color": "#1240ab"
+          }, {
+            "type": "glycan",
+            "x": 88,
+            "data": {
+              "Description": "Glycan at 88 position",
+              "Entropy score: Subtype B": 0.04,
+              "Entropy score: Subtype C": 0.05,
+              "Entropy score: Group M": 0.05
+            }
+          }, 
+            // ...and some more...
+            {
+            "type": "glycan",
+            "x": 276,
+            "data": {
+              "Description": "Glycan at 276 position",
+              "Entropy score: Subtype B": 0.06,
+              "Entropy score: Subtype C": 0.17,
+              "Entropy score: Group M": 0.12,
+              "VRC01 contacts": "VRC01",
+              "NIH45-46 contacts": "NIH45-46 276N L 89Y 3.5 ; NIH45-46, VRC01 light chains interact with carbohydrate",
+              "Mutations affecting PGV04, b12, VRC01, CD4-IgG": "N276A reduces PGV04 neutralization, enhances VRC01, no impact CD4-IgG or b12",
+              "Signature prediction": "8ANC195: glycosylation at T276 is associated with increased susceptibility to neutralization; intermediate quality of support."
+            }
+          },  {
+                "label": "T322N",
+                "type": "stick",
+                "x": 322,
+                "color": "red",
+                "position": "bottom"
+            }, {
+                "label": "I559P",
+                "type": "stick",
+                "x": 559,
+                "color": "red"
+            }, {
+                "type": "unknownglycan",
+                "x": 610
+            }, {
+                "type": "unknownglycan",
+                "x": 630
+            }, {
+                "type": "unknownglycan",
+                "x": 640
+            }],
+        "bridges": [{
+                "type": "S-S",
+                "start": 501,
+                "end": 605,
+                "startlabel": "A501C",
+                "endlabel": "T605C",
+                "color": "red"
+            }],
+        "overlayfeatures": {
+            "label": "regions",
+            "showLabels": "true",
+            "features": [{
+                    "regionType": "conserved",
+                    "start": 31,
+                    "end": 131,
+                    "label": "C1",
+                    "color": "#FFB300"
+                }, {
+                    "regionType": "variable",
+                    "start": 132,
+                    "end": 156,
+                    "label": "V1",
+                    "color": "#D94409"
+                }, {
+                    "regionType": "conserved",
+                    "start": 157,
+                    "end": 157,
+                    "label": "",
+                    "color": "#FFB300"
+                }, {
+                    "regionType": "variable",
+                    "start": 158,
+                    "end": 196,
+                    "label": "V2",
+                    "color": "#D94409"
+                },
+                // ... and some more ...
+                 {
+                    "regionType": "variable",
+                    "start": 615,
+                    "end": 664,
+                    "label": "HR2",
+                    "color": "#D94409"
+                }, {
+                    "regionType": "mper",
+                    "start": 657,
+                    "end": 664,
+                    "label": "mper",
+                    "color": "#FFB300"
+                }]
+        },
+        "qtracks": [],
+        "dbxrefs": {},
+        "label": "BG505",
+        "description": "No description",
+        "gap": {
+            "at": 511,
+            "size": 10
+        }
+    };</pre>
+        <h4>Javascript</h4>
+        <pre class="prettyprint ">
+    Protael(protein2, "svgholder2", false).draw();</pre>
+      </div>
+      <button type="submit" class="btn btn-default" onclick="tryIt(protein2)">Try it yourself</button>
+
+    </div>
+
+    <script>
+      (function (i, s, o, g, r, a, m) {
+          i['GoogleAnalyticsObject'] = r;
+          i[r] = i[r] || function () {
+              (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date();
+          a = s.createElement(o),
+                  m = s.getElementsByTagName(o)[0];
+          a.async = 1;
+          a.src = g;
+          m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+      ga('create', 'UA-50502533-2', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>

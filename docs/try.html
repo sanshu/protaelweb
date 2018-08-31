@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Try it : Protael</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.1.1/flatly/bootstrap.min.css">
+    <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript"    src="http://code.jquery.com/jquery-1.11.1.min.js"></script> 
+    <script type="text/javascript"    src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <!--<script type="text/javascript" src="js/protael.1.1.0.min.js"></script>-->
+ <script type="text/javascript" src="js/protael.js"></script>
+
+    <script>
+      $(document)
+              .ready(function () {
+
+                  $("#errorMsg").hide();
+
+                  if (localStorage.testJson) {
+                      $("#codeTextArea").val(localStorage.testJson);
+                      applyJSON();
+                  }
+              });
+
+      function loadDefault() {
+          var P;
+          $.getJSON('json/allFeaturesExample.json', function (data) {
+              console.log(data);
+              P = data;
+              $("#errorMsg").hide();
+              localStorage.testJson = JSON.stringify(P, undefined, 2);
+              $("#codeTextArea").val(localStorage.testJson);
+              applyJSON();
+          });
+      }
+
+      function applyJSON() {
+          $(".protael_resizable").remove();
+          $("#errorMsg").hide();
+          try {
+              var t = JSON.parse($("#codeTextArea").val());
+
+              try {
+                  Protael(t, "protaelHolder", true).draw();
+                  localStorage.testJson = JSON.stringify(t, undefined, 2);
+              } catch (err) {
+                  console.log(err);
+                  $("#errorMsg").html("Unable to display protein: " + err.message);
+                  $("#errorMsg").show();
+              }
+          } catch (err) {
+              console.log(err);
+              $("#errorMsg").html("Invalid JSON: " + err.message);
+              $("#errorMsg").show();
+          }
+      }
+    </script>
+  </head>
+  <body >
+
+    <!--[if lt IE 7]>
+ <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+    <div id="nav">    </div>
+    <div class="container-fluid">
+      <div class="row ">
+        <div class="col-md-12">
+          <h3>Modify this example or enter your own.
+            <!--or <a onclick="loadDefault()">load full example</a>-->
+          </h3>
+          <textarea id="codeTextArea" style="width:100%; height:300px;font-family: monospace">
+{
+  "sequence": "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGAKEEHGGLIRSPR",
+  "seqcolors": {
+    "data":   "CCCCCHHHHHCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCHHHHHCCCCCCCCCCEEEECCCCCCCCCCCEEEEECC",
+    "colors": {
+      "H": "red",
+      "E": "blue"
+    }
+  }
+}       </textarea></div>
+      </div>
+      <div class="row ">
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-default" onclick="applyJSON()" style="margin:10px;">Submit</button>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+          <div class="alert alert-danger" role="alert" id="errorMsg"></div>
+        </div></div>
+      <div class="row ">
+        <div class="col-md-12">
+          <h3>Protael view</h3>
+          <div id ="protaelHolder" > </div>
+        </div>
+      </div>
+    </div>
+    <!--feedback -->
+    <div id="feedback"><i class="fa fa-comments"></i></div>
+    <script> $(document)
+              .ready(function () {
+                  $("#nav").load('assets/navbar.html');
+              });
+    </script>
+    <script>
+      UserVoice = window.UserVoice || [];
+      (function () {
+          var uv = document.createElement('script');
+          uv.type = 'text/javascript';
+          uv.async = true;
+          uv.src = '//widget.uservoice.com/fOsDxyHzBBW8D2H6Qa4NQ.js';
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(uv, s)
+      })();
+
+      UserVoice.push(['set', {
+              accent_color: '#149C82',
+              trigger_color: 'white',
+              trigger_background_color: '#149C82'
+          }]);
+
+      UserVoice.push(['identify', {}]);
+      UserVoice.push(['addTrigger', '#feedback', {mode: 'contact', trigger_position: 'bottom-right'}]);
+      UserVoice.push(['autoprompt', {}]);
+    </script>
+    <!--/ feedback -->
+    <script>
+      (function (i, s, o, g, r, a, m) {
+          i['GoogleAnalyticsObject'] = r;
+          i[r] = i[r] || function () {
+              (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date();
+          a = s.createElement(o),
+                  m = s.getElementsByTagName(o)[0];
+          a.async = 1;
+          a.src = g;
+          m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+      ga('create', 'UA-50502533-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+    <script type="text/javascript" async="" src="js/vendor/FileSaver_Blob.js"></script>
+  </body></html>

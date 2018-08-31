@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Documentation : Protael</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.1.1/flatly/bootstrap.min.css">
+
+    <script src="../js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+
+    <!--JQuery and jQueryUI are required:-->
+    <link rel="stylesheet"
+          href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/main.css">
+    <!--    <link href="../css/sunburst.css" rel="stylesheet" type="text/css"/>
+        <script src="../js/vendor/prettify.js" type="text/javascript"></script>-->
+  </head>
+  <body onload="prettyPrint();">
+
+    <!--[if lt IE 7]>
+ <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+    <div id="nav"></div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="#json">JSON specification</a></li>
+            <li>
+              <ul style="list-style-type: none">
+                <li><a href="#prot">Sequence object</a></li>
+                <li><a href="#ftrack">Feature track</a></li>
+                <li><a href="#qtrack">Quantitative track</a></li>
+                <li><a href="#marker">Marker</a></li>
+                <li><a href="#marker">Bridge</a></li>
+                <li><a href="#ali">Alignment</a></li>
+              </ul>
+            </li>
+            <li><a href="#css">CSS styling</a></li>
+            <li>
+              <ul style="list-style-type: none">
+                <li><a href="#bground">Background</a></li>
+                <li><a href="#cssgrid">Grid lines</a></li>
+                <li><a href="#cssftrack">Features</a></li>
+                <li><a href="#cssqtrack">Quantitative track</a></li>
+                <li><a href="#cssother">Other elements</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <div>
+            <a id="json"></a><h1 class="page-header">Protael JSON specification</h1>
+            <div><h3 id="prot">Sequence object</h3>
+              <div>Sequence object is the main object required by Protael.</div>
+              <pre class="prettyprint">
+seq = {
+  "sequence"  : string,     // REQUIRED, main sequence.
+  "seqcolors" : {
+    "data"    : string,     // Comma-separated data set, ex: "C,C,C,C,C,H,H,H,H,H,C,...".
+                            // Each element is used to assign specific background color to a residue.
+    "colors"  : {
+      string     : string   // Colors assigned to specific data values, e.g. "C" : "red".
+    }
+  },
+  "ftracks"    : [ <a href="#ftrack" style="text-decoration: underline">FTrack</a> ],   // Array of feature tracks.
+  "qtracks"    : [ <a href="#qtrack" style="text-decoration: underline">QTrack</a> ],   // Array of quantitative tracks.
+  "markers"    : [ <a href="#marker" style="text-decoration: underline">Marker</a> ],   // Array of markers.
+  "bridges"    : [ <a href="#marker" style="text-decoration: underline">Bridge</a> ],   // Array of bridges.
+  "alignments" : [ <a href="#ali"    style="text-decoration: underline">Alignment</a>], // Array of aligned sequences.
+};
+              </pre>
+              <a id="props"></a>
+              <div>There are two common object types which could be used with any child object.
+                <br /><code>properties</code> will be converted to <code>data-d</code>
+                HTML attribute and by default used to display properties table in an object tooltip. If there is a property named <code>pdbid</code>
+                Protael will try to fetch image of the corresponding structure from PDB and place it in the tooltip.
+                <br /><code>dbxrefs</code> contains links (for example to external databases) and will be converted to <code>data-x</code>
+                HTML attribute and by default used to display dialog with external links when object is clicked.</div>
+              <pre class="prettyprint">
+"properties" = {
+  string  : string    // name:value pairs
+};
+
+Example:
+    "properties" : {
+      "pdbid"  : "1bo4"
+    };
+
+"dbxrefs" = {
+  string:string       // name:value pairs
+};
+
+Example:
+    "dbxrefs": {
+      "Protael website": "http://protael.org"
+    };
+              </pre>
+            </div>
+            <div>
+              <h3 id="ftrack">Feature track</h3>
+              <div>FTrack object contains number of features that are grouped according to some criteria, for example data source, type, prediction method etc.</div>
+              <pre class="prettyprint">
+FTrack =  {
+    "label"        : string,     // Track label, shown on the left-hand side of the view.
+    "display"      : string,     // Defines how the feature will be drawn.
+                                 // "block"(default) will render a rectangle and a label inside
+                                 // "line" will render a line and a label above it.
+    "showLine"     : boolean,    // Whether or not show center line; DEFAULT = TRUE.
+    "allowOverlap" : boolean,    // Whether or nor allow overlapping sequences.
+    "clazz"        : string,     // CSS class name.
+    "features"     : [ Feature ] // Array of features in this track.
+}
+
+Feature = {
+    "id"          : string,
+    "label"       : string,    // REQUIRED, Label will be displayed on feature drawing.
+    "start"       : integer,   // REQUIRED, start position of the feature.
+    "end"         : integer,   // REQUIRED, end position of the feature.
+    "clazz"       : string,    // CSS class name.
+    "description" : string,    // Short description, will be shown in tooltip.
+    <!--"regionType"  : string,-->
+    "properties"  : Object,    // <a href="#props" style="text-decoration: underline">Additional properties</a>.
+    "dbxrefs"     : Object     // <a href="#props" style="text-decoration: underline">Links to external resources</a>.
+}           </pre>
+            </div>
+            <div>
+              <h3 id="qtrack">Quantitative track</h3>
+              <div>Quantitative tracks are displayed as chart, where each datapoint corresponds to a residue. </div>
+              <pre class="prettyprint">
+QTrack = {
+  "label"        : string,              // Track label.
+  "color"        : string || [string],  // HTML color string. Could be single color, or
+                                        // array of 2 or 3 colors for gradient fill. DEFAULT="orange"
+  "type"         : string,              // chart type, area/area-spline(default)/line/spline/column.
+  "values"       : [double] || string,  // REQUIRED, either array of values or,
+                                        // for single-digit data, string containing 1 digit per residue
+                                        // e.g. "012345654321".
+  "displayScale" : boolean,             // When TRUE will display min and max values for the chart
+  "displayMax"   : number,              // Max value to display on scale. DEFAULT = chart max value
+  "displayMin"   : number,              // Min value to display on scale. DEFAULT = chart min value
+  "transform"    : string,              // Transformation function name, possible values: "log" | "log2" | "log10" | "exp"
+  "properties"   : Object,              // <a href="#props" style="text-decoration: underline">Additional properties</a>.
+  "dbxrefs"      : Object               // <a href="#props" style="text-decoration: underline">Links to external resources</a>.
+}
+              </pre>
+            </div>
+            <div>
+              <h3 id="marker">Marker and bridge</h3>
+              <div>Markers and bridges are displayed in the main sequence area.</div>
+              <pre class="prettyprint">
+Marker = {
+  "type"        : string    // REQUIRED, determines the shape of the marker.
+                            // possible values: "gap" || "stick" || "glycan" || "oliglycan" || "unknownglycan" || "pin".
+  "x"           : number,   // REQUIRED, if value is integer the marker will be placed in the center of the corresponding residue,
+                            // if fractional (10.5) - between two residues, useful for example to mark gaps.
+  "label"       : string,   // marker label
+  "color"       : string,   // HTML color string.
+  "position"    : string,   // position of the marker relative to the main sequence, DEFAULT: "top"
+                            // "top" || "bottom"
+  "properties"  : Object,   // <a href="#props" style="text-decoration: underline">Additional properties</a>
+  "dbxrefs"     : Object    // <a href="#props" style="text-decoration: underline">Links to external resources</a>
+}
+
+Bridge = {
+  "start"       : integer,  // REQUIRED. Bridge start.
+  "end"         : integer,  // REQUIRED. Bridge end.
+  "type"        : string,   // Bridge label (displayed in th middle of the bridge).
+  "startlabel"  : string,   // Label for start position.
+  "endlabel"    : string,   // Label for end position.
+  "color"       : string,   // HTML color string.
+  "properties"  : Object,   // <a href="#props" style="text-decoration: underline">Additional properties</a>
+  "dbxrefs"     : Object    // <a href="#props" style="text-decoration: underline">Links to external resources</a>
+}
+              </pre>
+            </div>
+            <div>
+              <h3 id="ali">Sequence alignment</h3>
+              <div></div>
+              <pre class="prettyprint">
+Alignment = {
+  "sequence"    : string,   // REQUIRED.
+  "CS"          : string,   // Name of the coloring schema for this sequence,
+                            // by default 'ALI' is used (gray background for aligned regions).
+  "id"          : string,   // Sequence id
+  "label"       : string,   // Label for tooltip (will be used in case "properties" is not set, see below).
+  "start"       : integer,  // Start position of the alignment.
+  "properties"  : Object,   // <a href="#props" style="text-decoration: underline">Additional properties</a>
+  "dbxrefs"     : Object    // <a href="#props" style="text-decoration: underline">Links to external resources</a>
+}
+              </pre>
+            </div>
+          </div>
+          <div><br/>
+            <a id="css"></a><h1 class="page-header" style="padding-top:60px">CSS styling</h1>
+            <div>Most of the elements on Protael SVG display could be styled using CSS. Each element type (features, markers etc) has it's own CSS class name assigned.<br/>
+              For some elements (qtracks chart, markers, bridges) styling could be done only by providing corresponding parameters in JSON object.<br />
+              <div class="alert alert-success">NOTE: Protael uses <a href="http://www.w3.org/TR/SVG/styling.html">SVG set</a> of CSS properties.</div>
+            </div>
+            <div><h3 id="bground">Background</h3>
+              <div>Default background color is white. To override it use <code>background</code> property.</div>
+              <pre class="prettyprint lang-css" lang='css'>
+// This will change background color to 'black' and fill color for sequence text
+// and markers/bridges (without JSON-specified color) to 'white'
+<i>containerId</i> svg{
+  background: black;
+  fill: white;
+}              </pre>
+            </div>
+            <div><h3 id="cssgrid">Grid lines</h3>
+              <div>There are two types of grid lines in Protael:
+                <ul><li><code>major</code> - drawn every 50 residues</li>
+                  <li><code>minor</code> - drawn every 10 residues.</li></ul></div>
+              <table class="table table-striped table-bordered">
+                <tr><th>Element type</th><th>CSS class/ID</th><th>Comment</th></tr>
+                <tr><td>Grid</td><td>#gridlines</td><td>Defines strike width and fill for all grid lines.</td></tr>
+                <tr><td>Grid</td><td>.pl-grid-label</td><td>Defines style for grid labels.</td></tr>
+                <tr><td>Major grid lines</td><td>.pl-grid-major</td><td>Use to change major grid lines color and stroke width.</td></tr>
+                <tr><td>Minor grid lines</td><td>.pl-grid-minor</td><td>Use to change minor grid lines color and stroke width.</td></tr>
+              </table>
+            </div>
+            <div>
+              <h3 id="cssftrack">Features</h3>
+              <table class="table table-striped table-bordered">
+                <tr><th>Element type</th><th>CSS class</th><th>Comment</th></tr>
+                <tr><td>Feature track</td><td>.pl-ftrack</td><td>Defines style for ftracks.</td></tr>
+                <tr><td>Feature track</td><td>.pl-ftrack-label</td><td>Defines style for feature track label.</td></tr>
+                <tr><td>Feature</td><td>.pl-feature</td><td>Defines style for individual feature, such as fill and stroke. Could be used with <code>:hover</code> selector to enable feature highlighting.</td></tr>
+                <tr><td>Feature</td><td>.pl-feature-label</td><td>Defines style for feature labels, such as font size and color. To change color use <code>fill</code> property.
+                    Do not use <code>stroke</code>.</td></tr>
+              </table>
+            </div>
+            <div>
+              <h3 id="cssqtrack">Quantitative tracks</h3>
+              <table class="table table-striped table-bordered">
+                <tr><th>Element type</th><th>CSS class/ID</th><th>Comment</th></tr>
+                <tr><td>Qtrack group</td><td>.pl-chart</td><td>This class is used only to "label" the whole qtrack group (label, scale lines, chart) to enable JavaScript interaction.</td></tr>
+                <tr><td>Qtrack scale lines</td><td>.pl-chart-top</td><td>Define style for max value scale line. Hidden by default. Use <code>stroke</code> property to change color.</td></tr>
+                <tr><td>Qtrack scale lines</td><td>.pl-chart-bottom</td><td>Define style for min value scale line. Hidden by default. Use <code>stroke</code> property to change color.</td></tr>
+                <tr><td>Qtrack scale lines</td><td>.pl-chart-center</td><td>Define style for center value scale line. Visible by default. Use <code>stroke</code> property to change color.</td></tr>
+                <tr><td>Qtrack label</td><td>.pl-chart-label</td><td>Defines style for qtrack label.</td></tr>
+                <tr><td>Qtrack chart</td><td>.pl-chart-area</td><td>Use to change <code>stroke-*</code> properties for the chart. Cannot be used to define <code>fill</code> color, this is done via JSON object.</td></tr>
+              </table>
+            </div>
+            <div>
+              <h3 id="cssother">Other elements</h3>
+              <table class="table table-striped table-bordered">
+                <tr><th>Element type</th><th>CSS class/ID</th><th>Comment</th></tr>
+                <tr><td>Tooltip</td><td>.ui-tooltip</td><td>This is a standard <a href="https://jqueryui.com/tooltip/" target="_blank">JQuery UI tooltip</a> class.</td></tr>
+                <tr><td>Bridge</td><td>.pl-bridge</td><td>Defines font and stroke for bridges. It is not recommended to change CSS properties for bridges.</td></tr> 
+                <tr><td>Marker</td><td>.pl-marker</td><td>Used only to "label" markers to enable JavaScript interaction.</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--feedback -->
+    <div id="feedback"><i class="fa fa-comments"></i></div>
+    <script> $(document)
+              .ready(function () {
+                  $("#nav").load('../assets/navbarsub.html');
+              });
+    </script>
+    <script>
+      UserVoice = window.UserVoice || [];
+      (function () {
+          var uv = document.createElement('script');
+          uv.type = 'text/javascript';
+          uv.async = true;
+          uv.src = '//widget.uservoice.com/fOsDxyHzBBW8D2H6Qa4NQ.js';
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(uv, s)
+      })();
+
+      UserVoice.push(['set', {
+              accent_color: '#149C82',
+              trigger_color: 'white',
+              trigger_background_color: '#149C82'
+          }]);
+
+      UserVoice.push(['identify', {}]);
+      UserVoice.push(['addTrigger', '#feedback', {mode: 'contact', trigger_position: 'bottom-right'}]);
+      UserVoice.push(['autoprompt', {}]);
+    </script>
+    <!--/ feedback -->
+
+
+    <!--Only needed to display code on this page-->
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    <script>
+      (function (i, s, o, g, r, a, m) {
+          i['GoogleAnalyticsObject'] = r;
+          i[r] = i[r] || function () {
+              (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date();
+          a = s.createElement(o),
+                  m = s.getElementsByTagName(o)[0];
+          a.async = 1;
+          a.src = g;
+          m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+      ga('create', 'UA-50502533-2', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>

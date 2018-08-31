@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Examples : Protael</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.1.1/flatly/bootstrap.min.css">
+    <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <!--Only needed to display code on this page-->
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    <!--JQuery and jQueryUI are required:-->
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script> 
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script type="text/javascript" src="js/protael.1.1.0.min.js"></script>
+    <script>
+      var seq = "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGA",
+              myProtein = {
+                  "sequence": seq
+              },
+              myProtein3 = {
+                  "sequence": seq,
+                  "seqcolors": {
+                      // 'data' contains either comma-separated values, or string with 1 datachar per residue, ex: 'CCCCCHHHHH...'  
+                      "data": "CCCCCHHHHHCCCCCCCCCCEHEHEHCCCCCCCCCCCCCCCCCHHHHHCCCCCCCCCCEEEEHHCCCEC",
+                      "colors": {
+                          "H": "red",
+                          "E": "blue"
+                      }
+                  }
+              },
+              myProtein4 = {
+                  "sequence": seq,
+                  "seqcolors": {
+                      // 'data' contains either comma-separated values, or string with 1 datachar per residue, ex: 'CCCCCHHHHH...'  
+                      "data": "CCCCCHHHHHCCCCCCCCCCEHEHEHCCCCCCCCCCCCCCCCCHHHHHCCCCCCCCCCEEEEHHCCCEC",
+                      "colors": {
+                          "H": "red",
+                          "E": "blue"
+                      }
+                  },
+                  "ftracks": [
+                      // star first feature track
+                      {
+                          "label": "PFAM_DOMAINS",
+                          // display type: "block"(default) will render a rectangle and label inside
+                          //               "line" will render a line and label above it 
+                          "display": "block",
+                          "showLine": true, //display base line ("string" for features) 
+                          "clazz": "pfam_domains", // your custom css class
+
+                          // here come the features in this track
+                          "features": [
+                              {
+                                  "id": "PF14259", // will be used as DOM element ID
+                                  "label": "PF14259", // label to be displayed on the feature 
+                                  "clazz": "pfam_feature", // custom css class
+                                  "start": 10, // feature start; required 
+                                  "end": 22, // feature end; required 
+                                  "properties": {// properties will be converted to data-* attributes
+                                      "Full name": "RRM_6"
+                                  }
+                              },
+                              {
+                                  "regionType": "PFAM_DOMAIN",
+                                  "start": 18,
+                                  "end": 33,
+                                  "clazz": "pfam_feature",
+                                  "label": "PF00076"
+                              }]
+                      },
+                      //start second track 
+                      {
+                          "label": "Structures",
+                          "color": "green", // instread of css class you can specify HTML color
+                          "showLine": true,
+                          "allowOverlap": true, // if set to false overlapping features will be
+                          // rendered on different levels
+                          "features": [
+                              {
+                                  "regionType": "STRUCTURE",
+                                  "start": 27,
+                                  "end": 42,
+                                  "color": "pink", // override track color for this feature
+                                  "label": "2M52"
+                              },
+                              {
+                                  "regionType": "STRUCTURE",
+                                  "start": 40,
+                                  "end": 47,
+                                  "properties": {
+                                      "Full name": "3V4M. Chain: A/B. Metod: X-ray. Resolution: 1.80 A"
+                                  },
+                                  "label": "3V4M"
+                              }]
+                      },
+                      //start third track 
+                      {
+                          "label": "Some annotations",
+                          "color": "#DF7401",
+                          "display": "line", // show annotations as lines
+                          "showLine": true,
+                          "allowOverlap": false, // if set to false overlapping features will be
+                          // rendered on different levels
+                          "features": [// array of feature objects
+                              {
+                                  "start": 40,
+                                  "end": 50,
+                                  "label": "Annotation 1"
+                              },
+                              {
+                                  "start": 55,
+                                  "end": 67,
+                                  "label": "Annotation 2"
+                              }]
+                      }]
+              },
+              myProtein5 = {
+                  "sequence": seq,
+                  "qtracks": [
+                      {
+                          "label": "Single color; area; custom display range[-2;3]",
+                          "color": "yellow",
+                          "type": "area",
+                          "displayScale": true,
+                          "displayMax": 3,
+                          "displayMin": -2,
+                          "values": [
+                              1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                              0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                              0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                              0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                              0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                              0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                              0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                          ],
+                          "topY": 65
+                      },
+                      {
+                          "label": "3-points gradient fill; area-spline",
+                          "color": [
+                              "yellow",
+                              "green",
+                              "red"
+                          ],
+                          "type": "area-spline",
+                          "values": [
+                              1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                              0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                              0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                              0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                              0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                              0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                              0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                          ]
+                      },
+                      {
+                          "label": "2-points gradient fill; area-spline",
+                          "color": [
+                              "yellow",
+                              "red"
+                          ],
+                          "values": [
+                              1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                              0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                              0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                              0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                              0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                              0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                              0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                          ]
+                      }, {
+                          "label": "Single color; spline",
+                          "color": "red",
+                          "type": "spline",
+                          "values": [
+                              1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                              0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                              0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                              0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                              0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                              0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                              0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                          ]
+                      },
+                      {
+                          "label": "3-points gradient fill; column",
+                          "color": [
+                              "yellow",
+                              "green",
+                              "red"
+                          ],
+                          "type": "column",
+                          "values": [
+                              1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                              0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                              0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                              0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                              0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                              0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                              0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                          ]
+                      },
+                      {
+                          "label": "2-points gradient fill; column",
+                          "color": [
+                              "yellow",
+                              "red"
+                          ],
+                          "type": "column",
+                          "values": [
+                              1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                              0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                              0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                              0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                              0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                              0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                              0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                          ]
+                      }, {
+                          "label": "2-points gradient; line",
+                          "color": [
+                              "green",
+                              "red"
+                          ],
+                          "type": "line",
+                          "values": [
+                              1, 0.7, 0.5, 0.4, 0.5, 1, 0.9, 0.8, 0.7, 0.4,
+                              0.2, 0.1, 0, 0, 1, 0.9, 0.7, 0.5, 0.3, 0.1,
+                              0, -0.2, -0.4, -0.4, -0.8, -1, -0.8, -0.6, -0.2, 2,
+                              0.8, 0.9, 0.96, 0.96, 0.95, 0, 0.88, 0.8, 0.3, 0.73,
+                              0.7, 0.5, 0.4, 0.5, 0.9, 0.99, 0.6, 0.995, 0.998, 0.998,
+                              0.998, -0.4, -0.4, -0.8, -0.2, -1, -0.8, -0.6, -0.2, 0,
+                              0.998, 0.7, 0.75, 0.6, 0.3, 0.2, 1, 2, -1
+                          ]
+                      }
+                  ]},
+              myProtein6 = {
+                  sequence: seq,
+                  "markers": [{
+                          "type": "gap",
+                          "x": 2,
+                          "label": "gap",
+                          "color": "#1240ab"
+                      }, {
+                          "type": "gap",
+                          "x": 6,
+                          "color": "#1240ab"
+                      }, {
+                          "type": "glycan",
+                          "x": 10,
+                          "label": "glycan",
+                      }, {
+                          "type": "glycan",
+                          "x": 11,
+                          "label": "bottom glycan",
+                          "position": "bottom"
+                      }, {
+                          "type": "glycan",
+                          "x": 13
+                      }, {
+                          "type": "unknownglycan",
+                          "x": 20,
+                          "label": "unknown glycan",
+                          "color": "green"
+                      }, {
+                          "type": "unknownglycan",
+                          "x": 23,
+                          "color": "#3c3"
+                      }, {
+                          "type": "oliglycan",
+                          "label": "oliglycan",
+                          "x": 30,
+                          "color": "red"
+                      }, {
+                          "type": "oliglycan",
+                          "x": 33,
+                          color: "#f60"
+                      }, {
+                          "label": "stick",
+                          "type": "stick",
+                          "x": 40,
+                          "color": "#fc0"
+                      },
+                      {
+                          "label": "bottom stick",
+                          "type": "stick",
+                          "x": 43,
+                          "color": "#f90",
+                          "position": "bottom"
+                      },
+                      {
+                          "label": "pin",
+                          "type": "pin",
+                          "x": 46,
+                          "color": "#f90"
+                      }]
+              },
+              myProtein7 = {
+                  "sequence": seq,
+                  "bridges": [{
+                          "type": "S-S",
+                          "start": 5,
+                          "end": 15,
+                          "startlabel": "5",
+                          "endlabel": "15",
+                          "color": "red"
+                      }, {
+                          "type": "other",
+                          "start": 25,
+                          "end": 35,
+                          "color": "green"
+                      }, {
+                          "start": 45,
+                          "end": 55,
+                          "color": "blue"
+                      }]
+              },
+              myProtein8 = {
+                  "alidisplay": true,
+                  "alignments": [
+                      {
+                          "CS": "Clustal",
+                          "id": "1bo4",
+                          "label": "1bo4_A",
+                          "sequence": "RTCRLGPDQVKSMRAALDLFGREFGDVATYSQHQPDSDYLGNLLRSKTFIALAAFDQEAVVGALAAYVLPKFEQPRSEIYIYDLAVSGEHRRQGIATALINLLKHEANALGAYVIYVQADYGDDPAVALYTKLGIREEVMH",
+                          "start": 7,
+                          "properties": {
+                              "pdbid": "1bo4",
+                              "PDB structure": "1bo4_A"
+                          }
+                      },
+                      {
+                          "CS": "",
+                          "description": "3tfy_A",
+                          "id": "3tfy",
+                          "label": "3tfy_A",
+                          "sequence": "NDKFYKDVL-EVGELAKLAYFNDIAVGAVCCRV--DHSQNQKRLYIMTLGCLAPYRRLGIGTKMLNHVLNICEKDGTFDNIYLHVQISNESAIDFYRKFG",
+                          "start": 42
+                      },
+                      {
+                          "CS": "",
+                          "description": "4lx9_A",
+                          "id": "4lx9",
+                          "label": "4lx9_A",
+                          "sequence": "GLAFFVAIVDNSVVG----YIMPRIEWGFSNIKQLPSLVRKGHVVSIAVLEEYRRKGIATTLLEASMKSMKNDYNAEEIYLEVRVSNYPAIALYEKLNFKK",
+                          "start": 54
+                      },
+                      {
+                          "CS": "",
+                          "description": "2psw_A",
+                          "id": "2psw",
+                          "label": "2psw_A",
+                          "sequence": "NDKFYKDVL-EVGELAKLAYFNDIAVGAVCCRV--DHSQNQKRLYIMTLGCLAPYRRLGIGTKMLNHVLNICEKDGTFDNIYLHVQISNESAIDFYRKFG",
+                          "start": 42
+                      },
+                      {
+                          "CS": "",
+                          "description": "2ob0_A",
+                          "id": "2ob0",
+                          "label": "2ob0_A",
+                          "sequence": "NDKFYKDVL-EVGELAKLAYFNDIAVGAVCCRV--DHSQNQKRLYIMTLGCLAPYRRLGIGTKMLNHVLNICEKDGTFDNIYLHVQISNESAIDFYRKFG",
+                          "start": 42
+                      },
+                      {
+                          "CS": "",
+                          "description": "2x7b_A",
+                          "id": "2x7b",
+                          "label": "2x7b_A",
+                          "sequence": "GLAFFVAIVDNSVVG----YIMPRIEWGFSNIKQLPSLVRKGHVVSIAVLEEYRRKGIATTLLEASMKSMKNDYNAEEIYLEVRVSNYPAIALYEKLNFKK",
+                          "start": 54
+                      },
+                      {
+                          "CS": "",
+                          "description": "3i3g_A",
+                          "id": "3i3g",
+                          "label": "3i3g_A",
+                          "sequence": "IVGSASLMIQPKFTRGGRAVGHIEDVVVDPSYRGAGLGKALIMDLCEISRSKGCYKVILDS---SEKSLPFYEKLGFRAHERQMRLDL",
+                          "start": 66
+                      },
+                      {
+                          "CS": "",
+                          "description": "3fb3_A",
+                          "id": "3fb3",
+                          "label": "3fb3_A",
+                          "sequence": "IVGSASLMIQPKFTRGGRAVGHIEDVVVDPSYRGAGLGKALIMDLCEISRSKGCYKVILDS---SEKSLPFYEKLGFRAHERQMRLDL",
+                          "start": 66
+                      },
+                      {
+                          "CS": "",
+                          "description": "2pdo_A",
+                          "id": "2pdo",
+                          "label": "2pdo_A",
+                          "sequence": "EVNGEVVGTVMGGYDGHRGSAYY--LGVHPEFRGRGIANALLNRLEKKLIARGCPKIQINVPEDNDMVLGMYERLG",
+                          "start": 65
+                      }
+                  ],
+                  "ftracks": [],
+                  "label": "",
+                  "markers": [],
+                  "properties": {},
+                  "qtracks": [],
+                  "sequence": "MISTQTKITRLNSQDVGVMRAMLGMFGEAFEDAENYCRAQPSDSYLQDLLCGSGFIAIAALQGQEVIGGLAAYVLPKFEQQRKEIYIYDLGVQGAYRRRGIATALINELQRIAHDIGAYVIFVQADYGDDPAVALYTKLGIREDVMHFDIEPQPAA"
+              },
+              myProtein9 = {
+                  "alidisplay": false,
+                  "alignments": [
+                      {
+                          "CS": "Clustal",
+                          "id": "1bo4",
+                          "label": "1bo4_A",
+                          "sequence": "RTCRLGPDQVKSMRAALDLFGREFGDVATYSQHQPDSDYLGNLLRSKTFIALAAFDQEAVVGALAAYVLPKFEQPRSEIYIYDLAVSGEHRRQGIATALINLLKHEANALGAYVIYVQADYGDDPAVALYTKLGIREEVMH",
+                          "start": 7,
+                          "properties": {
+                              "pdbid": "1bo4",
+                              "PDB structure": "1bo4_A"
+                          }
+                      },
+                      {
+                          "CS": "",
+                          "description": "3tfy_A",
+                          "id": "3tfy",
+                          "label": "3tfy_A",
+                          "sequence": "NDKFYKDVL-EVGELAKLAYFNDIAVGAVCCRV--DHSQNQKRLYIMTLGCLAPYRRLGIGTKMLNHVLNICEKDGTFDNIYLHVQISNESAIDFYRKFG",
+                          "start": 42
+                      },
+                      {
+                          "CS": "",
+                          "description": "4lx9_A",
+                          "id": "4lx9",
+                          "label": "4lx9_A",
+                          "sequence": "GLAFFVAIVDNSVVG----YIMPRIEWGFSNIKQLPSLVRKGHVVSIAVLEEYRRKGIATTLLEASMKSMKNDYNAEEIYLEVRVSNYPAIALYEKLNFKK",
+                          "start": 54
+                      },
+                      {
+                          "CS": "",
+                          "description": "2psw_A",
+                          "id": "2psw",
+                          "label": "2psw_A",
+                          "sequence": "NDKFYKDVL-EVGELAKLAYFNDIAVGAVCCRV--DHSQNQKRLYIMTLGCLAPYRRLGIGTKMLNHVLNICEKDGTFDNIYLHVQISNESAIDFYRKFG",
+                          "start": 42
+                      },
+                      {
+                          "CS": "",
+                          "description": "2ob0_A",
+                          "id": "2ob0",
+                          "label": "2ob0_A",
+                          "sequence": "NDKFYKDVL-EVGELAKLAYFNDIAVGAVCCRV--DHSQNQKRLYIMTLGCLAPYRRLGIGTKMLNHVLNICEKDGTFDNIYLHVQISNESAIDFYRKFG",
+                          "start": 42
+                      },
+                      {
+                          "CS": "",
+                          "description": "2x7b_A",
+                          "id": "2x7b",
+                          "label": "2x7b_A",
+                          "sequence": "GLAFFVAIVDNSVVG----YIMPRIEWGFSNIKQLPSLVRKGHVVSIAVLEEYRRKGIATTLLEASMKSMKNDYNAEEIYLEVRVSNYPAIALYEKLNFKK",
+                          "start": 54
+                      },
+                      {
+                          "CS": "",
+                          "description": "3i3g_A",
+                          "id": "3i3g",
+                          "label": "3i3g_A",
+                          "sequence": "IVGSASLMIQPKFTRGGRAVGHIEDVVVDPSYRGAGLGKALIMDLCEISRSKGCYKVILDS---SEKSLPFYEKLGFRAHERQMRLDL",
+                          "start": 66
+                      },
+                      {
+                          "CS": "",
+                          "description": "3fb3_A",
+                          "id": "3fb3",
+                          "label": "3fb3_A",
+                          "sequence": "IVGSASLMIQPKFTRGGRAVGHIEDVVVDPSYRGAGLGKALIMDLCEISRSKGCYKVILDS---SEKSLPFYEKLGFRAHERQMRLDL",
+                          "start": 66
+                      },
+                      {
+                          "CS": "",
+                          "description": "2pdo_A",
+                          "id": "2pdo",
+                          "label": "2pdo_A",
+                          "sequence": "EVNGEVVGTVMGGYDGHRGSAYY--LGVHPEFRGRGIANALLNRLEKKLIARGCPKIQINVPEDNDMVLGMYERLG",
+                          "start": 65
+                      }
+                  ],
+                  "ftracks": [],
+                  "label": "",
+                  "markers": [],
+                  "properties": {},
+                  "qtracks": [],
+                  "sequence": "MISTQTKITRLNSQDVGVMRAMLGMFGEAFEDAENYCRAQPSDSYLQDLLCGSGFIAIAALQGQEVIGGLAAYVLPKFEQQRKEIYIYDLGVQGAYRRRGIATALINELQRIAHDIGAYVIFVQADYGDDPAVALYTKLGIREDVMHFDIEPQPAA"
+              };
+
+
+      function tryIt(protein) {
+          if (protein) {
+              localStorage.testJson = JSON.stringify(protein, undefined, 2);
+              window.location = "try.html";
+          }
+      }
+
+
+      $(document).ready(
+              function () {
+
+                  var myProtein2 = {
+                      "sequence": "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGA"
+                  },
+                          p1 = Protael(myProtein, "myProtaelContainer", true).draw(),
+                          p2 = Protael(myProtein2, "myProtaelContainer2", true).draw().setColoringScheme("Clustal");
+                  p3 = Protael(myProtein3, "myProtaelContainer3", true).draw(),
+                          p4 = Protael(myProtein4, "myProtaelContainer4", true).draw(),
+                          p5 = Protael(myProtein5, "myProtaelContainer5", true).draw(),
+                          p6 = Protael(myProtein6, "myProtaelContainer6", true).draw(),
+                          p7 = Protael(myProtein7, "myProtaelContainer7", true).draw(),
+                          p8 = Protael(myProtein8, "myProtaelContainer8", true).draw(),
+                          p9 = Protael(myProtein9, "myProtaelContainer9", true).draw().setColoringScheme("Clustal");
+              });
+
+    </script>
+  </head>
+  <body onload="prettyPrint()">
+    <!--[if lt IE 7]>
+ <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+    <div id="nav">    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="#">Getting started</a></li>
+            <li><a href="#basic">Basic visualization</a></li>
+            <li><a href="#colors">Coloring sequence</a></li>   
+            <li><a href="#features">Adding features/annotations</a></li>   
+            <li><a href="#graphs">Adding graphs</a></li>   
+            <li><a href="#markers">Adding markers</a></li> 
+            <li><a href="#bridges">Adding bridges</a></li>  
+            <li><a href="#ali">Adding alignments</a></li> 
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <div><h1 class="page-header">Getting started</h1>
+            <div class="alert alert-info"><span class="glyphicon glyphicon-exclamation-sign"></span> Protael requires 
+              <a class="alert-link" href="http://jquery.com/download/" target="_blank">JQuery</a>, <a class="alert-link" href="http://jqueryui.com/download" target="_blank">JQueryUI</a> and <a class="alert-link" href="http://snapsvg.io" target="_blank">SnapSVG</a> to run.<br/>
+              <a href="https://github.com/eligrey/FileSaver.js">FileSaver</a> is required to save generated images.</div>
+            <h3 style="padding-top:10px;">Quick start</h3>  <ol>
+              <li>Download Protael <a href="http://proteins.burnham.org:8080/Protael/Protael.zip">starter project</a>.<br />
+              <li>Unpack <code>Protael.zip</code> to any location (you don't need server to run it). 
+                Starter project contains JS and CSS files as well as a basic HTML file where you need to edit only protein data. 
+              </li>
+
+              <li>JQuery, JQueryUI and SnapSVG will be autoloaded from CDN. If you want to run Protael offline you will have to 
+                download these libraries and edit paths accordingly.</li>
+              <li>Create your protein JSON object (hint: use our <a href="generator.html">ProteinDesigner</a>) and paste it into starter HTML file.</li>
+            </ol> 
+            <div>
+              <h3 id="basic">Let's create very basic visualization</h3>
+              <pre class="prettyprint" style="height:300px; overflow:scroll">
+&lt;!DOCTYPE html&gt;
+&lt;head&gt;
+    &lt;!--JQuery and jQueryUI are required, could be loaded from CDN:--&gt;
+    &lt;link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    &lt;script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"&gt;&lt;/script&gt;
+
+    &lt;!--Snap is required:--&gt;
+    &lt;script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"&gt;&lt;/script&gt;
+    &lt;!-- FileSaver: --&gt;
+    &lt;script type="text/javascript" async="" src="js/vendor/FileSaver_Blob.js"&gt;&lt;/script&gt;
+
+    &lt;!--And finally Protael styles and js:--&gt;
+    &lt;link rel="stylesheet" href="Protael.css" /&gt;
+    &lt;script type="text/javascript" src="protael.1.1.0.min.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+      $(document).ready(function() {
+        // define your protein
+        var myProtein = {"sequence": "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGA"};
+        
+        // create Protael instance
+        //Protael (proteinObject, containerID, width, height, enableControls)
+        var p = Protael(myProtein, "myProtaelContainer", true); 
+
+        //draw your protein
+        p.draw();
+
+        // you can also chain method calls:
+        // var p = Protael(myProtein, "myProtaelContainer", true).draw();
+      });
+    &lt;/script&gt;
+&lt;/head>
+    &lt;body&gt;
+      &lt;div id="myProtaelContainer"&gt;&lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt; </pre>
+
+              <p>Since we provided only protein sequence there is not much going on. You can zoom, select and export part of the sequence and try out different color schemas.
+              <div id="myProtaelContainer"></div>
+
+              <button type="submit" class="btn btn-default" onclick="tryIt(myProtein)">Try it yourself</button>
+
+
+              <hr class="featurette-divider">
+            </div>
+            <div> <h3 id="colors">Let's add some color</h3>
+              <p>There are 5 predefined coloring schemas you can choose from: Clustal, Lesk, Cinema, MAEditor, ALI</p>
+              <pre class="prettyprint">
+        var p = Protael(myProtein, "myProtaelContainer", true); 
+
+        //set residues coloring scheme
+        p.setColoringScheme("Clustal");
+        
+        p.draw();
+
+        // or with chaining:
+        //var p = Protael(myProtein, "myProtaelContainer", true)
+        //    .draw().setColoringScheme("Clustal");</pre>
+
+              <p>That's how it looks:</p><div id="myProtaelContainer2"></div>
+
+              <h3 id="colorsdata">Coloring sequence using additional data</h3>
+              <p >You can add your own coloring schema using <code>seqcolors</code> property of the protein.</p>
+              <p>Say, you have your secondary structure prediction and want to color protein based on the predicted secondary structure:</p>
+              <pre class="prettyprint">
+    var myProtein = {
+      "sequence": "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGA",
+      "seqcolors": {
+         // 'data' contains either comma-separated values, or string with 1 datachar per residue, ex: 'CCCCCHHHHH...'  
+         "data":  "C,C,C,C,C,H,H,H,H,H,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,E,E,E,E,C,C,C,C,C,C,C,C,C,C,C",
+         "colors": { 
+            "H": "red",
+            "E": "blue"
+         }
+      }};</pre>
+
+              <div id="myProtaelContainer3"></div>   
+              <button type="submit" class="btn btn-default" onclick="tryIt(myProtein3)">Try it yourself</button>
+              <hr class="featurette-divider">
+            </div>
+            <div>
+              <h3 id="features">Let's add annotations</h3>
+              <p>Annotations/features should be grouped together in "feature tracks". Normally, you would want to 
+                create separate track for each feature type or data source and apply visual style to the whole track. That's how it's done:</p>
+              <pre class="prettyprint"  style="height:300px; overflow:scroll">
+var myProtein = {
+...
+  "ftracks": [
+    // star first feature track
+    {
+      "label": "PFAM_DOMAINS",   
+       // display type: "block"(default) will render a rectangle and label inside
+       //               "line" will render a line and label above it 
+      "display": "block",        
+      "showLine": true,        //display base line ("string" for features) 
+      "clazz": "pfam_domains", // your custom css class
+
+      // here come the features in this track
+      "features": [
+        {
+          "id": "PF14259",         // will be used as DOM element ID
+          "label": "PF14259",      // label to be displayed on the feature 
+          "clazz": "pfam_feature", // custom css class
+          "start": 10,             // feature start; required 
+          "end": 22,               // feature end; required 
+          "properties": {          // properties will be converted to data-* attributes
+            "Full name": "RRM_6"
+          }
+        },
+        {
+          "regionType": "PFAM_DOMAIN",
+          "start": 26,
+          "end": 33,
+          "clazz": "pfam_feature",
+          "label": "PF00076"
+        }]
+    },
+    //start second track 
+    {
+      "label": "Structures",
+      "color": "green",          // instead of css class you can specify HTML color
+      "showLine": true,
+      "allowOverlap": true,      // if set to false overlapping features will be
+                                 // rendered on different levels
+      "features": [              // array of feature objects
+        {
+          "regionType": "STRUCTURE",
+          "start": 27,
+          "end": 42,
+          "color": "pink",        // override track color for this feature
+          "label": "2M52"
+        },
+        {
+          "regionType": "STRUCTURE",
+          "start": 40,
+          "end": 47,
+          "properties": {
+            "Full name": "3V4M. Chain: A/B. Metod: X-ray. Resolution: 1.80 A"
+          },
+          
+          "label": "3V4M"
+        }]
+    },
+    //start third track 
+    {
+      "label": "Some annotations",
+      "color": "#FF0",          
+      "display": "line",        // show annotations as lines
+      "showLine": true,
+      "allowOverlap": true,      // if set to false overlapping features will be
+                                 // rendered on different levels
+      "features": [              // array of feature objects
+        {
+          "start": 40,
+          "end": 50,
+          "label": "Annotation 1"
+        },
+        {
+          "start": 55,
+          "end": 67,          
+          "label": "Annotation 2"
+        }]
+    }],
+....
+              </pre>
+              <div id="myProtaelContainer4"></div>   
+              <button type="submit" class="btn btn-default" onclick="tryIt(myProtein4)">Try it yourself</button>
+              <hr class="featurette-divider">
+            </div>
+            <div>
+              <h3 id="graphs">Let's add graphs/charts</h3>
+              <p>All quantitative data should go in to <code>qtracks</code> property of the protein.</p>
+              <p>You can either provide array of values [1, 2, 3, 4,... ] or string with single-digit value per residue :"1234..."</p>
+              <p>Currently use can use any of the following chart types:</p>
+              <ul>
+                <li><code>line</code> - basic line chart</li>
+
+                <li><code>spline</code> - smooth lines (spline interpolation through data points)</li>
+                <li><code>area</code> - basic area chart</li>
+                <li><code>area-spline</code> - area chart using spline interpolation</li>
+                <li><code>column</code> - column chart</li>
+
+              </ul>
+              <p>There is an option to display qtracks using different scale by setting <code>"transform"</code> property to one of the following values:</p>
+              <ul>
+                <li><code>log</code></li>
+                <li><code>log2</code></li>
+                <li><code>log10</code></li>
+                <li><code>exp</code></li>
+              </ul>
+              <p>There are 3 different coloring option which could be applied to any graph:</p>
+              <ul><li>Single color fill - specify color in HTML format</li>
+                <li>2-point gradient fill, requires 2 color values, first color for min values in the graph, second for the max value</li>
+                <li>3-point gradient fill, requires 3 color values, first color for min values in the graph, second for the zero value, thrird for the max value</li>
+              </ul>
+
+              <pre class="prettyprint" style="height:300px; overflow:scroll">
+    var myProtein =  {
+        "sequence": "MSDFDEFERQLNENKQERDKENRHRKRSHSRSRSRDRKRRSRSRDRRNRDQRSASRDRRRRSKPLTRGA",        
+        "qtracks": [
+        {
+             "label": "Single color; area; custom display range[-2;2]",
+             "color": "yellow",
+             "type": "area",
+             "displayScale": true,
+             "displayMax": 3,
+             "displayMin": -2,
+             "values": [ 1, 0.7, 0.5...]
+        },
+        {
+            "label": "3-points gradient fill; area-spline",
+            // zero values are green, <0 gradient to yellow, >0 gradient to red
+            "color": [
+                "yellow",
+                "green",
+                "red"
+            ],
+            "type": "area-spline",
+             "values": [ 1, 0.7, 0.5...]
+        },
+        {
+            "label": "2-points gradient fill; area-spline",
+            // gradient from yellow to red, with zero values being 
+            // colored differently depending on the graph values
+            "color": [
+                "yellow",
+                "red"
+            ],
+             "values": [ 1, 0.7, 0.5...]
+        }, {
+            "label": "Single color; spline",
+            "color": "red",
+            "type": "spline",
+             "values": [ 1, 0.7, 0.5...]
+        },
+        {
+            "label": "3-points gradient fill; column",
+            "color": [
+                "yellow",
+                "green",
+                "red"
+            ],
+            "type": "column",
+             "values": [ 1, 0.7, 0.5...]
+        },
+        {
+            "label": "2-points gradient fill; column",
+            "color": [
+                "yellow",
+                "red"
+            ],
+            "type": "column",
+            "values": [ 1, 0.7, 0.5...]
+        }, {
+            "label": "2-points gradient; line",
+            "color": [
+                "green",
+                "red"
+            ],
+            "type": "line",
+            "values": [ 1, 0.7, 0.5...]
+        }
+    ]
+          }
+    ]};</pre>
+
+              <div id="myProtaelContainer5"></div>   
+              <button type="submit" class="btn btn-default" onclick="tryIt(myProtein5)">Try it yourself</button>
+
+
+
+              <hr class="featurette-divider">
+            </div>
+
+            <div>
+              <h3 id="markers">Let's add markers</h3>
+              <p>Currently there are several different types of markers that could be added to protein:</p>
+              <ol><li>Stick</li>
+                <li>Pin</li>
+                <li>Gap</li>
+                <li>Glycan</li>
+                <li>Oliglycan</li>
+                <li>Unknown glycan</li>
+              </ol>
+              <p>Markers could be displayed above(default) or below the main sequence. Use <code>"position":"bottom"</code> to place markes below the sequence.</p>
+              <pre class="prettyprint" style="height:300px; overflow:scroll">
+    var myProtein = {
+...
+   "markers": [{
+            "type": "gap", // required
+            "x": 2,        // required
+            "label": "gap",
+            "color": "#1240ab"
+          }, {
+            "type": "gap",
+            "x": 6,
+            "color": "#1240ab"
+          },{
+            "type": "glycan",
+            "x": 10,
+             "label": "glycan",
+          },{
+            "type": "glycan",
+            "x": 11,
+            "label": "bottom glycan",
+            "position": "bottom"
+          }, {
+            "type": "glycan",
+            "x": 13
+          }, {
+            "type": "unknownglycan",
+            "x": 20,
+            "label": "unknown glycan", 
+            "color":"green"
+          }, {
+            "type": "unknownglycan",
+            "x": 23,
+            "color":"#3c3"
+          },{
+            "type": "oliglycan",
+             "label": "oliglycan",
+            "x": 30, 
+            "color":"red"
+          },{
+            "type": "oliglycan",
+            "x": 33, 
+            color:"#f60"
+          },{
+            "label": "stick",
+            "type": "stick",
+            "x": 40,
+            "color": "#fc0"
+          },
+           {
+            "label": "bottom stick",
+            "type": "stick",
+            "x": 43,
+            "color": "#f90",
+            "position": "bottom"
+          } ]
+}</pre>
+
+              <div id="myProtaelContainer6"></div>   
+              <button type="submit" class="btn btn-default" onclick="tryIt(myProtein6)">Try it yourself</button>
+
+
+
+              <hr class="featurette-divider">
+            </div>
+
+            <div>
+              <h3 id="bridges">Let's add bridges</h3>
+              <p></p>
+              <pre class="prettyprint" style="height:300px; overflow:scroll">
+    var myProtein = {
+...
+      "bridges": [{
+            "type": "S-S",
+            "start": 5,
+            "end": 15,
+            "startlabel": "5",
+            "endlabel": "15",
+            "color": "red"
+          }, {
+            // no labels at the ends
+            "type":"other",
+            "start": 25,
+            "end": 35,
+            "color": "green"
+          }, {
+            // no labels at all
+            "start": 45,
+            "end": 55,
+            "color": "blue"
+          }]
+};</pre>
+
+              <div id="myProtaelContainer7"></div>   
+              <button type="submit" class="btn btn-default" onclick="tryIt(myProtein7)">Try it yourself</button>
+              <hr class="featurette-divider">
+
+            </div>
+
+            <div>
+              <h3 id="ali">Displaying multiple sequence alignments</h3>
+              <p></p>
+              <pre class="prettyprint" style="height:300px; overflow:scroll">
+    var myProtein = {
+          "alidisplay": true,   //if set to false will not display residues in alignments, default = false
+          "alignments": [
+              {
+                  "CS": "Clustal",   // you can specify different coloring schema for each sequence
+                                     // by default 'ALI' is used (gray lines for aligned regions)
+                  "id": "1bo4",
+                  "label": "1bo4_A", // label for tooltip (will be used in case "data" is not set, see below)
+                  "sequence": "RTCRLGPDQVKSMRAALDLFGREFGDVATYSQHQPDSDYLGNLLRSKTFIALAAFDQEAVVGALAAYVLPKFEQPRSEIYIYDLAVSGEHRRQGIATALINLLKHEANALGAYVIYVQADYGDDPAVALYTKLGIREEVMH",
+                  "start": 7,       // start position of the alignment
+                  "properties": {   // properties attribute will be converted to data-* attribute
+                                    // and by default used in tooltip
+                      "pdbid": "1bo4",
+                      "PDB structure": "1bo4_A"
+                  }
+              },
+              {
+                  "CS": "",
+                  "description": "3tfy_A",
+                  
+                  "id": "3tfy",
+                  "label": "3tfy_A",
+                  "sequence": "NDKFYKDVL-EVGELAKLAYFNDIAVGAVCCRV--DHSQNQKRLYIMTLGCLAPYRRLGIGTKMLNHVLNICEKDGTFDNIYLHVQISNESAIDFYRKFG",
+                  "start": 42
+              },
+            ....
+          ],
+          "sequence": "MISTQTKITRLNSQDVGVMRAMLGMFGEAFEDAENYCRAQPSDSYLQDLLCGSGFIAIAALQGQEVIGGLAAYVLPKFEQQRKEIYIYDLGVQGAYRRRGIATALINELQRIAHDIGAYVIFVQADYGDDPAVALYTKLGIREDVMHFDIEPQPAA"
+      };</pre>
+
+              <div id="myProtaelContainer8"></div>   
+              <button type="submit" class="btn btn-default" onclick="tryIt(myProtein8)">Try it yourself</button>
+
+
+              <h4>Setting default coloring schema for alignments</h4>
+              <p>You can setup default coloring schema as well: </p>
+              <pre class="prettyprint">
+        var myProtein = {
+          "alidisplay": false,   // see how it looks now 
+          "alignments": [
+              ...
+        ]};
+
+        var p = Protael(myProtein, "myProtaelContainer", true).draw(); 
+
+        //set residues coloring scheme
+        p.setColoringScheme("Clustal");
+              </pre>
+              <div id="myProtaelContainer9"></div>   
+              <button type="submit" class="btn btn-default" onclick="tryIt(myProtein9)">Try it yourself</button>
+
+              <p><br/>Another option to color alignments is to assign single color (based on some value). See an <a href='demo.html#blast'>example</a>.</p>
+
+              <hr class="featurette-divider">
+
+
+
+            </div>
+          </div> 
+        </div>
+      </div>
+    </div>
+    <!--feedback -->
+    <div id="feedback"><i class="fa fa-comments"></i></div>
+    <script> $(document)
+              .ready(function () {
+                  $("#nav").load('assets/navbar.html');
+              });
+    </script>
+    <script>
+      UserVoice = window.UserVoice || [];
+      (function () {
+          var uv = document.createElement('script');
+          uv.type = 'text/javascript';
+          uv.async = true;
+          uv.src = '//widget.uservoice.com/fOsDxyHzBBW8D2H6Qa4NQ.js';
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(uv, s)
+      })();
+
+      UserVoice.push(['set', {
+              accent_color: '#149C82',
+              trigger_color: 'white',
+              trigger_background_color: '#149C82'
+          }]);
+
+      UserVoice.push(['identify', {}]);
+      UserVoice.push(['addTrigger', '#feedback', {mode: 'contact', trigger_position: 'bottom-right'}]);
+      UserVoice.push(['autoprompt', {}]);
+    </script>
+    <!--/ feedback -->
+    <script>
+      (function (i, s, o, g, r, a, m) {
+          i['GoogleAnalyticsObject'] = r;
+          i[r] = i[r] || function () {
+              (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date();
+          a = s.createElement(o),
+                  m = s.getElementsByTagName(o)[0];
+          a.async = 1;
+          a.src = g;
+          m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+      ga('create', 'UA-50502533-2', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <script type="text/javascript" async="" src="js/vendor/FileSaver_Blob.js"></script>
+  </body>
+</html>

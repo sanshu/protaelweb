@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>ProteinDesigner : Protael</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.1.1/flatly/bootstrap.min.css"/>
+    <link rel="stylesheet" href ="css/bootstrap-colorpicker.min.css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+    <script src="js/vendor/bootstrap-colorpicker.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <script type="text/javascript" src="js/protael.1.1.0.min.js"></script>
+    <style>
+      .seqColorpicker,.gcolorpick , .colorpick{
+          background-color: #fff;
+          color: #000;
+      }
+      .seqColorpicker:hover, .gcolorpick, .colorpick:hover{
+          background-color: #fff;
+          color: #000;
+      }
+      #protaelHolder{border: 2px solid #128f76; min-height: 30px}
+      #drop_zone {
+          border: 2px dashed #bbb;
+          -moz-border-radius: 5px;
+          -webkit-border-radius: 5px;
+          border-radius: 5px;
+          padding: 15px;
+          text-align: center;
+          color: #bbb;
+      } #drop_zone:hover {
+          border: 2px dashed #128f76;
+      }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.min.js"></script>
+
+    <script type='text/javascript' src="js/vendor/ko.observableDictionary.js"></script>
+    <script>
+      var lastOpenedFile = '';
+      /* empty protein to bind initial form without any data*/
+      var emptyProtein = {
+          "sequence": "",
+          "seqcolors": {
+              "colors": {},
+              "data": ""
+          },
+          "markers": [{type: '', position: 'top', x: '', label: '', color: '#000', auto: false}],
+          "bridges": [{label: '', start: 0, end: 0, startlabel: '', endlabel: '', color: '#000'}],
+          "qtracks": [{values: '', label: '', color: ['', '', '']}],
+          "overlayfeatures": {
+              "label": "regions",
+              "showLabels": "true",
+              "features": [{label: '', start: '0', end: '0', color: '#fff'}]
+          },
+          "ftracks": [{
+                  "label": "1",
+                  "color": "blue",
+                  "allowOverlap": "true",
+                  "showLine": "true",
+                  "features": [{label: '', start: '0', end: '0'}]
+
+              }, {
+                  "label": "2",
+                  "color": "green",
+                  "allowOverlap": "true",
+                  "showLine": "true",
+                  "features": [{label: '', start: '0', end: '0'}]
+
+              }]
+      };
+
+      /** define ViewModel */
+      var viewModel = ko.mapping.fromJS(emptyProtein);
+      viewModel.seqcolors.colors = new ko.observableDictionary(emptyProtein.seqcolors.colors);
+      viewModel.addQtrack = function () {
+          viewModel.qtracks.push({values: '', label: '', type: '', color: ko.observableArray(['', '', ''])});
+          initgraphCPickers();
+      };
+
+      viewModel.removeQtrack = function (track) {
+          viewModel.qtracks.remove(track);
+      };
+
+      viewModel.addFtrack = function () {
+          viewModel.ftracks.push({
+              label: ko.observable('New ftrack'),
+              allowOverlap: ko.observable(false),
+              showLine: ko.observable(true),
+              display: ko.observable('block'),
+              color: ko.observable(''),
+              features: ko.observableArray([{label: '', start: '0', end: '0'}])
+          });
+          initCPickers();
+      };
+
+      viewModel.removeFtrack = function (track) {
+          viewModel.ftracks.remove(track);
+      };
+
+      viewModel.addMarker = function () {
+          viewModel.markers.push({color: '#000'});
+          initCPickers();
+      };
+
+      viewModel.removeMarker = function (item) {
+          viewModel.markers.remove(item);
+      };
+
+      viewModel.addAutoMarker = function (position, lbl) {
+          var newMark = {
+              color: '#000',
+              x: ko.observable(position),
+              auto: true,
+              label: ko.observable(''),
+              type: ko.observable('glycan'),
+              position: ko.observable('top'),
+              "data": {
+                  "Description": "Predicted N-GlycoSite [" + lbl + "] at " + position + " position"
+              }
+          };
+          // set.auto = false after any change
+          newMark.x.subscribe(function (newVal) {
+              newMark.auto = false;
+          });
+          newMark.type.subscribe(function (newVal) {
+              newMark.auto = false;
+          });
+          newMark.position.subscribe(function (newVal) {
+              newMark.auto = false;
+          });
+          newMark.label.subscribe(function (newVal) {
+              newMark.auto = false;
+          });
+          viewModel.markers.push(newMark);
+          initCPickers();
+      };
+
+      viewModel.clearAutoMarkers = function () {
+          var l = viewModel.markers().length, i, m;
+          for (i = l - 1; i > 0; i--) {
+              m = viewModel.markers()[i];
+              if (m.auto) {
+                  viewModel.removeMarker(m);
+              }
+          }
+      };
+
+      viewModel.addRegion = function () {
+          viewModel.overlayfeatures.features.push({});
+          initCPickers();
+      };
+      viewModel.removeRegion = function (item) {
+          viewModel.overlayfeatures.features.remove(item);
+      };
+
+      viewModel.addFeature = function (item) {
+          console.log(item);
+          item.features.push({label: '', start: '0', end: '0'});
+          //   initCPickers();
+      };
+      viewModel.removeFeature = function (item) {
+          viewModel.overlayfeatures.features.remove(item);
+      };
+      viewModel.addBridge = function () {
+          viewModel.bridges.push({color: '#000'});
+          initCPickers();
+      };
+      viewModel.removeBridge = function (item) {
+          viewModel.bridges.remove(item);
+      };
+
+      viewModel.findGlycoSites = function () {
+          var re = /(N.[T|S])/ig, match,
+                  seq = viewModel.sequence();
+          viewModel.clearAutoMarkers();
+
+          while ((match = re.exec(seq))) {
+              // need to +1
+              viewModel.addAutoMarker(match.index + 1, match[1]);
+          }
+      };
+
+      viewModel.seqcolors.data.subscribe(function (newValue) {
+          var chars = newValue.toUpperCase().split(''), i, c, l = chars.length;
+          for (i = 0; i < l; i++) {
+              c = chars[i];
+              if (typeof viewModel.seqcolors.colors[c] === 'undefined') {
+                  // only set color if this char has no assignment yet
+                  viewModel.setSeqColor(c, '#FFF');
+              }
+          }
+          $('.seqColorpicker').colorpicker({"color": "#FFF"}).on('changeColor', function (ev) {
+              var newColor = ev.color.toHex().toString(),
+                      text = $(this).text();
+              $(this).css("background-color", newColor);
+              viewModel.setSeqColor(text, newColor);
+          });
+      });
+
+      viewModel.setSeqColor = function (char, color) {
+          viewModel.seqcolors.colors.push(char, color);
+      };
+
+      $(document)
+              .ready(function () {
+                  $("#errorMsg").hide();
+
+                  ko.applyBindings(viewModel);
+                  viewModel.markers.removeAll();
+                  viewModel.bridges.removeAll();
+                  viewModel.overlayfeatures.features.removeAll();
+                  viewModel.qtracks.removeAll();
+                  viewModel.ftracks.removeAll();
+
+                  $('#saveJson').on('click', function () {
+                      saveJsonToFile.apply();
+                  });
+                  var fileInput = document.getElementById('fileInput');
+
+                  if (!(window.File && window.FileReader && window.FileList)) {
+                      $("#fileInput").attr("disabled", "disabled");
+                      message = '<p>The ' +
+                              '<a href="http://dev.w3.org/2006/webapi/FileAPI/" target="_blank">File API</a>s ' +
+                              'are not fully supported by this browser.</p>' +
+                              '<p>Upgrade your browser to the latest version.</p>';
+
+                      displayError(message);
+                  } else {
+                      fileInput.addEventListener('change', function (e) {
+                          var file = fileInput.files[0];
+                          lastOpenedFile = file.name;
+                          var textType = 'text/json', jsonType = 'application/json';
+// TODO: check what exactly going on with the mime on windows
+//                    if (file.type.match(textType) || file.type === jsonType || file.type === '' || file.type === undefined) {
+                          var reader = new FileReader();
+                          reader.onload = function (e) {
+                              try {
+                                  codeTextArea.innerText = reader.result;
+                                  protein = JSON.parse(reader.result);
+                                  reset();
+                                  for (var q in protein.qtracks) {
+                                      var color = protein.qtracks[q].color;
+                                      if (!Array.isArray(color)) {
+                                          protein.qtracks[q].color = [color, '', ''];
+                                      } else {
+                                          protein.qtracks[q].color[0] = protein.qtracks[q].color[0] || '';
+                                          protein.qtracks[q].color[1] = protein.qtracks[q].color[1] || '';
+                                          protein.qtracks[q].color[2] = protein.qtracks[q].color[2] || '';
+                                      }
+                                  }
+                                  // need to process graph colors and convert single color to
+                                  ko.mapping.fromJS(protein, viewModel);
+                                  initCPickers();
+                                  initgraphCPickers();
+                                  applyModel(protein);
+                              }
+                              catch (err) {
+                                  displayError("<p>Unable to open file: " + err.message + "</p>");
+                              }
+                          };
+                          reader.readAsText(file);
+//                    }
+//                    else {
+//                      displayError("File type not supported! " + file.type +"<br/>Please make sure you are opening a JSON file.");
+//                    }
+                      });
+                  }
+                  initCPickers();
+                  initgraphCPickers();
+              });
+
+      function submitJson() {
+          var jsonData = ko.mapping.toJSON(viewModel, null, 2);
+          applyModel(JSON.parse(jsonData));
+      }
+
+      function applyModel(model) {
+          $("#protaelHolder").children('span').remove();
+          $(".protael_resizable").remove();
+          $("#errorMsg").hide();
+          try {
+              Protael(model, "protaelHolder", true).draw();
+          } catch (err) {
+              console.log(err);
+              displayError("Unable to display protein: " + err.name + ": " + err.message);
+          }
+      }
+
+      function displayError(msg) {
+          $("#errorMsg").html("<h4>Warning:</h4>" + msg);
+          $("#errorMsg").show();
+      }
+
+      function reset() {
+          ko.mapping.fromJS(emptyProtein, viewModel);
+          viewModel.markers.removeAll();
+          viewModel.bridges.removeAll();
+          viewModel.overlayfeatures.features.removeAll();
+          viewModel.qtracks.removeAll();
+          viewModel.ftracks.removeAll();
+          $(".protael_resizable").remove();
+          $("#errorMsg").hide();
+      }
+
+      function initCPickers() {
+          $('.colorpick').colorpicker({"color": "#FFF"}).on('changeColor', function (ev) {
+              var newColor = ev.color.toHex().toString();
+              $(this).css("background-color", newColor);
+              $(this).text(newColor);
+              ko.dataFor($(this)[0]).color = newColor;
+          });
+      }
+
+      function initgraphCPickers() {
+          $('.gcolorpick').colorpicker({"color": "#FFF"}).on('changeColor', function (ev) {
+              var newColor = ev.color.toHex().toString();
+              $(this).css("background-color", newColor);
+              $(this).text(newColor);
+              var context = ko.contextFor($(this)[0]);
+              var index = context.$index();
+              // var data = context.$data;
+              var colors = context.$parent.color();
+              colors[index] = newColor;
+          });
+      }
+
+      function saveJsonToFile() {
+          var text = ko.mapping.toJSON(viewModel, null, 2),
+                  name = lastOpenedFile || 'protael_export.json';
+          blob = new Blob([text], {type: "application/json"});
+          // from FileSaver.js
+          saveAs(blob, name);
+      }
+    </script>
+
+    <script>
+      (function (id) {
+          function handleFileSelect(evt) {
+              evt.stopPropagation();
+              evt.preventDefault();
+              var files = evt.target.files || evt.dataTransfer.files; // FileList object.
+              $(id).value(files[0].name);
+          }
+
+          function handleDragOver(evt) {
+              evt.stopPropagation();
+              evt.preventDefault();
+              evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+              evt.target.className = (evt.type == "dragover" ? "hover" : "");
+          }
+
+          //  // Setup the dnd listeners.
+          var dropZone = $(id);
+          dropZone.on('dragover', handleDragOver, false);
+          dropZone.on('drop', handleFileSelect, false);
+      }('#fileInput'));
+    </script>
+  </head>
+  <body>
+
+    <!--[if lt IE 7]>
+ <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+    <div id="nav">
+    </div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <h3 style="padding-top: 25px">Select a JSON file: </h3>
+          <div id="drop_zone"><input type="file" id="fileInput">
+          </div>
+        </div>
+        <div class="col-md-4" style="padding-top: 35px">
+          <div class="alert alert-danger" role="alert" id="errorMsg"></div>
+        </div>
+      </div>
+      <div class="row ">
+        <div class="col-md-12">
+          <h3 style="padding-top: 25px">OR enter you data below to generate JSON and view it in Protael</h3>
+            <form role="form" onsubmit="editJson();
+                  return false;">
+              <fieldset>
+                <div class="form-group">
+                  <label for="inpSeq">Protein sequence</label>
+                  <input type="text" class="form-control input-sm" id="inpSeq"
+                         placeholder="Enter protein sequence" data-bind="value: sequence">
+                </div>
+              </fieldset>
+
+              <div class="panel-group" id="accordion">
+                <fieldset><div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeqColors">Sequence colors</a>
+                      </h4>
+                    </div>
+                    <div id="collapseSeqColors" class="panel-collapse collapse"><div class="panel-body">
+                        <div class="form-group ">
+                          <label for="inpSeqCol">Sequence colors data</label>&nbsp;<a href="getting-started.html#colorsdata" target="info"><span class="glyphicon glyphicon-question-sign"></span></a>
+                          <input type="text" class="form-control input-sm" id="inpSeqCol" placeholder="Enter sequence color data and press ENTER"
+                                 data-bind="value: seqcolors.data">
+                        </div>
+                        <div class="form-group" id="seqColorInputs">
+                          <label>Select color per data char:</label>
+                          <div data-bind="foreach : seqcolors.colors.items">
+                            <button type='button' class='btn btn-default btn-sm seqColorpicker' data-bind="text: key"></button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseMark">Markers</a><span class="badge pull-right" data-bind="text: $root.markers().length"></span>
+                      </h4>
+                    </div>
+                    <div id="collapseMark" class="panel-collapse collapse">
+                      <div class="panel-body">
+                        <div class="row ">
+                          <div class="col-sm-3"><button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addMarker">Add marker</button>
+                            <a href="getting-started.html#markers" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></div>
+                        </div>
+                        <div class="row " style="margin:10px;">
+                          <div class="panel panel-info">
+                            <div class="panel-heading">Predict N-linked glycosylation sites based on <code>N.[ST]</code> pattern</div>
+                            <div class="panel-body">
+                              <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.findGlycoSites">Mark N-GlycoSites</button>
+                              <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.clearAutoMarkers">Remove N-GlycoSites</button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row ">
+                          <div class="col-sm-2"><label>Type</label></div>
+                          <div class="col-sm-1"><label>X</label></div>
+                          <div class="col-sm-2"><label>Position</label></div>
+                          <div class="col-sm-2"><label>Label</label></div>
+                          <div class="col-sm-1"><label>Color</label></div>
+                          <div class="col-sm-1"> </div>
+                        </div>
+                        <div class="row rowgrid" id="markersGrid" data-bind="foreach: markers">
+                          <div class="form-group row">
+                            <div class="col-sm-2">
+                              <select class="form-control input-sm" name="type"  data-bind="value: $data.type">
+                                <option value="glycan">Glycan</option>
+                                <option value="oliglycan">Oliglycan</option>
+                                <option value="unknownglycan">Unknown glycan</option>
+                                <option value="gap">Gap</option>
+                                <option value="stick">Stick</option>
+                                <option value="pin">Pin</option>
+                              </select>
+                            </div>
+                            <div class="col-sm-1">
+                              <input class="form-control input-sm" name="x" min="0" type="number"  data-bind="value: $data.x" />
+                            </div>
+                            <div class="col-sm-2">
+                              <select class="form-control input-sm" name="position"  data-bind="value: $data.position" >
+                                <option value="top">Top</option>
+                                <option value="bottom">Bottom</option>
+                              </select>
+                            </div>
+                            <div class="col-sm-2">
+                              <input class="form-control input-sm"  name="label" type="text"  data-bind="value: $data.label" />
+                            </div>
+                            <div class="col-sm-1">
+                              <button type='button' class='btn btn-default btn-sm colorpick' data-bind="style: {backgroundColor: $data.color}, text: $data.color|| 'Color'" name='c1'>Color</button>
+                            </div>
+                            <div class="col-sm-1">
+                              <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.removeMarker">-</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseBridg">
+                          Bridges
+                        </a>
+                        <span class="badge pull-right" data-bind="text: $root.bridges().length"></span>
+                      </h4>
+                    </div>
+                    <div id="collapseBridg" class="panel-collapse collapse"><div class="panel-body">
+                        <p><button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addBridge">Add bridge</button> <a href="getting-started.html#bridges" target="info"><span class="glyphicon glyphicon-question-sign"></span></a></p>
+                        <div class="row">
+                          <div class="col-sm-2"><label>Type/label</label></div>
+                          <div class="col-sm-1"><label>Start</label></div>
+                          <div class="col-sm-1"><label>End</label></div>
+                          <div class="col-sm-2"><label>Start Label</label></div>
+                          <div class="col-sm-2"><label>End Label</label></div>
+                          <div class="col-sm-1"><label>Color</label></div>
+                          <div class="col-sm-1"><label></label></div>
+                        </div>
+                        <div class="row rowgrid" id="bridgesGrid" data-bind="foreach: bridges ">
+                          <div class="form-group row">
+                            <div class="col-sm-2">
+                              <input class="form-control input-sm"  name="type" type="text" data-bind="value: $data.type"/>
+                            </div>
+                            <div class="col-sm-1">
+                              <input class="form-control input-sm" name="s" min="0" type="number" data-bind="value: $data.start"/>
+                            </div>
+                            <div class="col-sm-1">
+                              <input class="form-control input-sm" name="e" min="0" type="number" data-bind="value: $data.end" />
+                            </div>
+                            <div class="col-sm-2">
+                              <input class="form-control input-sm" name="slabel" type="text" data-bind="value: $data.startlabel"/>
+                            </div><div class="col-sm-2">
+                              <input class="form-control input-sm"  name="elabel" type="text" data-bind="value: $data.endlabel"/>
+                            </div>
+                            <div class="col-sm-1">
+                              <button type='button' class='btn btn-default btn-sm colorpick' data-bind="style: {backgroundColor: $data.color}, text: $data.color|| 'Color'" name='c1'>Color</button>
+                            </div>
+                            <div class="col-sm-1">
+                              <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.removeBridge">-</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOFeatur">Regions</a><span class="badge pull-right" data-bind="text: $root.overlayfeatures.features().length">42</span>
+                      </h4>
+                    </div>
+                    <div id="collapseOFeatur" class="panel-collapse collapse"><div class="panel-body">
+                        <p>Regions are marked areas on the main protein sequence</p>
+
+                        <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addRegion">Add region</button>
+                        <div class="row">
+                          <div class="col-sm-2"><label>Label</label></div>
+                          <div class="col-sm-2"><label>Start</label></div>
+                          <div class="col-sm-2"><label>End</label></div>
+                          <div class="col-sm-2"><label>Color</label></div>
+                        </div>
+                        <div class="row rowgrid" id="regionsGrid" data-bind="foreach: overlayfeatures.features ">
+                          <div class="form-group row">
+                            <div class="col-sm-2">
+                              <input class="form-control input-sm" name="label" type="text"  data-bind="value: $data.label" />
+                            </div>
+                            <div class="col-sm-2">
+                              <input class="form-control input-sm" name="s"
+                                     min="0" type="number"  data-bind="value: $data.start"/>
+                            </div>
+                            <div class="col-sm-2">
+                              <input class="form-control input-sm" name="e"
+                                     min="0" type="number"  data-bind="value: $data.end"/>
+                            </div>
+                            <div class="col-sm-2">
+                              <button type='button' class='btn btn-default btn-sm colorpick' data-bind="style: {backgroundColor: $data.color}, text: $data.color|| 'Color'" name='c1'>Color</button>
+                            </div>
+                            <div class="col-sm-2">
+                              <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.removeRegion">-</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFeatur">Features</a><span class="badge pull-right" data-bind="text: $root.ftracks().length">42</span>
+                      </h4>
+                    </div>
+                    <div id="collapseFeatur" class="panel-collapse collapse">
+                      <div class="panel-body">
+                        <p>Features and annotations are grouped in <i>ftracks</i></p>
+                        <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addFtrack">Add ftrack</button>
+                        <div class="panel-group" id="accordFT">
+                          <div id="collapseFTrack">
+                            <div class="panel-body">
+                              <div class="row">
+                                <div class="col-sm-2"><label>Label</label></div>
+                                <div class="col-sm-2"><label>Display</label></div>
+                                <div class="col-sm-2"><label>Overlap</label></div>
+                                <div class="col-sm-2"><label>Baseline</label></div>
+                                <div class="col-sm-2"><label>Color</label></div>
+                              </div>
+                              <div data-bind="foreach: {data:$root.ftracks, as:'ftrack'}"> <!-------------->
+                                <div class="row rowgrid" id="ftracksGrid" >
+                                  <div class="form-group row">
+                                    <div class="col-sm-2">
+                                      <input class="form-control input-sm"  name="label" type="text"  data-bind="value: ftrack.label" />
+                                    </div>
+                                    <div class="col-sm-2">
+                                      <select class="form-control input-sm" name="type"  data-bind="value: ftrack.display">
+                                        <option value="block">Block</option>
+                                        <option value="line">Line</option>
+                                      </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                      <input type="checkbox" data-bind="checked: ftrack.allowOverlap" /> Allow
+                                    </div>
+                                    <div class="col-sm-2">
+                                      <input type="checkbox" data-bind="checked: ftrack.showLine" /> Show
+                                    </div>
+                                    <div class="col-sm-2">
+                                      <button type='button' class='btn btn-default btn-sm colorpick' data-bind="style: {backgroundColor: ftrack.color}, text: ftrack.color|| 'Color'" name='c1'>Color</button>
+                                    </div>
+                                    <div class="col-sm-2">
+                                      <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.removeFtrack">-</button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="panel panel-default">
+                                  <div class="panel-heading">
+                                    <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                                      <a data-toggle="collapse" data-parent="#accordFT" data-bind="text: ftrack.label() + ': features', attr : { 'href': '#collapse' + $index() }">Features</a>
+                                      <span class="badge pull-right" data-bind="text:ftrack.features().length">5</span>
+                                    </h4>
+                                  </div>
+                                  <div>
+                                    <div data-bind="attr : { 'id': 'collapse' + $index() }"  class="panel-collapse collapse">
+                                      <div class="panel-body">
+                                        <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.addFeature">Add feature</button>
+                                        <div class="row">
+                                          <div class="col-sm-2"><label>Label</label></div>
+                                          <div class="col-sm-2"><label>Start</label></div>
+                                          <div class="col-sm-2"><label>End</label></div>
+                                        </div>
+                                        <div class="row rowgrid" id="regionsGrid" data-bind="foreach: {data: ftrack.features, as :'feature' }">
+                                          <div class="form-group row">
+                                            <div class="col-sm-2">
+                                              <input class="form-control input-sm" name="label" type="text"  data-bind="value: feature.label" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                              <input class="form-control input-sm" name="s"
+                                                     min="0" type="number"  data-bind="value: feature.start"/>
+                                            </div>
+                                            <div class="col-sm-2">
+                                              <input class="form-control input-sm" name="e"
+                                                     min="0" type="number"  data-bind="value: feature.end"/>
+                                            </div>
+
+                                            <div class="col-sm-2">
+                                              <button type='button' class='btn btn-default btn-xs' data-bind="click: $root.removeFeature">-</button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                </div>                              <!-------------->
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset> <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title"><span class="glyphicon glyphicon-cog"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseGraphs">
+                          Graphs</a><span class="badge pull-right" data-bind="text: $root.qtracks().length">42</span>
+                      </h4>
+                    </div>
+                    <div id="collapseGraphs" class="panel-collapse collapse"><div class="panel-body">
+                        <button type='button' class='btn btn-default btn-xs' data-bind="click : $root.addQtrack">Add new graph</button>&nbsp;<a href="getting-started.html#graphs" target="info"><span class="glyphicon glyphicon-question-sign"></span></a><br />
+
+                        <div class="row rowgrid" id="graphsGroup" data-bind="foreach: qtracks">
+                          <div class="form-group">
+                            <br />  <input type="text" class="form-control input-sm" name="data" placeholder="Graph values" data-bind="value: $data.values">
+                            <div class="row">
+                              <div class="col-sm-3">
+                                <input class="form-control input-sm"  name="label" type="text" placeholder="Graph label" data-bind="value: $data.label" /></div>
+                              <div class="col-sm-2">
+                                <select class="form-control input-sm" name="type"  data-bind="value: $data.type">
+                                  <option value="area-spline">Area-spline</option>
+                                  <option value="area">Area</option>
+                                  <option value="line">Line</option>
+                                  <option value="spline">Spline</option>
+                                  <option value="column">Column</option>
+                                </select></div>
+                              <div class="col-sm-3">
+                                <label>Colors:</label>
+                                <span data-bind="foreach: {data: color, as: 'colr'}">
+                                  <button type='button' class='btn btn-default btn-sm gcolorpick' data-bind="style: {backgroundColor: colr}, text: colr || ''" name='c1'>Color</button></span>
+                              </div>
+                              <div class="col-sm-1"></div>
+                              <div class="col-sm-2">
+                                <button type='button' class='btn btn-default btn-xs' data-bind="click : $root.removeQtrack">Remove</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div></div>
+                </fieldset>
+              </div><!--accordion-->
+            </form>
+        </div>
+      </div>
+
+      <div class="row ">
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-default" onclick="submitJson()" style="margin:10px;">Submit</button>
+          <button type="submit" class="btn btn-default" onclick="reset()" style="margin:10px;">Reset</button>
+        </div>
+        <div class="col-md-1"></div>
+      </div>
+      <div class="row ">
+        <div class="col-md-12">
+          <h3>Protael view</h3>
+          <div id ="protaelHolder"><span>No data to display. Did you enter your data and click 'Submit' button above?</span></div>
+        </div>
+      </div>
+      <div class="row ">
+        <div class="col-md-12">
+          <h3>JSON:</h3>
+          <p>You can copy JSON into your webpage or <a href="#" id="saveJson"  class="btn btn-default" style="margin:10px;">Save to file</a>
+            <textarea id="codeTextArea" class="form-control"  data-bind="value: ko.mapping.toJSON($data, null, 2)"
+                      style="width:100%; height:200px;font-family: monospace; margin-bottom: 35px;" disabled></textarea></div>
+      </div>
+
+    </div>
+    <!--feedback -->
+    <div id="feedback"><i class="fa fa-comments"></i></div>
+    <script> $(document)
+             .ready(function () {
+                 $("#nav").load('assets/navbar.html');
+             });
+    </script>
+    <script>
+      UserVoice = window.UserVoice || [];
+     (function() {
+       var uv = document.createElement('script');
+       uv.type = 'text/javascript';
+       uv.async = true;
+       uv.src = '//widget.uservoice.com/fOsDxyHzBBW8D2H6Qa4NQ.js';
+       var s = document.getElementsByTagName('script')[0];
+       s.parentNode.insertBefore(uv, s)
+     })();
+
+     UserVoice.push(['set', {
+ accent_color: '#149C82',
+ trigger_color: 'white',
+ trigger_background_color: '#149C82'
+}]);
+
+UserVoice.push(['identify', {}]);
+UserVoice.push(['addTrigger', '#feedback', { mode: 'contact', trigger_position: 'bottom-right' }]);
+UserVoice.push(['autoprompt', {}]);
+    </script>
+    <!--/ feedback -->
+    <script>
+      (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+      ga('create', 'UA-50502533-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+    <script type="text/javascript" async="" src="js/vendor/FileSaver_Blob.js"></script>
+  </body>
+</html>

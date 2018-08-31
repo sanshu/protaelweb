@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Examples : Protael</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.1.1/flatly/bootstrap.min.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="../css/main.css">
+
+    <script src="../js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script type="text/javascript"    src="http://code.jquery.com/jquery-1.11.1.min.js"></script> 
+
+    <script type="text/javascript"    src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/dist/typeahead.bundle.min.js"></script>
+    <style>
+      .typeahead,
+      .tt-query,
+      .tt-hint {
+          width: 100%;
+          height: 30px;
+          padding: 8px 12px;
+          line-height: 30px;
+          border: 2px solid #ccc;
+          -webkit-border-radius: 8px;
+          -moz-border-radius: 8px;
+          border-radius: 8px;
+          outline: none;
+      }
+      .twitter-typeahead{width:100%;}
+      .typeahead {
+          background-color: #fff;
+      }
+      .typeahead:focus {
+          border: 2px solid #0097cf;
+      }
+      .tt-query {
+          -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      }
+      .tt-hint {
+          color: #999
+      }
+      .tt-dropdown-menu {
+          width: 422px;
+          margin-top: 12px;
+          padding: 8px 0;
+          background-color: #fff;
+          border: 1px solid #ccc;
+          border: 1px solid rgba(0, 0, 0, 0.2);
+          -webkit-border-radius: 8px;
+          -moz-border-radius: 8px;
+          border-radius: 8px;
+          -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          font-size:10px;
+      }
+
+      .tt-suggestion {
+          padding: 3px 20px;
+          font-size: 12px;
+          line-height: 24px;
+      }
+
+      .tt-suggestion.tt-cursor {
+          color: #fff;
+          background-color: #0097cf;
+
+      }
+
+      .tt-suggestion p {
+          margin: 0;
+      }
+    </style>
+    <script>
+      var viewModel = {
+          fasta: ko.observable(""),
+          selectedSource: ko.observable(""), //id of the selected sequnce
+          selectedTarget: ko.observable(""),
+          pairSourceSeq: ko.observable(""),
+          sourceIdx: ko.observableArray(),
+          targetIdx: ko.observableArray(),
+          pairTarSeq: ko.observable(""),
+          pairwise: ko.observable(""),
+          seqIds: []
+      };
+
+      viewModel.pairSourceChars = function () {
+          return viewModel.pairSourceSeq().split("");
+      };
+      viewModel.isGap = function (val) {
+          return val === '-';
+      };
+
+      $(document)
+              .ready(function () {
+                  $("#alertReady").hide();
+                  var fileInput = document.getElementById('fileInput');
+                  ko.applyBindings(viewModel);
+
+                  if (!(window.File && window.FileReader && window.FileList)) {
+                      $("#nofilealert").show(); //warn user
+                  } else {
+                      $("#nofilealert").hide();
+                  }
+
+                  fileInput.addEventListener('change', function (e) {
+                      var file = fileInput.files[0];
+                      var reader = new FileReader();
+                      reader.onload = function (e) {
+                          try {
+                              $("#alertReady").hide();
+                              viewModel.fasta(reader.result);
+                          }
+                          catch (err) {
+                              console.log("<p>Unable to open file: " + err.message + "</p>");
+                          }
+                      };
+                      reader.readAsText(file);
+                  });
+
+
+              });
+
+      function process() {
+          viewModel.selectedSource($('#sseqid').val());
+          viewModel.selectedTarget($('#tseqid').val());
+          removeCommonGaps(viewModel.seqHash[$('#sseqid').val()], viewModel.seqHash[$('#tseqid').val()]);
+      }
+
+      viewModel.parseFasta = function () {
+          $("#alertReady").hide();
+          //** create hash with seqId-seqStr for processing
+          if (!viewModel.fasta()) {
+              return;
+          }
+          var fas = viewModel.fasta().split(">"), f = "", i = 0, j, l = fas.length, sequences = [], seqids = [], seq = {id: '', sequence: ''};
+
+          // console.log("Found " + l + " sequences");
+          for (i = 0; i < l; i++) {
+              var current = fas[i].trim().split("\n"), l2 = current.length;
+
+              for (j = 0; j < l2; j++)
+              {
+                  f = current[j].trim();
+                  if (!f) {
+                      continue;
+                  }
+                  if (j === 0) {//(f.charAt(0) === '>') {
+                      //new entry
+                      if (seq.id) {
+                          sequences[seq.id] = seq.sequence;
+                          seqids.push(seq.id);
+                          seq = {id: '', sequence: ''};
+                      }
+
+                      seq.id = f;//f.substring(1, f.length - 1);
+                  } else {
+                      seq.sequence = seq.sequence.concat(f);
+                  }
+              }
+
+          }
+          // and last one!
+          sequences[seq.id] = seq.sequence;
+          seqids.push(seq.id);
+          
+          viewModel.seqIds = seqids;
+          viewModel.seqHash = sequences;
+          $('#the-basics-1 .typeahead').typeahead('destroy');
+
+          $('#the-basics-2 .typeahead').typeahead('destroy');
+          $('#the-basics-1 .typeahead').typeahead({
+              hint: true,
+              highlight: true,
+              minLength: 1
+          },
+          {
+              name: 'states',
+              displayKey: 'value',
+              source: substringMatcher(seqids)
+          });
+          $('#the-basics-2 .typeahead').typeahead({
+              hint: true,
+              highlight: true,
+              minLength: 1
+          },
+          {
+              name: 'states',
+              displayKey: 'value',
+              source: substringMatcher(seqids)
+          });
+
+          $("#alertReady").show();
+      };
+
+      function removeCommonGaps(sourceSeq, targetSeq) {
+          var tar = targetSeq.split(""),
+                  sour = sourceSeq.split(""),
+                  tarnew = [], sournew = [], i,
+                  si = [], ti = [], s, t,
+                  limit = Math.min(tar.length, sour.length),
+                  gap = "-";
+
+          for (i = 0; i < limit; i++) {
+              if (tar[i] == gap && sour[i] == gap) {
+                  //remove
+                  //console.log("mutual gap at " + i);
+              } else {
+                  tarnew.push(tar[i]);
+                  sournew.push(sour[i]);
+              }
+          }
+
+          limit = Math.min(tarnew.length, sournew.length);
+          s = 0;
+          t = 0;
+          for (i = 0; i < limit; i++) {
+              if (tarnew[i] === gap) {
+                  //do not increment M
+                  s++;
+              } else if (sournew[i] === gap) {
+                  // do not increment K
+                  t++;
+              }
+              si.push(i + 1 - t);
+              ti.push(i + 1 - s);
+          }
+          viewModel.sourceIdx(si);
+          viewModel.targetIdx(ti);
+          viewModel.pairSourceSeq(sournew.join(""));
+          viewModel.pairTarSeq(tarnew.join(""));
+
+          var res = ">" + viewModel.selectedSource() + "\n" + tarnew.join("") + "\n>" + viewModel.selectedTarget() + "\n" + sournew.join("") + "\n";
+          viewModel.pairwise(res);
+      }
+/// for typeahead
+      var substringMatcher = function (strs) {
+          return function findMatches(q, cb) {
+              var matches, substrRegex;
+
+              // an array that will be populated with substring matches
+              matches = [];
+
+              // regex used to determine if a string contains the substring `q`
+              substrRegex = new RegExp(q, 'i');
+
+              // iterate through the pool of strings and for any string that
+              // contains the substring `q`, add it to the `matches` array
+              $.each(strs, function (i, str) {
+                  if (substrRegex.test(str)) {
+                      // the typeahead jQuery plugin expects suggestions to a
+                      // JavaScript object, refer to typeahead docs for more info
+                      matches.push({value: str});
+                  }
+              });
+
+              cb(matches);
+          };
+      };
+    </script>
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-Fcollapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Protael</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">            
+            <li><a href="../getting-started.html">Getting started</a></li>
+            <li><a href="../try.html">Try it</a></li>
+            <li><a href="../demo.html">Examples</a></li>
+            <li><a href="../generator.html">ProteinDesigner</a></li>
+            <li><a onClick="ga('send', 'event', 'Downloads', 'Click', '/Protael.zip');" href="Protael.zip" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="alert alert-warning alert-dismissible" role="alert" id="nofilealert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <strong>Warning!</strong> <p>The <a href="http://dev.w3.org/2006/webapi/FileAPI/" target="_blank">File API</a>s
+          are not fully supported by this browser.</p>
+        <p>Upgrade your browser to the latest version.</p>
+      </div>
+
+      <h2>MSA to Pairwise alignment convertor</h2>
+      <div class="panel panel-info">
+        <div class="panel-heading"></div>
+        <div class="panel-body">
+          <p> This tool will extract pairwise alignment from multiple sequence alignment.</p>
+          <ol><li>Select MSA FASTA file or paste FASTA into the text box.</li>
+            <li>Click <kbd>Parse MSA</kbd>  button.</li>
+            <li>After you see "Ready" message start typing sequence IDs in the text boxes. You will see suggestions as you type.</li>
+            <li>Click <kbd>Start</kbd> button to extract pairwise alignment for selected sequences and calculate originat->target position conversion table.</li>
+          </ol>
+          <i>NOTE: all processing is done in the browser, so for very large MSAs convertor might crash. <br/>Safari browser seems to be able to handle larger data set than Chrome, Opera and Firefox.</i>
+        </div>
+      </div><form class="form-horizontal" role="form">
+        <div class="row">
+
+          <div class="col-md-6">
+            <div id="drop_zone">
+              <label for="fileInput">Select FASTA file with MSA: </label>
+              <input type="file" id="fileInput"> 
+            </div>
+            <label for="txt_msa">OR paste FASTA in the textarea:</label>
+          </div>
+          <div class="col-md-6">
+            <div class="alert alert-success" role="alert" id="alertReady">Ready! Select two sequences below.</div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+
+            <textarea style="width:100%;height:300px;" id="txt_msa" data-bind="value:fasta"></textarea>
+            <button  data-bind="click: parseFasta">Parse MSA</button> <button  data-bind="click: process">Start</button>
+          </div>
+          <div class="col-md-6"> 
+            <h5>First sequence</h5>
+            <div id="the-basics-1">
+              <input style="width:100%;" class="typeahead" type="text" placeholder="First sequence" data-bind="value: $root.selectedSource" id="sseqid">
+            </div>
+            <h5>Second sequence</h5>
+            <div id="the-basics-2">
+              <input class="typeahead" type="text" placeholder="Second sequence"  data-bind="value: $root.selectedTarget" id = "tseqid">
+            </div>
+          </div>
+        </div>
+      </form>
+      <hr class="featurette-divider">
+
+      <div class="row">
+        <div class="col-md-6">
+          <textarea style="width:100%;height:300px;" id = "txt_pair" data-bind="value:pairwise"></textarea>
+        </div>
+        <div class="col-md-6">
+          <!--<p>Not showing gaps in target sequence</p>-->
+          <table class="table table-striped table-condensed">
+            <tr>
+              <th>Original position</th>
+              <th>Original residue</th>
+              <th>Target residue</th>
+              <th>Target position</th></tr>
+            <tbody data-bind="foreach: { data: pairTarSeq().split(''), as: 'tarChar' }">
+              <tr >
+                <td data-bind="text:  $root.isGap( $root.pairSourceChars()[$index()]) ? '-' : $root.sourceIdx()[$index()]"></td>
+                <td data-bind="text: $root.pairSourceChars()[$index()]"></td>
+                <td data-bind="text: tarChar"></td>
+                <td data-bind="text: $root.isGap(tarChar)? '-': $root.targetIdx()[$index()]"></td>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+    <!-- Bootstrap core JavaScript
+  ================================================== -->
+
+    <script>
+      (function (i, s, o, g, r, a, m) {
+          i['GoogleAnalyticsObject'] = r;
+          i[r] = i[r] || function () {
+              (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date();
+          a = s.createElement(o),
+                  m = s.getElementsByTagName(o)[0];
+          a.async = 1;
+          a.src = g;
+          m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+      ga('create', 'UA-50502533-2', 'auto');
+      ga('send', 'pageview');</script>
+
+    <script type="text/javascript" async="" src="../js/vendor/FileSaver_Blob.js"></script>
+  </body>
+</html>
